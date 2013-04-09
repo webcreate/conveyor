@@ -1,0 +1,57 @@
+services:
+  config:
+    class: Webcreate\Conveyor\Config\YamlConfig
+    arguments: [ %conveyor.configfile%, @task.factory, @transporter.factory ]
+
+  cli:
+    class: Webcreate\Util\Cli
+
+  dispatcher:
+    class: Symfony\Component\EventDispatcher\EventDispatcher
+    calls:
+      - [ addSubscriber, [ @subscriber.transporter ] ]
+      - [ addSubscriber, [ @subscriber.builder ] ]
+
+  logger:
+    class: Monolog\Logger
+    factory_class: Webcreate\Conveyor\Factory\LoggerFactory
+    factory_method: get
+    arguments: [ %conveyor.logdir% ]
+
+  subscriber.transporter:
+    class: Webcreate\Conveyor\Subscriber\TransporterSubscriber
+    arguments: [ @io ]
+
+  subscriber.builder:
+    class: Webcreate\Conveyor\Subscriber\BuilderSubscriber
+    arguments: [ @io ]
+
+  repository:
+    class: Webcreate\Conveyor\Repository\Repository
+    arguments: [ %repository.type%, %repository.url%, @io ]
+
+  task.factory:
+    class: Webcreate\Conveyor\Factory\TaskFactory
+    arguments: [ @service_container ]
+
+  builder:
+    class: Webcreate\Conveyor\Builder\Builder
+    factory_class: Webcreate\Conveyor\Factory\BuilderFactory
+    factory_method: get
+    arguments: [ @config, @io, @dispatcher, @task.factory ]
+
+  transporter.factory:
+    class: Webcreate\Conveyor\Factory\TransporterFactory
+    arguments: [ @service_container ]
+
+  deploy.taskrunner.before:
+    class: Webcreate\Conveyor\Task\TaskRunner
+    factory_class: Webcreate\Conveyor\Factory\TaskRunnerFactory
+    factory_method: get
+    arguments: [ 'deploy.before', @task.factory, @config, @io ]
+
+  deploy.taskrunner.after:
+    class: Webcreate\Conveyor\Task\TaskRunner
+    factory_class: Webcreate\Conveyor\Factory\TaskRunnerFactory
+    factory_method: get
+    arguments: [ 'deploy.after', @task.factory, @config, @io ]

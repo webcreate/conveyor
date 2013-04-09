@@ -1,0 +1,15 @@
+conveyor:
+  repository:
+    type: svn
+    url: {{ repository.url }}
+  targets:
+    production:
+      url: test
+      transport:
+        type: ftp
+        host: localhost
+        path: deploy
+        user: test@localhost
+        pass: j234jkh234
+  build:
+    dir: /tmp/wbcrte-deploy/

@@ -1,0 +1,40 @@
+services:
+  transporter.file:
+    class: Webcreate\Conveyor\Transporter\FileTransporter
+    arguments: [ @dispatcher ]
+    tags:
+      - { name: transporter, alias: file }
+
+  transporter.readonly:
+    class: Webcreate\Conveyor\Transporter\ReadOnlyTransporter
+    arguments: [ @dispatcher ]
+
+  transporter.ftp:
+    class: Webcreate\Conveyor\Transporter\FtpTransporter
+    arguments: [ @dispatcher ]
+    tags:
+      - { name: transporter, alias: ftp }
+
+  transporter.sftp:
+    class: Webcreate\Conveyor\Transporter\SftpTransporter
+    arguments: [ @dispatcher, ~, @io ]
+    tags:
+      - { name: transporter, alias: sftp }
+
+  transporter.rsync:
+    class: Webcreate\Conveyor\Transporter\RsyncTransporter
+    arguments: [ @dispatcher, @cli ]
+    tags:
+      - { name: transporter, alias: rsync }
+
+  transporter.scp:
+    class: Webcreate\Conveyor\Transporter\ScpTransporter
+    arguments: [ @dispatcher, @cli ]
+    tags:
+      - { name: transporter, alias: scp }
+
+  transporter.git:
+    class: Webcreate\Conveyor\Transporter\GitTransporter
+    arguments: [ @dispatcher, %conveyor.userdir% ]
+    tags:
+      - { name: transporter, alias: git, configuration: Webcreate\Conveyor\Transporter\Configuration\GitTransporterConfiguration }

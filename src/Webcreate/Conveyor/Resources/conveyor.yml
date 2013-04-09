@@ -1,0 +1,25 @@
+conveyor:
+  repository:
+    type:
+    url:
+  targets:
+    production:
+      transport:
+        type: rsync
+        host: example.com
+        path: /var/www/example.com
+        user: johndoe
+        pass: johndoepass
+    staging:
+      transport:
+        type: rsync
+        host: staging.example.com
+        path: /var/www/staging.example.com
+        user: johndoe2
+        pass: johndoepass2
+  build:
+    dir: ./build
+    tasks:
+      -
+        type: shell
+        command: echo 'hello'

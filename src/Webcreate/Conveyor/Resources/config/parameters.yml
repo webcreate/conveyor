@@ -1,0 +1,5 @@
+parameters:
+  conveyor.configfile:      ./conveyor.yml
+  conveyor.remoteinfofile:  .conveyor
+  conveyor.userdir:         ~/.conveyor.d
+  conveyor.logdir:          %conveyor.userdir%/logs

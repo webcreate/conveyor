@@ -1,0 +1,30 @@
+services:
+  task.export:
+    class: Webcreate\Conveyor\Task\ExportTask
+    arguments: [ %build.dir%, @repository, @io ]
+    tags:
+      - { name: task, alias: export }
+
+  task.shell:
+    class: Webcreate\Conveyor\Task\ShellTask
+    arguments: [ %build.dir%, @cli, @io ]
+    tags:
+      - { name: task, alias: shell, configuration: Webcreate\Conveyor\Task\Configuration\ShellTaskConfiguration }
+
+  task.phar:
+    class: Webcreate\Conveyor\Task\PharTask
+    arguments: [ %build.dir%, %conveyor.configfile%, @io ]
+    tags:
+      - { name: task, alias: phar, configuration: Webcreate\Conveyor\Task\Configuration\PharTaskConfiguration }
+
+  task.ssh:
+    class: Webcreate\Conveyor\Task\SshTask
+    arguments: [ @config, @cli, @io ]
+    tags:
+      - { name: task, alias: ssh, configuration: Webcreate\Conveyor\Task\Configuration\SshTaskConfiguration }
+
+  task.phing:
+    class: Webcreate\Conveyor\Task\PhingTask
+    arguments: [ %build.dir%, @cli, @io ]
+    tags:
+      - { name: task, alias: phing, configuration: Webcreate\Conveyor\Task\Configuration\PhingTaskConfiguration }

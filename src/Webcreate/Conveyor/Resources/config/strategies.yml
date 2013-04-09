@@ -1,0 +1,8 @@
+services:
+  strategy.simple:
+    class: Webcreate\Conveyor\Strategy\SimpleStrategy
+
+  strategy.releases:
+    class: Webcreate\Conveyor\Strategy\ReleasesStrategy
+    arguments:
+      - @task.factory

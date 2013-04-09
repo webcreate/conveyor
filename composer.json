@@ -1,0 +1,40 @@
+{
+    "name": "webcreate/conveyor",
+    "type": "library",
+    "keywords": ["build", "deploy", "php", "tool", "commandline"],
+    "description": "Build and deploy tool for PHP",
+    "homepage": "http://conveyordeploy.com/",
+    "license": "Commercial",
+    "authors": [
+        {
+            "name": "Jeroen Fiege",
+            "email": "jeroen@webcreate.nl",
+            "homepage": "http://www.fieg.nl"
+        }
+    ],
+    "support": {
+        "email": "support@webcreate.nl",
+        "source": "https://github.com/webcreate/conveyor"
+    },
+    "autoload": {
+        "psr-0": {
+            "Webcreate": ["src/", "tests/"]
+        }
+    },
+    "require": {
+        "php": ">=5.3.2",
+        "ext-ftp": "*",
+        "symfony/console": "2.2.*",
+        "symfony/config": "2.2.*",
+        "symfony/yaml": "2.2.*",
+        "symfony/finder": "2.2.*",
+        "symfony/filesystem": "2.2.*",
+        "symfony/event-dispatcher": "2.2.*",
+        "symfony/dependency-injection": "2.2.*",
+        "phpseclib/phpseclib": "*",
+        "webcreate/vcs": "1.1.6",
+        "webcreate/util": "*@dev",
+        "monolog/monolog": "1.4.*"
+    },
+    "bin": ["bin/conveyor"]
+}
