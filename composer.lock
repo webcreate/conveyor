@@ -1,5 +1,5 @@
 {
-    "hash": "51c7cc760597f79dbe9e44f90af7e08e",
+    "hash": "9bd48d17eda4e6c0047a55bea241fcab",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -602,16 +602,16 @@
         },
         {
             "name": "webcreate/vcs",
-            "version": "1.1.6",
+            "version": "1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webcreate/vcs.git",
-                "reference": "1.1.6"
+                "reference": "1.1.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webcreate/vcs/zipball/1.1.6",
-                "reference": "1.1.6",
+                "url": "https://api.github.com/repos/webcreate/vcs/zipball/1.1.7",
+                "reference": "1.1.7",
                 "shasum": ""
             },
             "require": {
@@ -649,7 +649,7 @@
                 "vcs",
                 "versioncontrol"
             ],
-            "time": "2013-03-18 21:28:24"
+            "time": "2013-04-09 20:45:20"
         }
     ],
     "packages-dev": [

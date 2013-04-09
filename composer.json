@@ -32,7 +32,7 @@
         "symfony/event-dispatcher": "2.2.*",
         "symfony/dependency-injection": "2.2.*",
         "phpseclib/phpseclib": "*",
-        "webcreate/vcs": "1.1.6",
+        "webcreate/vcs": "1.1.*",
         "webcreate/util": "*@dev",
         "monolog/monolog": "1.4.*"
     },
