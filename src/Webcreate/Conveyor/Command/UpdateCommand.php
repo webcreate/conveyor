@@ -7,6 +7,7 @@
 
 namespace Webcreate\Conveyor\Command;
 
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Webcreate\Conveyor\Command\AbstractCommand;
@@ -18,6 +19,7 @@ class UpdateCommand extends AbstractCommand
         $this
             ->setName('update')
             ->setDescription('Updates conveyor to the latest version')
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update of latest version')
         ;
     }
 
@@ -28,7 +30,7 @@ class UpdateCommand extends AbstractCommand
         $current = trim(file_get_contents('phar://conveyor.phar/VERSION'));
         $update  = version_compare($current, $latest, '<');
 
-        if ($update) {
+        if ($update || $input->getOption('force')) {
             $remoteFile = sprintf('%s/conveyor.phar', $dsn);
             $localFile  = $_SERVER['argv'][0];
             $tempFile   = tempnam(sys_get_temp_dir(), 'conveyor') . '.phar';
