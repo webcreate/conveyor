@@ -55,8 +55,11 @@ class VersionsCommandTest extends PHPUnit_Framework_TestCase
 
     public function testExecute()
     {
-        $application = new Application();
+        $conveyor = new \Webcreate\Conveyor\Conveyor();
+        $application = new Application($conveyor);
         $application->add(new VersionsCommand());
+
+        $conveyor->boot(new \Webcreate\Conveyor\IO\NullIO());
 
         $command = $application->find('versions');
         $commandTester = new CommandTester($command);

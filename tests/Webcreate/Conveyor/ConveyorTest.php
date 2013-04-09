@@ -14,7 +14,8 @@ class ConveyorTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetConfig()
     {
-        $conveyor = new Conveyor(new NullIO());
+        $conveyor = new Conveyor();
+        $conveyor->boot(new NullIO());
 
         $this->assertInstanceOf('Webcreate\Conveyor\Config\YamlConfig', $conveyor->getConfig());
     }
