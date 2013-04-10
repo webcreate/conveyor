@@ -1,5 +1,5 @@
 {
-    "hash": "9bd48d17eda4e6c0047a55bea241fcab",
+    "hash": "7fb1726d85c91649ade332e0b04c2c13",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -560,16 +560,16 @@
         },
         {
             "name": "webcreate/util",
-            "version": "dev-master",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webcreate/util.git",
-                "reference": "1.0"
+                "reference": "1.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webcreate/util/zipball/1.0",
-                "reference": "1.0",
+                "url": "https://api.github.com/repos/webcreate/util/zipball/1.0.1",
+                "reference": "1.0.1",
                 "shasum": ""
             },
             "require": {
@@ -598,27 +598,27 @@
             "keywords": [
                 "util"
             ],
-            "time": "2013-02-08 15:24:08"
+            "time": "2013-04-10 14:00:31"
         },
         {
             "name": "webcreate/vcs",
-            "version": "1.1.7",
+            "version": "1.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webcreate/vcs.git",
-                "reference": "1.1.7"
+                "reference": "1.1.8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webcreate/vcs/zipball/1.1.7",
-                "reference": "1.1.7",
+                "url": "https://api.github.com/repos/webcreate/vcs/zipball/1.1.8",
+                "reference": "1.1.8",
                 "shasum": ""
             },
             "require": {
                 "symfony/filesystem": ">=v2.1.2",
                 "symfony/finder": ">=v2.1.2",
                 "symfony/process": ">=v2.1.2",
-                "webcreate/util": "dev-master"
+                "webcreate/util": "1.*"
             },
             "type": "library",
             "autoload": {
@@ -649,7 +649,7 @@
                 "vcs",
                 "versioncontrol"
             ],
-            "time": "2013-04-09 20:45:20"
+            "time": "2013-04-10 14:04:26"
         }
     ],
     "packages-dev": [
@@ -659,9 +659,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "webcreate/util": 20
-    },
+    "stability-flags": [
+
+    ],
     "platform": {
         "php": ">=5.3.2",
         "ext-ftp": "*"

@@ -33,7 +33,7 @@
         "symfony/dependency-injection": "2.2.*",
         "phpseclib/phpseclib": "*",
         "webcreate/vcs": "1.1.*",
-        "webcreate/util": "*@dev",
+        "webcreate/util": "1.*",
         "monolog/monolog": "1.4.*"
     },
     "bin": ["bin/conveyor"]
