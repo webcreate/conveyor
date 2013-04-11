@@ -188,7 +188,19 @@ class FtpTransporter extends AbstractTransporter
      */
     public function copy($src, $dest, $recursive = true)
     {
-        throw new \RuntimeException('Symlinking (yet) not supported');
+        throw new \RuntimeException('Copy (yet) not supported');
+    }
+
+    /**
+     * Removes a file/directory on the remote host
+     *
+     * @param  string $path
+     * @param  bool $recursive
+     * @return mixed
+     */
+    public function remove($path, $recursive = true)
+    {
+        throw new \RuntimeException('Remove (yet) not supported');
     }
 
     public function __destruct()

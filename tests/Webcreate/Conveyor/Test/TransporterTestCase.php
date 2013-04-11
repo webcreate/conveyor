@@ -100,4 +100,15 @@ abstract class TransporterTestCase extends \PHPUnit_Framework_TestCase
 
         $this->transporter->copy($this->transporter->getPath() . '/a/path', $this->transporter->getPath() . '/deploy');
     }
+
+    public function testRemoveDispatchesEvent()
+    {
+        $this->getDispatcherMock()
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(TransporterEvents::TRANSPORTER_REMOVE, $this->anything())
+        ;
+
+        $this->transporter->remove($this->transporter->getPath() . '/a/path');
+    }
 }

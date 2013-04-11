@@ -33,6 +33,7 @@ class TransporterSubscriber implements EventSubscriberInterface
             TransporterEvents::TRANSPORTER_MKDIR       => array('onTransporterMkdir'),
             TransporterEvents::TRANSPORTER_SYMLINK     => array('onTransporterSymlink'),
             TransporterEvents::TRANSPORTER_COPY        => array('onTransporterCopy'),
+            TransporterEvents::TRANSPORTER_REMOVE      => array('onTransporterRemove'),
         );
     }
 
@@ -40,11 +41,13 @@ class TransporterSubscriber implements EventSubscriberInterface
     {
         if (false === $this->io->isVerbose()) return;
 
-        $this->io->write(sprintf(
+        $this->io->write(
+            sprintf(
                 'Connecting to <comment>%s@%s</comment>...',
                 $event->getTransporter()->getUser(),
                 $event->getTransporter()->getHost()
-        ));
+            )
+        );
     }
 
     public function onTransporterGet(TransporterEvent $event)
@@ -58,11 +61,13 @@ class TransporterSubscriber implements EventSubscriberInterface
 
         $data = $event->getData();
 
-        $this->io->write(sprintf(
+        $this->io->write(
+            sprintf(
                 '%s <comment>%s</comment>',
                 $verb,
                 $data['src']
-        ));
+            )
+        );
     }
 
     public function onTransporterPut(TransporterEvent $event)
@@ -74,12 +79,14 @@ class TransporterSubscriber implements EventSubscriberInterface
 
         $data = $event->getData();
 
-        $this->io->write(sprintf(
+        $this->io->write(
+            sprintf(
                 '%s <comment>%s</comment> to <comment>%s</comment>',
                 $verb,
                 $data['src'],
                 $data['dest']
-        ));
+            )
+        );
     }
 
     public function onTransporterPutContent(TransporterEvent $event)
@@ -88,11 +95,13 @@ class TransporterSubscriber implements EventSubscriberInterface
 
         $data = $event->getData();
 
-        $this->io->write(sprintf(
+        $this->io->write(
+            sprintf(
                 '%s content to <comment>%s</comment>',
                 $verb,
                 $data['dest']
-        ));
+            )
+        );
     }
 
     public function onTransporterMkdir(TransporterEvent $event)
@@ -101,31 +110,49 @@ class TransporterSubscriber implements EventSubscriberInterface
 
         $data = $event->getData();
 
-        $this->io->write(sprintf(
+        $this->io->write(
+            sprintf(
                 'Creating directory <comment>%s</comment>',
                 $data
-        ));
+            )
+        );
     }
 
     public function onTransporterSymlink(TransporterEvent $event)
     {
         $data = $event->getData();
 
-        $this->io->write(sprintf(
+        $this->io->write(
+            sprintf(
                 'Symlinking <comment>%s</comment> to <comment>%s</comment>',
                 $data['src'],
                 $data['dest']
-            ));
+            )
+        );
     }
 
     public function onTransporterCopy(TransporterEvent $event)
     {
         $data = $event->getData();
 
-        $this->io->write(sprintf(
+        $this->io->write(
+            sprintf(
                 'Copying (server-side) <comment>%s</comment> to <comment>%s</comment>',
                 $data['src'],
                 $data['dest']
-            ));
+            )
+        );
+    }
+
+    public function onTransporterRemove(TransporterEvent $event)
+    {
+        $data = $event->getData();
+
+        $this->io->write(
+            sprintf(
+                'Removing (server-side) <comment>%s</comment>',
+                $data['path']
+            )
+        );
     }
 }

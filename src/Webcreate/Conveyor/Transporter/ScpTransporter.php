@@ -194,4 +194,25 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
             throw new \RuntimeException($this->cli->getErrorOutput());
         }
     }
+
+    /**
+     * Removes a file/directory on the remote host
+     *
+     * @param  string $path
+     * @param  bool $recursive
+     * @return mixed
+     */
+    public function remove($path, $recursive = true)
+    {
+        $recursiveFlag = ($recursive ? 'r' : '');
+
+        $remoteCommand = sprintf("rm -{$recursiveFlag}f %s", $path);
+        $commandline   = sprintf("ssh %s@%s \"%s\"", $this->getUser(), $this->getHost(), $remoteCommand);
+
+        $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_REMOVE, new TransporterEvent($this, array('path' => $path)));
+
+        if ($this->cli->execute($commandline)) {
+            throw new \RuntimeException($this->cli->getErrorOutput());
+        }
+    }
 }

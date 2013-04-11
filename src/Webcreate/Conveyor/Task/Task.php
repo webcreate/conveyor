@@ -51,6 +51,8 @@ abstract class Task
     /**
      * Sets a specific option
      *
+     * @todo validate $name
+     *
      * @param $name
      * @param $value
      * @return Task

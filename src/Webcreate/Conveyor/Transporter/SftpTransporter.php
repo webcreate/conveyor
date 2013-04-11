@@ -255,7 +255,7 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
 
         $success = $this->sftp->exec(sprintf("ln -s -T -f %s %s", escapeshellarg($src), escapeshellarg($dest)));
         if (false === $success) {
-            throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", $this->sftp->getErrors()));
+            throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", (array) $this->sftp->getErrors()));
         }
     }
 
@@ -284,7 +284,7 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
         if ($lstat['type'] === 3) {
             $result = $this->sftp->exec(sprintf("readlink -f %s", escapeshellarg($src)));
             if (false === $result) {
-                throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", $this->sftp->getErrors()));
+                throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", (array) $this->sftp->getErrors()));
             }
 
             $src = trim($result);
@@ -292,7 +292,23 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
 
         $success = $this->sftp->exec(sprintf("cp -{$recursiveFlag}f %s %s", escapeshellarg($src), escapeshellarg($dest)));
         if (false === $success) {
-            throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", $this->sftp->getErrors()));
+            throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", (array) $this->sftp->getErrors()));
+        }
+    }
+
+    public function remove($path, $recursive = true)
+    {
+        if (false === $this->isConnected()) {
+            $this->connectAndLogin();
+        }
+
+        $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_REMOVE, new TransporterEvent($this, array('path' => $path)));
+
+        $recursiveFlag = ($recursive ? 'r' : '');
+
+        $success = $this->sftp->exec(sprintf("rm -{$recursiveFlag}f %s", escapeshellarg($path)));
+        if (false === $success) {
+            throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", (array) $this->sftp->getErrors()));
         }
     }
 

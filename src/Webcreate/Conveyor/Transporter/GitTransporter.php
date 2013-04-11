@@ -210,4 +210,19 @@ class GitTransporter extends AbstractTransporter implements TransactionalTranspo
             $filesystem->copy($src, $dest);
         }
     }
+
+    /**
+     * Removes a file/directory on the remote host
+     *
+     * @param  string $path
+     * @param  bool $recursive
+     * @return mixed
+     */
+    public function remove($path, $recursive = true)
+    {
+        $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_REMOVE, new TransporterEvent($this, array('path' => $path)));
+
+        $filesystem = new Filesystem();
+        $filesystem->remove($path);
+    }
 }

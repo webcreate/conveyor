@@ -102,7 +102,7 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
      * Copies the latest version server-side to the uploaddir,
      * in case this is a incremental deploy.
      *
-     * @param $context
+     * @param \Webcreate\Conveyor\Context $context
      */
     protected function prepareUploadPath($context)
     {
@@ -110,7 +110,14 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
         $uploadPath         = $basepath . '/' . $this->getUploadPath($context->getVersion());
         $currentReleasePath = $basepath . '/' . $this->getCurrentReleasePath();
 
-        if (false === $context->isFullDeploy() && $this->transporter->exists($currentReleasePath)) {
+        // remove the uploadPath if the already exists, eg. after a previous aborted deploy
+        // this solves issues with copying, when the target dir (uploadPath) already exists, like
+        // copying into a subfolder of uploadPath..
+        if ($this->transporter->exists($uploadPath)) {
+            $this->transporter->remove($uploadPath);
+        }
+
+        if (false === $context->isFullDeploy()) {
             $this->transporter->copy(
                 $currentReleasePath,
                 $uploadPath

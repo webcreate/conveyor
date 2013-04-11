@@ -116,4 +116,16 @@ class ReadOnlyTransporter extends AbstractTransporter
     {
         $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_COPY, new TransporterEvent($this, array('dest' => $dest, 'src' => $src)));
     }
+
+    /**
+     * Removes a file/directory on the remote host
+     *
+     * @param  string $path
+     * @param  bool $recursive
+     * @return mixed
+     */
+    public function remove($path, $recursive = true)
+    {
+        $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_REMOVE, new TransporterEvent($this, array('path' => $path)));
+    }
 }

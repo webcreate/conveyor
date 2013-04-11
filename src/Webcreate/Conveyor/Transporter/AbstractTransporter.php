@@ -145,10 +145,19 @@ abstract class AbstractTransporter
     /**
      * Copies a file/directory on the remote host
      *
-     * @param string $src
-     * @param string $dest
-     * @param bool $recursive
+     * @param  string $src
+     * @param  string $dest
+     * @param  bool   $recursive
      * @return mixed
      */
     abstract public function copy($src, $dest, $recursive = true);
+
+    /**
+     * Removes a file/directory on the remote host
+     *
+     * @param  string $path
+     * @param  bool   $recursive
+     * @return mixed
+     */
+    abstract public function remove($path, $recursive = true);
 }

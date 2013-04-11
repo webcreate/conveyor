@@ -17,7 +17,7 @@ class SftpTransporterTest Extends TransporterTestCase
     {
         $sftp = $this
             ->getMockBuilder('Webcreate\Conveyor\Transporter\Ftp\Sftp')
-            ->setMethods(array('isConnected', 'chdir'))
+            ->setMethods(array('isConnected', 'chdir', 'exec', 'mkdir'))
             ->getMock()
         ;
 
@@ -30,6 +30,18 @@ class SftpTransporterTest Extends TransporterTestCase
         $sftp
             ->expects($this->any())
             ->method('chdir')
+            ->will($this->returnValue(true))
+        ;
+
+        $sftp
+            ->expects($this->any())
+            ->method('exec')
+            ->will($this->returnValue(true))
+        ;
+
+        $sftp
+            ->expects($this->any())
+            ->method('mkdir')
             ->will($this->returnValue(true))
         ;
 

@@ -16,4 +16,5 @@ final class TransporterEvents
     const TRANSPORTER_MKDIR       = 'transporter.mkdir';
     const TRANSPORTER_SYMLINK     = 'transporter.symlink';
     const TRANSPORTER_COPY        = 'transporter.copy';
+    const TRANSPORTER_REMOVE      = 'transporter.remove';
 }
