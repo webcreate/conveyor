@@ -14,6 +14,9 @@ use Webcreate\Vcs\Git;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * @todo research if this transporter could extend the FileTransporter
+ */
 class GitTransporter extends AbstractTransporter implements TransactionalTransporterInterface
 {
     protected $dispatcher;

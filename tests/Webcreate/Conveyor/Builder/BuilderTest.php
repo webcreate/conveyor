@@ -16,7 +16,7 @@ class BuilderTest extends PHPUnit_Framework_TestCase
 
     public function testBuilderCallsExecuteOnTasks()
     {
-        $task1 = $this->getMockBuilder('Webcreate\\Conveyor\\Task\\Task')->disableOriginalConstructor()->getMock();
+        $task1 = $this->getMockBuilder('Webcreate\Conveyor\Task\Task')->disableOriginalConstructor()->getMock();
         $task1
             ->expects($this->once())
             ->method('execute')
@@ -28,7 +28,7 @@ class BuilderTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue(true))
         ;
 
-        $version = $this->getMockBuilder('Webcreate\\Conveyor\\Repository\\Version')->getMock();
+        $version = $this->getMockBuilder('Webcreate\Conveyor\Repository\Version')->getMock();
 
         $builder = new Builder($this->tempdir, array($task1));
         $builder->build('test', $version);

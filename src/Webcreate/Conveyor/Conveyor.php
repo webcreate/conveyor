@@ -24,7 +24,6 @@ use Webcreate\Conveyor\IO\NullIO;
 use Webcreate\Conveyor\Stage\Manager\StageManager;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Repository\Repository;
-use Webcreate\Conveyor\Strategy\ReleasesStrategy;
 use Webcreate\Conveyor\Strategy\StrategyInterface;
 use Webcreate\Conveyor\Task\SshTask;
 use Webcreate\Conveyor\Task\TaskRunner;

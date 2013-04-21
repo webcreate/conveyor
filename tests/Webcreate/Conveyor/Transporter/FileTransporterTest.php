@@ -40,4 +40,9 @@ class FileTransporterTest Extends TransporterTestCase
         $filesystem = new Filesystem();
         $filesystem->remove($this->tmpdir);
     }
+
+    public function testCopyDispatchesEvent()
+    {
+        $this->markTestIncomplete();
+    }
 }

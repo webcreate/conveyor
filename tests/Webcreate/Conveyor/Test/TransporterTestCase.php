@@ -13,6 +13,10 @@ use Webcreate\Conveyor\Transporter\AbstractTransporter;
 abstract class TransporterTestCase extends \PHPUnit_Framework_TestCase
 {
     protected $dispatcher;
+
+    /**
+     * @var AbstractTransporter
+     */
     protected $transporter;
 
     public function setUp()

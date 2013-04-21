@@ -50,4 +50,14 @@ class GitTransporterTest Extends TransporterTestCase
 
         return $transporterMock ; //new Webcreate\Conveyor\Transporter\GitTransporter();
     }
+
+    public function testSymlinkDispatchesEvent()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testCopyDispatchesEvent()
+    {
+        $this->markTestIncomplete();
+    }
 }
