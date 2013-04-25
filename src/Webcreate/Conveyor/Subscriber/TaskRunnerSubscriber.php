@@ -8,13 +8,12 @@
 namespace Webcreate\Conveyor\Subscriber;
 
 use Symfony\Component\EventDispatcher\GenericEvent;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use Webcreate\Conveyor\Event\BuilderEvents;
+use Webcreate\Conveyor\Event\TaskRunnerEvents;
 use Webcreate\Conveyor\IO\IOInterface;
 
-class BuilderSubscriber implements EventSubscriberInterface
+class TaskRunnerSubscriber implements EventSubscriberInterface
 {
     protected $io;
     protected $showProgress = false;
@@ -28,39 +27,13 @@ class BuilderSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            BuilderEvents::BUILDER_PRE_BUILD  => array('onBuilderPreBuild'),
-            BuilderEvents::BUILDER_POST_BUILD => array('onBuilderPostBuild'),
-            BuilderEvents::BUILDER_PRE_TASK   => array('onBuilderPreTask'),
-            BuilderEvents::BUILDER_POST_TASK  => array('onBuilderPostTask'),
+            TaskRunnerEvents::TASKRUNNER_PRE_EXECUTE_TASK  => array('onTaskPreExecute'),
+            TaskRunnerEvents::TASKRUNNER_POST_EXECUTE_TASK  => array('onTaskPostExecute'),
         );
     }
 
-    public function onBuilderPreBuild(Event $event)
+    public function onTaskPreExecute(GenericEvent $event)
     {
-        if (true === $this->showProgress) {
-            $this->io->write(sprintf('- Executing tasks'));
-            $this->io->increaseIndention(2);
-
-            $this->io->write(sprintf('Progress: <comment>%d%%</comment>', 0), false);
-        }
-    }
-
-    public function onBuilderPostBuild(Event $event)
-    {
-        if (true === $this->needsNewline) {
-            $this->io->write('');
-            $this->needsNewline = false;
-        }
-
-        if (true === $this->showProgress) {
-            $this->io->decreaseIndention(2);
-        }
-    }
-
-    public function onBuilderPreTask(GenericEvent $event)
-    {
-        if (true === $this->showProgress) return;
-
         $task = $event->getSubject();
         $io   = $this->io;
 
@@ -84,20 +57,12 @@ class BuilderSubscriber implements EventSubscriberInterface
         $this->io->increaseIndention(2);
     }
 
-    public function onBuilderPostTask(GenericEvent $event)
+    public function onTaskPostExecute(GenericEvent $event)
     {
         $task = $event->getSubject();
 
-        if (true === $this->showProgress) {
-            $index = $event->getArgument('index');
-            $total = $event->getArgument('total');
-            $percentage = (++$index * 100 / $total);
+        $this->io->write('');
 
-            $this->io->overwrite(sprintf('Progress: <comment>%d%%</comment>', $percentage), false);
-
-            $this->needsNewline = true;
-        } else {
-            $this->io->decreaseIndention(2);
-        }
+        $this->io->decreaseIndention(2);
     }
 }

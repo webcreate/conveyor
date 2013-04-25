@@ -16,11 +16,21 @@ use Webcreate\Conveyor\IO\IOInterface;
 
 class TaskRunner implements TransporterAwareInterface
 {
+    /**
+     * @var Task[]
+     */
     protected $tasks = array();
     protected $needsNewline = false;
     protected $transporter;
     protected $dispatcher;
 
+    /**
+     *
+     * @todo I think it's better NOT to have the taskrunner depend on the IOinterface
+     *
+     * @param IOInterface $io
+     * @param EventDispatcherInterface $dispatcher
+     */
     public function __construct(IOInterface $io, EventDispatcherInterface $dispatcher = null)
     {
         $this->io = $io;
@@ -62,6 +72,7 @@ class TaskRunner implements TransporterAwareInterface
         $this->transporter = $transporter;
 
         // also apply it to the tasks
+        // @todo I don't this should be done here
         array_walk(
             $this->tasks,
             function ($task) use ($transporter) {
@@ -77,17 +88,37 @@ class TaskRunner implements TransporterAwareInterface
         $total = count($this->tasks);
 
         foreach ($this->tasks as $i => $task) {
-            $result = $this->executeTaskWithErrorHandling($task, $i, $total, $target, $version);
+            while (true) {
+                $this->dispatch(TaskRunnerEvents::TASKRUNNER_PRE_EXECUTE_TASK,
+                    new GenericEvent($task, array('index' => $i, 'total' => $total))
+                );
+
+                $result = null;
+
+                try {
+                    $result = $task->execute($target, $version);
+
+                    break;
+                } catch (\Exception $e) {
+                    $this->io->renderException($e);
+
+                    // @todo instead of relying on the IOInterface here for asking an action,
+                    //       better to trigger an event and have the listener ask an action.
+                    if (false === $this->tryAgain()) {
+                        break;
+                    }
+                }
+
+                // @todo might be better to trigger a different event here, smt like TASKRUNNER_RETRY_EXECUTE_TASK
+                $this->dispatch(TaskRunnerEvents::TASKRUNNER_POST_EXECUTE_TASK,
+                    new GenericEvent($task, array('index' => $i, 'total' => $total, 'result' => $result))
+                );
+            }
 
             $this->dispatch(TaskRunnerEvents::TASKRUNNER_POST_EXECUTE_TASK,
                 new GenericEvent($task, array('index' => $i, 'total' => $total, 'result' => $result))
             );
         }
-
-//        if (true === $this->needsNewline) {
-//            $this->io->write('');
-//            $this->needsNewline = false;
-//        }
     }
 
     public function simulate($target, $version)
@@ -122,54 +153,6 @@ class TaskRunner implements TransporterAwareInterface
         if (true === $this->needsNewline) {
             $this->io->write('');
             $this->needsNewline = false;
-        }
-    }
-
-    protected function executeTaskWithErrorHandling(Task $task, $i, $total, $target, $version)
-    {
-        //$io = $this->io;
-
-        if ($i > 0) {
-//            if (true === $this->needsNewline) {
-//                $this->io->write('');
-//                $this->needsNewline = false;
-//            }
-//            $this->io->write('');
-        }
-
-        while (true) {
-            $this->dispatch(TaskRunnerEvents::TASKRUNNER_PRE_EXECUTE_TASK,
-                new GenericEvent($task, array('index' => $i, 'total' => $total))
-            );
-
-//            $this->io->write(sprintf('- Executing task <info>%s</info>', get_class($task)));
-//            $this->io->increaseIndention(2);
-
-//            $self = $this;
-//
-//            $task->setOutput(function($output) use ($io, $self) {
-//                $io->overwrite(sprintf('%s', $output), false);
-//
-//                $self->needsNewline = true;
-//            });
-
-            try {
-                $result = $task->execute($target, $version);
-
-                //$this->io->decreaseIndention(2);
-
-                return $result;
-            } catch (\Exception $e) {
-                //$this->io->decreaseIndention(2);
-
-                $this->io->renderException($e);
-
-                $result = $this->tryAgain();
-
-                if (false === $result) {
-                    return false;
-                }
-            }
         }
     }
 

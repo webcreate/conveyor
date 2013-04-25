@@ -23,21 +23,19 @@ use Webcreate\Conveyor\Task\TaskRunner;
 
 /**
  * @todo remove dependency on Context, have the BuildStage request the files
- * @todo use the TaskRunner
  */
 class Builder
 {
     protected $builddir;
     protected $io;
     protected $dispatcher;
-    //protected $tasks = array();
     protected $context;
     protected $taskrunner;
 
     /**
      * Constructor.
      *
-     * @todo Looks like the $io isn't used/needed here...
+     * @todo Can we refactor so we don't have to depend on the IOInterface?
      *
      * @param string                   $builddir   destionation path for build
      * @param array                    $tasks
@@ -49,7 +47,6 @@ class Builder
     )
     {
         $this->builddir   = rtrim($builddir, '/');
-        //$this->tasks      = $tasks;
         $this->io         = $io;
         $this->dispatcher = $dispatcher;
         $this->taskrunner = new TaskRunner($this->io, new EventDispatcher());
@@ -65,7 +62,6 @@ class Builder
     public function addTask(Task $task)
     {
         $this->taskrunner->addTask($task);
-        //$this->tasks[] = $task;
 
         return $this;
     }
@@ -135,22 +131,6 @@ class Builder
         $this->taskrunner->setTasks($tasks);
 
         $this->taskrunner->execute($target, $version);
-
-//        foreach ($tasks as $t => $task) {
-//            $this->dispatch(BuilderEvents::BUILDER_PRE_TASK,
-//                new GenericEvent($task, array('index' => $t, 'total' => $total))
-//            );
-//
-//            $result = $task->execute($target, $version);
-//
-//            if ($result instanceof ExecuteResult) {
-//                $this->applyResultToFilelist($result);
-//            }
-//
-//            $this->dispatch(BuilderEvents::BUILDER_POST_TASK,
-//                new GenericEvent($task, array('index' => $t, 'total' => $total))
-//            );
-//        }
 
         $this->dispatch(BuilderEvents::BUILDER_POST_BUILD);
     }
