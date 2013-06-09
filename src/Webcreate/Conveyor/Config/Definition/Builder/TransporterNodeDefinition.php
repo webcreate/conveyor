@@ -16,7 +16,6 @@ use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 
 use Webcreate\Conveyor\Config\Definition\TransporterNode;
-use Webcreate\Conveyor\Factory\TaskTransporterFactory;
 
 /**
  * This class provides a fluent interface for defining an transporter node.

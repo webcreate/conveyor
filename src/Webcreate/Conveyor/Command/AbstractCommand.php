@@ -11,7 +11,6 @@
 
 namespace Webcreate\Conveyor\Command;
 
-use Webcreate\Conveyor\IO\ConsoleIO;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Command\Command;

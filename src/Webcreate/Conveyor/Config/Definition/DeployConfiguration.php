@@ -36,7 +36,7 @@ class DeployConfiguration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('conveyor', 'array', $nodeBuilder);
 
-		$validSchemes = array('git', 'svn');
+        $validSchemes = array('git', 'svn');
 
         $rootNode
             ->children()

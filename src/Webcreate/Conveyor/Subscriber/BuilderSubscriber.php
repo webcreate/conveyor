@@ -78,8 +78,8 @@ class BuilderSubscriber implements EventSubscriberInterface
 
         if ($event->getArgument('index') > 0) {
             if (true === $this->needsNewline) {
-            	$this->io->write('');
-            	$this->needsNewline = false;
+                $this->io->write('');
+                $this->needsNewline = false;
             }
             $this->io->write('');
         }

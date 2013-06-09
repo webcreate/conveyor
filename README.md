@@ -5,16 +5,6 @@ Conveyor is a build and deploy for PHP projects.
 
 Full documentation is available at [http://conveyordeploy.com](http://conveyordeploy.com)
 
-Licensing
----------
-
-Conveyor is **free for non-commercial, personal, educational and open-source** projects and applications,
-under the terms of the MIT License.
-
-When used for commercial projects a purchase of a license is required per developer seat. Commercial
-use includes any project that makes you money. Commercial licenses may be purchased
-at [http://conveyordeploy.com](http://conveyordeploy.com)
-
 Installation / Usage
 --------------------
 
@@ -44,6 +34,16 @@ Fork the project, **create a feature branch**, and send us a pull request.
 To ensure a consistent code base, you should make sure the code follows
 the [Coding Standards](http://symfony.com/doc/current/contributing/code/standards.html)
 which we borrowed from Symfony.
+
+Licensing
+---------
+
+Conveyor is **free for non-commercial, personal, educational and open-source** projects and applications,
+under the terms of the MIT License.
+
+When used for commercial projects a purchase of a license is required per developer seat. Commercial
+use includes any project that makes you money. Commercial licenses may be purchased
+at [http://conveyordeploy.com](http://conveyordeploy.com)
 
 Acknowledgments
 ---------------

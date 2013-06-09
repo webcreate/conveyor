@@ -69,7 +69,7 @@ class ValidateRemoteStage extends AbstractStage
                 $this->transporter->mkdir($basepath);
 
                 $directories = $context->getStrategy()->getRequiredDirectories();
-                foreach($directories as $directory) {
+                foreach ($directories as $directory) {
                     $this->transporter->mkdir(FilePath::join($basepath, $directory));
                 }
 
@@ -83,7 +83,7 @@ class ValidateRemoteStage extends AbstractStage
     protected function validateRequiredDirectories(Context $context)
     {
         $directories = $context->getStrategy()->getRequiredDirectories();
-        foreach($directories as $directory) {
+        foreach ($directories as $directory) {
             $path = FilePath::join($this->transporter->getPath(), $directory);
 
             if (false == $this->transporter->exists($path)) {

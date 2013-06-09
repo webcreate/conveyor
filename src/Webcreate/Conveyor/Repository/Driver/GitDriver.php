@@ -29,8 +29,8 @@ class GitDriver extends AbstractVcsDriver
      *       it's needed by the git client. Fix the git client to accept
      *       Reference's correctly!
      *
-     * @param Version $oldVersion
-     * @param Version $newVersion
+     * @param  Version $oldVersion
+     * @param  Version $newVersion
      * @return mixed
      */
     public function diff(Version $oldVersion, Version $newVersion)

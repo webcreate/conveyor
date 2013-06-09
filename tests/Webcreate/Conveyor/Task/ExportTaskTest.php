@@ -14,7 +14,7 @@ use Webcreate\Conveyor\Task\ExportTask;
 class ExportTaskTest extends PHPUnit_Framework_TestCase
 {
     protected $tempdir;
-    
+
     public function setUp()
     {
         $this->tempdir = sys_get_temp_dir();

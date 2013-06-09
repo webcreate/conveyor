@@ -266,9 +266,9 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
     /**
      * Copies a file/directory on the remote host
      *
-     * @param string $src
-     * @param string $dest
-     * @param bool $recursive
+     * @param  string            $src
+     * @param  string            $dest
+     * @param  bool              $recursive
      * @throws \RuntimeException
      * @return mixed
      */

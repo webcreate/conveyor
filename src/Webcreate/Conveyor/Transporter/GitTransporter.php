@@ -75,7 +75,7 @@ class GitTransporter extends AbstractTransporter implements TransactionalTranspo
             return;
         }
 
-        foreach($this->added as $dest) {
+        foreach ($this->added as $dest) {
             $result = $this->git->add($dest);
         }
 
@@ -139,8 +139,8 @@ class GitTransporter extends AbstractTransporter implements TransactionalTranspo
     /**
      * Upload a file or directory to remote server
      *
-     * @param string $src  local source path
-     * @param string $dest remote destination path
+     * @param  string                    $src  local source path
+     * @param  string                    $dest remote destination path
      * @throws \InvalidArgumentException
      */
     public function put($src, $dest)
@@ -200,9 +200,9 @@ class GitTransporter extends AbstractTransporter implements TransactionalTranspo
     /**
      * Copies a file/directory on the remote host
      *
-     * @param string $src
-     * @param string $dest
-     * @param bool $recursive
+     * @param  string $src
+     * @param  string $dest
+     * @param  bool   $recursive
      * @return mixed
      */
     public function copy($src, $dest, $recursive = true)
@@ -222,7 +222,7 @@ class GitTransporter extends AbstractTransporter implements TransactionalTranspo
      * Removes a file/directory on the remote host
      *
      * @param  string $path
-     * @param  bool $recursive
+     * @param  bool   $recursive
      * @return mixed
      */
     public function remove($path, $recursive = true)

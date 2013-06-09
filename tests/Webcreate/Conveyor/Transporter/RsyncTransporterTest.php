@@ -10,7 +10,6 @@
  */
 
 use Webcreate\Conveyor\Test\TransporterTestCase;
-use Webcreate\Conveyor\Event\TransporterEvents;
 use Webcreate\Util\Cli;
 use Webcreate\Conveyor\Transporter\RsyncTransporter;
 

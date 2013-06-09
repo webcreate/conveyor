@@ -116,9 +116,9 @@ class FileTransporter extends AbstractTransporter
     /**
      * Copies a file/directory on the remote host
      *
-     * @param string $src
-     * @param string $dest
-     * @param bool $recursive
+     * @param  string $src
+     * @param  string $dest
+     * @param  bool   $recursive
      * @return mixed
      */
     public function copy($src, $dest, $recursive = true)
@@ -138,7 +138,7 @@ class FileTransporter extends AbstractTransporter
      * Removes a file/directory on the remote host
      *
      * @param  string $path
-     * @param  bool $recursive
+     * @param  bool   $recursive
      * @return mixed
      */
     public function remove($path, $recursive = true)

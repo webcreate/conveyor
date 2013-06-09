@@ -143,11 +143,11 @@ class Builder
     {
         $filelist = $this->context->getFilelist();
 
-        foreach($result->getDerived() as $pattern) {
+        foreach ($result->getDerived() as $pattern) {
             $filelist->add($pattern);
         }
 
-        foreach($result->getRemoved() as $pattern) {
+        foreach ($result->getRemoved() as $pattern) {
             $filelist->remove($pattern);
         }
     }
@@ -155,9 +155,9 @@ class Builder
     /**
      * Filters the tasks for given target
      *
-     * @param  string $target
-     * @param \Webcreate\Conveyor\Repository\Version $version
-     * @return Task[] task for the specific target
+     * @param  string                                 $target
+     * @param  \Webcreate\Conveyor\Repository\Version $version
+     * @return Task[]                                 task for the specific target
      */
     protected function getSupportedTasks($target, Version $version)
     {

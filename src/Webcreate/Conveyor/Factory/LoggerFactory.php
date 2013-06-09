@@ -17,7 +17,7 @@ use Monolog\Logger;
 class LoggerFactory
 {
     /**
-     * @param string $logdir
+     * @param  string $logdir
      * @return Logger
      */
     public static function get($logdir)

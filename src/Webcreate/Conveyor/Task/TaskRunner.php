@@ -32,7 +32,7 @@ class TaskRunner implements TransporterAwareInterface
      *
      * @todo I think it's better NOT to have the taskrunner depend on the IOinterface
      *
-     * @param IOInterface $io
+     * @param IOInterface              $io
      * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(IOInterface $io, EventDispatcherInterface $dispatcher = null)
@@ -173,7 +173,7 @@ class TaskRunner implements TransporterAwareInterface
                 'r'
             );
 
-            switch($answer) {
+            switch ($answer) {
                 case "a":
                     $this->io->setIndention(0);
                     $this->io->write('Aborted.');

@@ -9,9 +9,7 @@
  * file that was distributed with this source code.
  */
 
-use Webcreate\Conveyor\IO\NullIO;
 use Webcreate\Conveyor\Test\TransporterTestCase;
-use Webcreate\Conveyor\Event\TransporterEvents;
 use Webcreate\Conveyor\Transporter\ScpTransporter;
 
 class ScpTransporterTest Extends TransporterTestCase

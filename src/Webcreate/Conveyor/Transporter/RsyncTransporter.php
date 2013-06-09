@@ -134,8 +134,8 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
     /**
      * Upload a string to remote server
      *
-     * @param string $content content
-     * @param string $dest    remote destination path
+     * @param  string            $content content
+     * @param  string            $dest    remote destination path
      * @throws \RuntimeException
      */
     public function putContent($content, $dest)
@@ -196,9 +196,9 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
     /**
      * Copies a file/directory on the remote host
      *
-     * @param string $src
-     * @param string $dest
-     * @param bool $recursive
+     * @param  string            $src
+     * @param  string            $dest
+     * @param  bool              $recursive
      * @throws \RuntimeException
      * @return mixed
      */
@@ -220,7 +220,7 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
      * Removes a file/directory on the remote host
      *
      * @param  string $path
-     * @param  bool $recursive
+     * @param  bool   $recursive
      * @return mixed
      */
     public function remove($path, $recursive = true)

@@ -249,7 +249,7 @@ class ConsoleIO implements IOInterface
         if ($this->indention - $indent < 0) {
             throw new \InvalidArgumentException('Resulting indenting should be greater or equal to 0.');
         }
-        
+
         $this->indention -= $indent;
     }
 

@@ -11,7 +11,6 @@
 
 namespace Webcreate\Conveyor\Strategy;
 
-use Webcreate\Conveyor\Context;
 use Webcreate\Conveyor\Repository\Version;
 
 interface StrategyInterface
@@ -41,5 +40,3 @@ interface StrategyInterface
      */
     public function getUploadPath(Version $version);
 }
-
-

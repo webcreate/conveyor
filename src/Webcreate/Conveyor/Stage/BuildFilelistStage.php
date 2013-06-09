@@ -16,8 +16,6 @@ use Webcreate\Vcs\Common\Status;
 use Webcreate\Conveyor\Context;
 use Webcreate\Conveyor\Repository\Repository;
 
-use Symfony\Component\Finder\Finder;
-
 class BuildFilelistStage extends AbstractStage
 {
     protected $repository;
@@ -56,7 +54,7 @@ class BuildFilelistStage extends AbstractStage
                 */
             }
 
-            foreach($this->derivedFiles as $derivable) {
+            foreach ($this->derivedFiles as $derivable) {
                 $source = $derivable['source'];
                 $derived = $derivable['derived'];
 

@@ -69,10 +69,9 @@ class Conveyor
 
         try {
             $container->compile();
-        }
-        catch (\InvalidArgumentException $e) {
-           	// Ignore an InvalidArgumentException for YamlConfig,
-           	// otherwise init() would not be possible
+        } catch (\InvalidArgumentException $e) {
+               // Ignore an InvalidArgumentException for YamlConfig,
+               // otherwise init() would not be possible
             if ('YamlConfig.php' !== basename($e->getFile())) {
                 throw $e;
             }
@@ -139,7 +138,7 @@ class Conveyor
      *          - no validation during "validate" command
      *          - move to a dedicated Factory
      *
-     * @param null|AbstractTransporter $transporter
+     * @param  null|AbstractTransporter $transporter
      * @return StrategyInterface
      */
     public function getStrategy($transporter = null)
@@ -222,7 +221,7 @@ class Conveyor
 
         $retval = array();
 
-        foreach($targets as $target) {
+        foreach ($targets as $target) {
             $transporter = $this->getTransporter($target);
             $strategy    = $this->getStrategy($transporter);
 
@@ -341,7 +340,7 @@ class Conveyor
         $trDeployAfter->setTransporter($transporter);
 
         // @todo Think of a better way to set the correct path for the SshTask and REFACTOR this shit!
-        foreach($trDeployAfter->getTasks() as $task) {
+        foreach ($trDeployAfter->getTasks() as $task) {
             if ($task instanceof SshTask) {
                 $task->setOption('path', FilePath::join($transporter->getPath(), $strategy->getUploadPath($version)));
             }

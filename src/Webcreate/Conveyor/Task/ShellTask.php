@@ -37,7 +37,7 @@ class ShellTask extends Task
      * @todo improve output (also @see SshTask)
      *
      * @param $target
-     * @param Version $version
+     * @param  Version                                                     $version
      * @return ExecuteResult
      * @throws \Symfony\Component\Process\Exception\ProcessFailedException
      */

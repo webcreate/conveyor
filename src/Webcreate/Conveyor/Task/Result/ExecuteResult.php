@@ -31,7 +31,7 @@ class ExecuteResult
     /**
      * Sets derived files
      *
-     * @param array $derived
+     * @param  array                                         $derived
      * @return \Webcreate\Conveyor\Task\Result\ExecuteResult
      */
     public function setDerived(array $derived)
@@ -54,7 +54,7 @@ class ExecuteResult
     /**
      * Sets removed files
      *
-     * @param array $removed
+     * @param  array                                        $removed
      * @return Webcreate\Conveyor\Task\Result\ExecuteResult
      */
     public function setRemoved(array $removed)

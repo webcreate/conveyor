@@ -47,7 +47,7 @@ class SshTask extends Task implements TransporterAwareInterface
      * @todo improve output (also @see ShellTask)
      *
      * @param $target
-     * @param Version $version
+     * @param  Version                                                     $version
      * @throws \Symfony\Component\Process\Exception\ProcessFailedException
      */
     public function execute($target, Version $version)

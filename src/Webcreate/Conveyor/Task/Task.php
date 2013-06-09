@@ -42,7 +42,7 @@ abstract class Task
      *
      * Gets called during the TaskCompilerPass.
      *
-     * @param array $options
+     * @param  array $options
      * @return Task
      */
     public function setOptions(array $options)

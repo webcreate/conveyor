@@ -90,7 +90,7 @@ class Context
     public function setBuilddir($builddir)
     {
         $this->builddir = $builddir;
-        
+
         $this->filelist->setBasepath($this->builddir);
 
         return $this;

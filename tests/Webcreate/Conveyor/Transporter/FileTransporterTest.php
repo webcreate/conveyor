@@ -13,7 +13,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 use Webcreate\Conveyor\Transporter\FileTransporter;
 use Webcreate\Conveyor\Test\TransporterTestCase;
-use Webcreate\Conveyor\Event\TransporterEvents;
 
 class FileTransporterTest Extends TransporterTestCase
 {

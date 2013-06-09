@@ -12,7 +12,6 @@
 namespace Webcreate\Conveyor\Config\Definition;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\EnumNode;
 use Symfony\Component\Config\Definition\NodeInterface;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -97,8 +96,7 @@ class TransporterNode extends ArrayNode
     {
         if (isset($value['type'])) {
             $this->prepareChildren($value['type']);
-        }
-        else {
+        } else {
             // ignore extra keys so the error message will be
             // focused on the missing type field
             $this->setIgnoreExtraKeys(true);

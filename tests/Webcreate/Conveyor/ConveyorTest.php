@@ -11,7 +11,6 @@
 
 use Webcreate\Conveyor\Config\YamlConfig;
 use Webcreate\Conveyor\IO\NullIO;
-use Webcreate\Conveyor\IO\ConsoleIO;
 use Webcreate\Conveyor\Conveyor;
 
 class ConveyorTest extends \PHPUnit_Framework_TestCase

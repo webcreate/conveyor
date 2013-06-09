@@ -120,7 +120,7 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
         $regex = Glob::toRegex($pattern, false);
         $regex = str_replace('$', '', $regex);
 
-        foreach($this->files as $file) {
+        foreach ($this->files as $file) {
             if (1 === preg_match($regex, $file)) {
                 return true;
             }

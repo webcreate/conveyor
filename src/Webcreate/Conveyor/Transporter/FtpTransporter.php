@@ -70,7 +70,7 @@ class FtpTransporter extends AbstractTransporter
             $result = ftp_rawlist($this->stream, $options . ' ' . $parent);
 
             if (false !== $result) {
-                foreach($result as $line) {
+                foreach ($result as $line) {
                     if (false !== $pos = strrpos($line, basename($path))) {
                         return true;
                     }
@@ -185,9 +185,9 @@ class FtpTransporter extends AbstractTransporter
     /**
      * Copies a file/directory on the remote host
      *
-     * @param string $src
-     * @param string $dest
-     * @param bool $recursive
+     * @param  string $src
+     * @param  string $dest
+     * @param  bool   $recursive
      * @return mixed
      */
     public function copy($src, $dest, $recursive = true)
@@ -199,7 +199,7 @@ class FtpTransporter extends AbstractTransporter
      * Removes a file/directory on the remote host
      *
      * @param  string $path
-     * @param  bool $recursive
+     * @param  bool   $recursive
      * @return mixed
      */
     public function remove($path, $recursive = true)

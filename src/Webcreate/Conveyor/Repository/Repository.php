@@ -70,7 +70,7 @@ class Repository
     {
         $branch = 'unknown';
 
-        switch($this->getType()) {
+        switch ($this->getType()) {
             case "git":
                 $branch = 'master';
                 break;
@@ -104,8 +104,8 @@ class Repository
     }
 
     /**
-     * @param Version $oldVersion
-     * @param Version $newVersion
+     * @param  Version                             $oldVersion
+     * @param  Version                             $newVersion
      * @return \Webcreate\Vcs\Common\VcsFileInfo[]
      */
     public function diff(Version $oldVersion, Version $newVersion)

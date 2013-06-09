@@ -1,0 +1,29 @@
+conveyor:
+  repository:
+    type: git
+    url: git@github.com:webcreate/conveyor.git
+  targets:
+    production:
+      transport:
+        type: sftp
+        host: ~
+        path: conveyor
+        user: ~
+        pass: ~
+    staging:
+      transport:
+        type: sftp
+        host: ~
+        path: ~
+        user: ~
+        pass: ~
+  build:
+    dir: /tmp/conveyor/build/conveyor
+    derived:
+      - { source: '*', derived: conveyor.phar }
+      - { source: composer.lock, derived: vendor/ }
+    tasks:
+      -
+        type: shell
+        command: composer install
+        creates: ['vendor/']
