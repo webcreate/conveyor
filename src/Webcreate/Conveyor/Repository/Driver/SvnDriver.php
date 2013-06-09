@@ -11,7 +11,6 @@
 
 namespace Webcreate\Conveyor\Repository\Driver;
 
-use Webcreate\Conveyor\Repository\Repository;
 use Webcreate\Vcs\Svn;
 
 class SvnDriver extends AbstractVcsDriver

@@ -25,6 +25,12 @@ use Webcreate\Conveyor\Console\Application;
  */
 class VersionsCommandTest extends PHPUnit_Framework_TestCase
 {
+    public $tmpdir;
+    public $projectdir;
+    public $reposdir;
+    public $reposurl;
+    public $filesystem;
+
     public function setUp()
     {
         $this->tmpdir = sys_get_temp_dir() . '/' . uniqid('conveyor');
@@ -47,8 +53,6 @@ class VersionsCommandTest extends PHPUnit_Framework_TestCase
 
         $svn->setHead(new Reference('feature1', Reference::BRANCH));
         $svn->import(__DIR__ . '/../Test/Fixtures/skeleton/svn/branches/feature1', '/', 'imported skeleton');
-
-//         die($this->reposurl);
 
         $content = file_get_contents(__DIR__ . '/../Test/Fixtures/conveyor.yml.twig');
         $content = str_replace('{{ repository.url }}', $this->reposurl, $content);

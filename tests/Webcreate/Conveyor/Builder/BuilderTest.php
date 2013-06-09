@@ -13,6 +13,8 @@ use Webcreate\Conveyor\Builder\Builder;
 
 class BuilderTest extends PHPUnit_Framework_TestCase
 {
+    protected $tempdir;
+    
     public function setUp()
     {
         $this->tempdir = sys_get_temp_dir();
@@ -34,13 +36,13 @@ class BuilderTest extends PHPUnit_Framework_TestCase
 
         $version = $this->getMockBuilder('Webcreate\Conveyor\Repository\Version')->getMock();
 
-        $builder = new Builder($this->tempdir, array($task1));
+        $builder = new Builder($this->tempdir, array($task1), new \Webcreate\Conveyor\IO\NullIO());
         $builder->build('test', $version);
     }
 
     public function testGetBuilddir()
     {
-        $builder = new Builder($this->tempdir, array());
+        $builder = new Builder($this->tempdir, array(), new \Webcreate\Conveyor\IO\NullIO());
 
         $this->assertEquals($this->tempdir, $builder->getBuildDir());
     }

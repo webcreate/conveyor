@@ -31,7 +31,7 @@ class FileTransporterTest Extends TransporterTestCase
 
     public function setUp()
     {
-        $this->tmpdir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('wbcrte');
+        $this->tmpdir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('conveyor');
 
         mkdir($this->tmpdir, 0777, true);
         file_put_contents($this->tmpdir . DIRECTORY_SEPARATOR . 'hello.txt', 'Hello?? Is it me you are looking for?');
