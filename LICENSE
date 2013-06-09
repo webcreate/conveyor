@@ -1,12 +1,32 @@
 Copyright (c) 2013 Jeroen Fiege / Webcreate <http://webcreate.nl/>
 
+Open Source License
+===================
+
+Conveyor is free for non-commercial, personal, educational and open-source projects and applications,
+under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+
+Commercial Licensing
+====================
+
+When used for commercial projects a purchase of a license is required per developer seat. Commercial
+use includes any project that makes you money. Commercial licenses may be purchased
+at [http://conveyordeploy.com](http://conveyordeploy.com)
+
+With the purchase of a commercial license:
+
+* You may use Conveyor for as many commercial projects as you like.
+* Customers of your product do not need to purchase a license.
+
+Commercial License Agreement
+============================
+
 This Commercial License Agreement (the "Agreement") is a binding legal
 agreement between you and Webcreate. By installing, copying, or using
 Conveyor (the "Software"), you agree to be bound by these terms of this
 Agreement.
 
-Usage
-=====
+## Usage
 
 This Agreement grants a non-exclusive, non-transferable license to use
 the Software to build and deploy software (Applications).
