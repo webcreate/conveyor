@@ -11,6 +11,7 @@ services:
     calls:
       - [ addSubscriber, [ @subscriber.transporter ] ]
       - [ addSubscriber, [ @subscriber.builder ] ]
+      - [ addSubscriber, [ @subscriber.taskrunner ] ]
 
   logger:
     class: Monolog\Logger
@@ -24,6 +25,10 @@ services:
 
   subscriber.builder:
     class: Webcreate\Conveyor\Subscriber\BuilderSubscriber
+    arguments: [ @io ]
+
+  subscriber.taskrunner:
+    class: Webcreate\Conveyor\Subscriber\TaskRunnerSubscriber
     arguments: [ @io ]
 
   repository:
@@ -48,10 +53,10 @@ services:
     class: Webcreate\Conveyor\Task\TaskRunner
     factory_class: Webcreate\Conveyor\Factory\TaskRunnerFactory
     factory_method: get
-    arguments: [ 'deploy.before', @task.factory, @config, @io ]
+    arguments: [ 'deploy.before', @task.factory, @config, @io, @dispatcher ]
 
   deploy.taskrunner.after:
     class: Webcreate\Conveyor\Task\TaskRunner
     factory_class: Webcreate\Conveyor\Factory\TaskRunnerFactory
     factory_method: get
-    arguments: [ 'deploy.after', @task.factory, @config, @io ]
+    arguments: [ 'deploy.after', @task.factory, @config, @io, @dispatcher ]

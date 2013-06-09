@@ -1,8 +1,12 @@
 <?php
 
 /*
- * @author Jeroen Fiege <jeroen@webcreate.nl>
- * @copyright Webcreate (http://webcreate.nl)
+ * This file is part of the Conveyor package.
+ *
+ * (c) Jeroen Fiege <jeroen@webcreate.nl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 use Webcreate\Conveyor\IO\NullIO;
@@ -32,6 +36,8 @@ class FtpTransporterTest Extends TransporterTestCase
 
     public function testPutDispatchesEvent()
     {
+        $this->markTestIncomplete();
+
         $this->getDispatcherMock()
             ->expects($this->once())
             ->method('dispatch')
@@ -43,5 +49,35 @@ class FtpTransporterTest Extends TransporterTestCase
         $tmpfile = tempnam(sys_get_temp_dir(), 'test');
 
         $this->transporter->put($tmpfile, $transporter->getPath() . '/deploy');
+    }
+
+    public function testMkdirDispatchesEvent()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testGetDispatchesEvent()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testPutContentDispatchesEvent()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testSymlinkDispatchesEvent()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testCopyDispatchesEvent()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testRemoveDispatchesEvent()
+    {
+        $this->markTestIncomplete();
     }
 }

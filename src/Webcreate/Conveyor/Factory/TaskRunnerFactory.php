@@ -1,12 +1,17 @@
 <?php
 
 /*
- * @author Jeroen Fiege <jeroen@webcreate.nl>
- * @copyright Webcreate (http://webcreate.nl)
+ * This file is part of the Conveyor package.
+ *
+ * (c) Jeroen Fiege <jeroen@webcreate.nl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Webcreate\Conveyor\Factory;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Task\TaskRunner;
 
@@ -16,14 +21,15 @@ class TaskRunnerFactory
      * @param string      $taskConfigPath path to the tasks configuration in the conveyor.yml config
      * @param TaskFactory $taskFactory
      * @param $config
-     * @param  IOInterface $io
+     * @param  IOInterface              $io
+     * @param  EventDispatcherInterface $dispatcher
      * @return TaskRunner
      */
-    public static function get($taskConfigPath, TaskFactory $taskFactory, $config, IOInterface $io)
+    public static function get($taskConfigPath, TaskFactory $taskFactory, $config, IOInterface $io, EventDispatcherInterface $dispatcher = null)
     {
         $_config = $config->getConfig();
 
-        $taskRunner = new TaskRunner($io);
+        $taskRunner = new TaskRunner($io, $dispatcher);
 
         foreach ((array) self::getTasksConfig($_config, $taskConfigPath) as $t => $taskConfig) {
             $task = $taskFactory->get($taskConfig['type'], $taskConfig);

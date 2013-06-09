@@ -1,8 +1,12 @@
 <?php
 
 /*
- * @author Jeroen Fiege <jeroen@webcreate.nl>
- * @copyright Webcreate (http://webcreate.nl)
+ * This file is part of the Conveyor package.
+ *
+ * (c) Jeroen Fiege <jeroen@webcreate.nl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 use Webcreate\Conveyor\Builder\Builder;
@@ -16,7 +20,7 @@ class BuilderTest extends PHPUnit_Framework_TestCase
 
     public function testBuilderCallsExecuteOnTasks()
     {
-        $task1 = $this->getMockBuilder('Webcreate\\Conveyor\\Task\\Task')->disableOriginalConstructor()->getMock();
+        $task1 = $this->getMockBuilder('Webcreate\Conveyor\Task\Task')->disableOriginalConstructor()->getMock();
         $task1
             ->expects($this->once())
             ->method('execute')
@@ -28,7 +32,7 @@ class BuilderTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue(true))
         ;
 
-        $version = $this->getMockBuilder('Webcreate\\Conveyor\\Repository\\Version')->getMock();
+        $version = $this->getMockBuilder('Webcreate\Conveyor\Repository\Version')->getMock();
 
         $builder = new Builder($this->tempdir, array($task1));
         $builder->build('test', $version);

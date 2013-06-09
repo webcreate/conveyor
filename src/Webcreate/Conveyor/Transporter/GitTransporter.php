@@ -1,8 +1,12 @@
 <?php
 
 /*
- * @author Jeroen Fiege <jeroen@webcreate.nl>
- * @copyright Webcreate (http://webcreate.nl)
+ * This file is part of the Conveyor package.
+ *
+ * (c) Jeroen Fiege <jeroen@webcreate.nl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Webcreate\Conveyor\Transporter;
@@ -14,6 +18,9 @@ use Webcreate\Vcs\Git;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * @todo research if this transporter could extend the FileTransporter
+ */
 class GitTransporter extends AbstractTransporter implements TransactionalTransporterInterface
 {
     protected $dispatcher;

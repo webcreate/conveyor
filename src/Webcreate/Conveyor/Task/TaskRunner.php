@@ -1,24 +1,44 @@
 <?php
 
 /*
- * @author Jeroen Fiege <jeroen@webcreate.nl>
- * @copyright Webcreate (http://webcreate.nl)
+ * This file is part of the Conveyor package.
+ *
+ * (c) Jeroen Fiege <jeroen@webcreate.nl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Webcreate\Conveyor\Task;
 
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Webcreate\Conveyor\DependencyInjection\TransporterAwareInterface;
+use Webcreate\Conveyor\Event\TaskRunnerEvents;
 use Webcreate\Conveyor\IO\IOInterface;
 
 class TaskRunner implements TransporterAwareInterface
 {
+    /**
+     * @var Task[]
+     */
     protected $tasks = array();
     protected $needsNewline = false;
     protected $transporter;
+    protected $dispatcher;
 
-    public function __construct(IOInterface $io)
+    /**
+     *
+     * @todo I think it's better NOT to have the taskrunner depend on the IOinterface
+     *
+     * @param IOInterface $io
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function __construct(IOInterface $io, EventDispatcherInterface $dispatcher = null)
     {
         $this->io = $io;
+        $this->dispatcher = $dispatcher;
     }
 
     public function addTask(Task $task)
@@ -36,6 +56,13 @@ class TaskRunner implements TransporterAwareInterface
         return (count($this->tasks) > 0);
     }
 
+    public function setTasks($tasks)
+    {
+        $this->tasks = $tasks;
+
+        return $this;
+    }
+
     /**
      * @return Task[]
      */
@@ -48,7 +75,8 @@ class TaskRunner implements TransporterAwareInterface
     {
         $this->transporter = $transporter;
 
-        // apply it also to the tasks
+        // also apply it to the tasks
+        // @todo I don't this should be done here
         array_walk(
             $this->tasks,
             function ($task) use ($transporter) {
@@ -61,15 +89,39 @@ class TaskRunner implements TransporterAwareInterface
 
     public function execute($target, $version)
     {
-        $io = $this->io;
+        $total = count($this->tasks);
 
         foreach ($this->tasks as $i => $task) {
-            $this->executeTaskWithErrorHandling($task, $i, $target, $version);
-        }
+            while (true) {
+                $this->dispatch(TaskRunnerEvents::TASKRUNNER_PRE_EXECUTE_TASK,
+                    new GenericEvent($task, array('index' => $i, 'total' => $total))
+                );
 
-        if (true === $this->needsNewline) {
-            $this->io->write('');
-            $this->needsNewline = false;
+                $result = null;
+
+                try {
+                    $result = $task->execute($target, $version);
+
+                    break;
+                } catch (\Exception $e) {
+                    $this->io->renderException($e);
+
+                    // @todo instead of relying on the IOInterface here for asking an action,
+                    //       better to trigger an event and have the listener ask an action.
+                    if (false === $this->tryAgain()) {
+                        break;
+                    }
+                }
+
+                // @todo might be better to trigger a different event here, smt like TASKRUNNER_RETRY_EXECUTE_TASK
+                $this->dispatch(TaskRunnerEvents::TASKRUNNER_POST_EXECUTE_TASK,
+                    new GenericEvent($task, array('index' => $i, 'total' => $total, 'result' => $result))
+                );
+            }
+
+            $this->dispatch(TaskRunnerEvents::TASKRUNNER_POST_EXECUTE_TASK,
+                new GenericEvent($task, array('index' => $i, 'total' => $total, 'result' => $result))
+            );
         }
     }
 
@@ -108,50 +160,6 @@ class TaskRunner implements TransporterAwareInterface
         }
     }
 
-    protected function executeTaskWithErrorHandling(Task $task, $i, $target, $version)
-    {
-        $io = $this->io;
-
-        if ($i > 0) {
-            if (true === $this->needsNewline) {
-                $this->io->write('');
-                $this->needsNewline = false;
-            }
-            $this->io->write('');
-        }
-
-        while (true) {
-            $this->io->write(sprintf('- Executing task <info>%s</info>', get_class($task)));
-            $this->io->increaseIndention(2);
-
-            $self = $this;
-
-            $task->setOutput(function($output) use ($io, $self) {
-                $io->overwrite(sprintf('%s', $output), false);
-
-                $self->needsNewline = true;
-            });
-
-            try {
-                $task->execute($target, $version);
-
-                $this->io->decreaseIndention(2);
-
-                return true;
-            } catch (\Exception $e) {
-                $this->io->decreaseIndention(2);
-
-                $this->io->renderException($e);
-
-                $result = $this->tryAgain();
-
-                if (false === $result) {
-                    return false;
-                }
-            }
-        }
-    }
-
     protected function tryAgain()
     {
         while (true) {
@@ -167,6 +175,7 @@ class TaskRunner implements TransporterAwareInterface
 
             switch($answer) {
                 case "a":
+                    $this->io->setIndention(0);
                     $this->io->write('Aborted.');
                     die();
                     break;
@@ -178,5 +187,25 @@ class TaskRunner implements TransporterAwareInterface
                     break;
             }
         }
+
+        return true;
+    }
+
+    /**
+     * Dispatch event when a dispatcher is available
+     *
+     * @param string $eventName
+     * @param Event  $event
+     */
+    protected function dispatch($eventName, Event $event = null)
+    {
+        if (null !== $this->dispatcher) {
+            $this->dispatcher->dispatch($eventName, $event);
+        }
+    }
+
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
     }
 }

@@ -1,8 +1,12 @@
 <?php
 
 /*
- * @author Jeroen Fiege <jeroen@webcreate.nl>
- * @copyright Webcreate (http://webcreate.nl)
+ * This file is part of the Conveyor package.
+ *
+ * (c) Jeroen Fiege <jeroen@webcreate.nl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -49,5 +53,15 @@ class GitTransporterTest Extends TransporterTestCase
         file_put_contents($transporterMock->getPath() . '/hello.txt', 'world');
 
         return $transporterMock ; //new Webcreate\Conveyor\Transporter\GitTransporter();
+    }
+
+    public function testSymlinkDispatchesEvent()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testCopyDispatchesEvent()
+    {
+        $this->markTestIncomplete();
     }
 }

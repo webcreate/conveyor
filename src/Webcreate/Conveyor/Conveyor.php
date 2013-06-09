@@ -1,8 +1,12 @@
 <?php
 
 /*
- * @author Jeroen Fiege <jeroen@webcreate.nl>
- * @copyright Webcreate (http://webcreate.nl)
+ * This file is part of the Conveyor package.
+ *
+ * (c) Jeroen Fiege <jeroen@webcreate.nl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Webcreate\Conveyor;
@@ -24,7 +28,6 @@ use Webcreate\Conveyor\IO\NullIO;
 use Webcreate\Conveyor\Stage\Manager\StageManager;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Repository\Repository;
-use Webcreate\Conveyor\Strategy\ReleasesStrategy;
 use Webcreate\Conveyor\Strategy\StrategyInterface;
 use Webcreate\Conveyor\Task\SshTask;
 use Webcreate\Conveyor\Task\TaskRunner;

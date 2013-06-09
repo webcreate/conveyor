@@ -1,8 +1,12 @@
 <?php
 
 /*
- * @author Jeroen Fiege <jeroen@webcreate.nl>
- * @copyright Webcreate (http://webcreate.nl)
+ * This file is part of the Conveyor package.
+ *
+ * (c) Jeroen Fiege <jeroen@webcreate.nl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Webcreate\Conveyor\Test;
@@ -13,6 +17,10 @@ use Webcreate\Conveyor\Transporter\AbstractTransporter;
 abstract class TransporterTestCase extends \PHPUnit_Framework_TestCase
 {
     protected $dispatcher;
+
+    /**
+     * @var AbstractTransporter
+     */
     protected $transporter;
 
     public function setUp()
