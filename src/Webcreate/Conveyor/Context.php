@@ -20,7 +20,8 @@ class Context
     protected $isFullDeploy = false;
     protected $isSimulate = false;
     protected $builddir;
-    protected $filelist;
+    protected $filesModified;
+    protected $filesDeleted;
     protected $version;
     protected $remoteVersion;
     protected $target;
@@ -28,7 +29,8 @@ class Context
 
     public function __construct()
     {
-        $this->filelist = new FileCollection();
+        $this->filesModified = new FileCollection();
+        $this->filesDeleted = new FileCollection();
     }
 
     public function getTarget()
@@ -68,18 +70,41 @@ class Context
     }
 
     /**
-     * @return \Webcreate\Conveyor\Util\FileCollection
+     * @param \Webcreate\Conveyor\Util\FileCollection $filesDeleted
+     * @return $this
      */
-    public function getFilelist()
+    public function setFilesDeleted($filesDeleted)
     {
-        return $this->filelist;
-    }
-
-    public function setFilelist(FileCollection $filelist)
-    {
-        $this->filelist = $filelist;
+        $this->filesDeleted = $filesDeleted;
 
         return $this;
+    }
+
+    /**
+     * @return \Webcreate\Conveyor\Util\FileCollection
+     */
+    public function getFilesDeleted()
+    {
+        return $this->filesDeleted;
+    }
+
+    /**
+     * @param \Webcreate\Conveyor\Util\FileCollection $filesModified
+     * @return $this
+     */
+    public function setFilesModified($filesModified)
+    {
+        $this->filesModified = $filesModified;
+
+        return $this;
+    }
+
+    /**
+     * @return \Webcreate\Conveyor\Util\FileCollection
+     */
+    public function getFilesModified()
+    {
+        return $this->filesModified;
     }
 
     public function getBuilddir()
@@ -91,7 +116,8 @@ class Context
     {
         $this->builddir = $builddir;
 
-        $this->filelist->setBasepath($this->builddir);
+        $this->filesModified->setBasepath($this->builddir);
+        $this->filesDeleted->setBasepath($this->builddir);
 
         return $this;
     }

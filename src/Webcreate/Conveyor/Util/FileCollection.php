@@ -28,7 +28,7 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
 
     public function setBasepath($basepath)
     {
-        $this->basepath = $basepath;
+        $this->basepath = rtrim($basepath, '/');
 
         return $this;
     }
@@ -38,10 +38,23 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
         return $this->basepath;
     }
 
-    public function add($pattern)
+    /**
+     * @param $pattern
+     * @param bool $force assumes the $pattern is a absolute file and adds it, even if it doesn't exist
+     * @return $this
+     * @throws \LogicException
+     */
+    public function add($pattern, $force = false)
     {
         if (null === $this->basepath) {
             throw new \LogicException('You need to call "setBasepath()" first before adding files');
+        }
+
+        $filepath = $this->basepath . '/' . $pattern;
+        if ($force || is_file($filepath)) {
+            $this->files[] = $pattern;
+
+            return $this;
         }
 
         $regex = Glob::toRegex($pattern, false);
@@ -83,6 +96,11 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
         }
 
         return $this;
+    }
+
+    public function merge(FileCollection $collection)
+    {
+        $this->files = array_merge($this->files, $collection->toArray());
     }
 
     public function toArray()

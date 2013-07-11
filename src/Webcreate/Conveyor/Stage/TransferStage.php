@@ -16,6 +16,7 @@ use Webcreate\Conveyor\Context;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Strategy\StrategyInterface;
 use Webcreate\Conveyor\Transporter\AbstractTransporter;
+use Webcreate\Conveyor\Util\FileCollection;
 use Webcreate\Conveyor\Util\FilePath;
 
 class TransferStage extends AbstractStage
@@ -30,13 +31,13 @@ class TransferStage extends AbstractStage
 
     public function supports(Context $context)
     {
-        return (count($context->getFilelist()) > 0);
+        return (count($context->getFilesModified()) > 0);
     }
 
     public function execute(Context $context)
     {
-        $filelist = $context->getFilelist();
-        $total = count($filelist);
+        $filesModified = $context->getFilesModified();
+        $filesDeleted = $context->getFilesDeleted();
 
         if ($this->io) {
             $this->io->write('');
@@ -51,7 +52,24 @@ class TransferStage extends AbstractStage
             $this->io->increaseIndention(3);
         }
 
-        foreach ($filelist as $t => $file) {
+        $this->uploadFiles($filesModified->toArray(), $context);
+        $this->removeFiles($filesDeleted->toArray(), $context);
+
+        if ($this->io) {
+            if (true === $this->showProgress) {
+                // clear last line, because it was a overwrite
+                $this->io->write('');
+            }
+
+            $this->io->decreaseIndention(3);
+        }
+    }
+
+    protected function uploadFiles(array $files, Context $context)
+    {
+        $total = count($files);
+
+        foreach ($files as $t => $file) {
             $src = FilePath::join($context->getBuilddir(), $file);
             $dest = FilePath::join($this->getDestinationPath($context->getStrategy(), $context->getVersion()), $file);
 
@@ -74,14 +92,21 @@ class TransferStage extends AbstractStage
                 $this->io->overwrite(sprintf('Progress: <comment>%d%%</comment>', (($t + 1) * 100) / $total), false);
             }
         }
+    }
 
-        if ($this->io) {
-            if (true === $this->showProgress) {
-                // clear last line, because it was a overwrite
-                $this->io->write('');
+    protected function removeFiles(array $files, Context $context)
+    {
+        $total = count($files);
+
+        foreach ($files as $t => $file) {
+            $src = FilePath::join($context->getBuilddir(), $file);
+            $dest = FilePath::join($this->getDestinationPath($context->getStrategy(), $context->getVersion()), $file);
+
+            $this->transporter->remove($dest, true);
+
+            if ($this->io && true === $this->showProgress) {
+                $this->io->overwrite(sprintf('Progress: <comment>%d%%</comment>', (($t + 1) * 100) / $total), false);
             }
-
-            $this->io->decreaseIndention(3);
         }
     }
 

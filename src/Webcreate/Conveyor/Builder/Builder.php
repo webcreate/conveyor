@@ -33,6 +33,10 @@ class Builder
     protected $builddir;
     protected $io;
     protected $dispatcher;
+
+    /**
+     * @var Context
+     */
     protected $context;
     protected $taskrunner;
 
@@ -80,6 +84,13 @@ class Builder
         return $this->builddir;
     }
 
+    /**
+     * @deprecated I rather not have the builder depend on the context,
+     *             that's something for the BuildStage
+     *
+     * @param Context $context
+     * @return $this
+     */
     public function setContext(Context $context)
     {
         $this->context = $context;
@@ -102,8 +113,8 @@ class Builder
         $this->taskrunner->getDispatcher()->addListener(
             TaskRunnerEvents::TASKRUNNER_PRE_EXECUTE_TASK,
             function (GenericEvent $event) use ($self) {
-                $task = $event->getSubject();
-                $t = $event->getArgument('index');
+                $task  = $event->getSubject();
+                $t     = $event->getArgument('index');
                 $total = $event->getArgument('total');
 
                 $self->dispatch(BuilderEvents::BUILDER_PRE_TASK,
@@ -115,9 +126,9 @@ class Builder
         $this->taskrunner->getDispatcher()->addListener(
             TaskRunnerEvents::TASKRUNNER_POST_EXECUTE_TASK,
             function (GenericEvent $event) use ($self) {
-                $task = $event->getSubject();
-                $t = $event->getArgument('index');
-                $total = $event->getArgument('total');
+                $task   = $event->getSubject();
+                $t      = $event->getArgument('index');
+                $total  = $event->getArgument('total');
                 $result = $event->getArgument('result');
 
                 if ($result instanceof ExecuteResult) {
@@ -141,14 +152,14 @@ class Builder
 
     protected function applyResultToFilelist(ExecuteResult $result)
     {
-        $filelist = $this->context->getFilelist();
+        $filesModified = $this->context->getFilesModified();
 
         foreach ($result->getDerived() as $pattern) {
-            $filelist->add($pattern);
+            $filesModified->add($pattern);
         }
 
         foreach ($result->getRemoved() as $pattern) {
-            $filelist->remove($pattern);
+            $filesModified->remove($pattern);
         }
     }
 

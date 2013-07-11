@@ -28,6 +28,14 @@ class ExportTask extends Task
         $this->dest = $dest;
     }
 
+    /**
+     * @todo better progress (percentage) updating
+     *
+     * @param $target
+     * @param Version $version
+     * @param array $options
+     * @return ExecuteResult
+     */
     public function execute($target, Version $version, array $options = array())
     {
         $this->output(sprintf('Exporting: <comment>0%%</comment>'));

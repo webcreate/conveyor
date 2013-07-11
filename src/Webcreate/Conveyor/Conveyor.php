@@ -37,6 +37,9 @@ use Webcreate\Conveyor\Util\FilePath;
 
 class Conveyor
 {
+    /**
+     * @var Container
+     */
     protected $container;
     protected $booted;
 
@@ -51,6 +54,11 @@ class Conveyor
         $this->booted = true;
     }
 
+    /**
+     * @param IOInterface $io
+     * @return ContainerBuilder
+     * @throws \Exception|\InvalidArgumentException
+     */
     protected function buildContainer(IOInterface $io)
     {
         $container = new ContainerBuilder();

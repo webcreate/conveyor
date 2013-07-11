@@ -18,7 +18,7 @@ class FileCollectionTest extends \PHPUnit_Framework_TestCase
         $collection = new Webcreate\Conveyor\Util\FileCollection($basepath);
 
         $this->assertInstanceOf('Webcreate\Conveyor\Util\FileCollection', $collection);
-        $this->assertEquals($basepath, $collection->getBasepath());
+        $this->assertEquals('..', $collection->getBasepath());
 
         $collection = new Webcreate\Conveyor\Util\FileCollection();
 
@@ -34,11 +34,13 @@ class FileCollectionTest extends \PHPUnit_Framework_TestCase
         $collection->add('*.yml');
         $collection->add('*.md');
         $collection->add('composer.*');
+        $collection->add('tests/bootstrap.php');
 
         $files = iterator_to_array($collection);
 
         $this->assertContains('README.md', $files);
         $this->assertContains('vendor/autoload.php', $files);
+        $this->assertContains('tests/bootstrap.php', $files);
         $this->assertNotContains('lorem.txt', $files);
     }
 
@@ -65,7 +67,7 @@ class FileCollectionTest extends \PHPUnit_Framework_TestCase
 
         $files = iterator_to_array($collection);
 
-        $this->assertContains('conveyor.yml', $files);
+        $this->assertContains('conveyor.yml.dist', $files);
         $this->assertContains('phpunit.xml.dist', $files);
         $this->assertContains('vendor/webcreate/util/.travis.yml', $files);
 
@@ -104,7 +106,7 @@ class FileCollectionTest extends \PHPUnit_Framework_TestCase
 
         $matches = $collection->match('*.yml');
 
-        $this->assertEquals(array(0 => 'conveyor.yml'), $matches);
+        $this->assertEquals(array(0 => 'conveyor.yml.dist'), $matches);
     }
 
     public function testHas()

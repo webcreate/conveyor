@@ -55,7 +55,7 @@ class ExecuteResult
      * Sets removed files
      *
      * @param  array                                        $removed
-     * @return Webcreate\Conveyor\Task\Result\ExecuteResult
+     * @return \Webcreate\Conveyor\Task\Result\ExecuteResult
      */
     public function setRemoved(array $removed)
     {

@@ -21,6 +21,11 @@ class BuildFilelistStage extends AbstractStage
     protected $repository;
     protected $derivedFiles;
 
+    /**
+     * @var Context
+     */
+    protected $context;
+
     public function __construct(Repository $repository, array $derivedFiles = array())
     {
         $this->repository = $repository;
@@ -34,43 +39,44 @@ class BuildFilelistStage extends AbstractStage
 
     public function execute(Context $context)
     {
-        $filelist = $context->getFilelist(); // this was filled by the builder
+        // this was filled by the builder
+        $filesModified = $context->getFilesModified();
+        $filesDeleted = $context->getFilesDeleted();
 
         if (false === $context->isFullDeploy()) {
             $diff = $this->repository->diff($context->getRemoteVersion(), $context->getVersion());
 
-            $subselection = new FileCollection($context->getBuilddir());
+            $subselectionModified = new FileCollection($context->getBuilddir());
 
             foreach ($diff as $fileinfo) {
-                if (in_array($fileinfo->getStatus(), array(Status::ADDED, Status::MODIFIED))) {
-                    $subselection[] = $fileinfo->getPathname();
-                }
-                /*
-                elseif ($fileinfo->getStatus() === Status::DELETED) {
-                    // skip
+                if (Status::ADDED === $fileinfo->getStatus()) {
+                    $subselectionModified[] = $fileinfo->getPathname();
+                } elseif (Status::MODIFIED === $fileinfo->getStatus()) {
+                    $subselectionModified[] = $fileinfo->getPathname();
+                } elseif (Status::DELETED === $fileinfo->getStatus()) {
+                    $filesDeleted->add($fileinfo->getPathname(), true);
                 } else {
-                    throw new \RuntimeException(sprintf('Unimplemented action \'%s\'', $fileinfo->getStatus()));
+                    // @todo handle other cases if they actually exist
                 }
-                */
             }
 
             foreach ($this->derivedFiles as $derivable) {
                 $source = $derivable['source'];
                 $derived = $derivable['derived'];
 
-                if ($subselection->has($source)) {
-                    $subselection->add($derived);
+                if ($subselectionModified->has($source)) {
+                    $subselectionModified->add($derived);
                 }
             }
 
             // only keep files that are changed
-            $filelist->intersect($subselection);
+            $filesModified->intersect($subselectionModified);
 
-            if (0 === count($filelist) && count($subselection) > 0) {
-                // hmm.. so files have changed but nothing to deploy
-                // it looks like we forgot to specify some derived files
-                // @todo inform the user about this?
-            }
+//            if (0 === count($filesAdded) && count($subselectionAdded) > 0) {
+//                // hmm.. so files have changed but nothing to deploy
+//                // it looks like we forgot to specify some derived files
+//                // @todo inform the user about this?
+//            }
 
             // @todo we could also check here if all files are accounted for (maybe
             //       some files were deleted and not told to us by setting it in
@@ -79,10 +85,11 @@ class BuildFilelistStage extends AbstractStage
 
         // validate result, throw exception when we have nothing to deploy
         // @todo improve this, throwing exceptions is crap!
-        if (0 === count($filelist)) {
+        if (0 === count($filesModified) && 0 === count($filesDeleted)) {
             throw new \RuntimeException('Nothing to deploy, this should not have happend');
         }
 
-        $context->setFilelist($filelist);
+        $context->setFilesModified($filesModified);
+        $context->setFilesDeleted($filesDeleted);
     }
 }
