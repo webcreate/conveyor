@@ -125,7 +125,22 @@ class DeployConfiguration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('deploy')
                     ->children()
-                        ->scalarNode('strategy')->defaultValue('releases')->end()
+                        ->arrayNode('strategy')
+                            ->beforeNormalization()
+                                ->ifString()
+                                ->then(function($v) {
+                                    return array('type' => $v);
+                                })
+                            ->end()
+                            ->children()
+                                ->scalarNode('type')->end()
+                                // @todo the 'shared' section is only relevant for the ReleasesStrategy
+                                //       refactor to a dedicated configuration per strategy type
+                                ->arrayNode('shared')
+                                    ->prototype('scalar')->end()
+                                ->end()
+                            ->end()
+                        ->end()
                         ->arrayNode('before')
                             ->prototype('task')->setTaskFactory($this->taskFactory)->end()
                         ->end()

@@ -153,7 +153,8 @@ class Conveyor
     {
         $config = $this->getConfig()->getConfig();
 
-        $strategy = $this->container->get('strategy.' . $config['deploy']['strategy']);
+        $strategy = $this->container->get('strategy.' . $config['deploy']['strategy']['type']);
+        $strategy->setOptions($config['deploy']['strategy']);
 
         if ($strategy instanceof TransporterAwareInterface) {
             $strategy->setTransporter($transporter);

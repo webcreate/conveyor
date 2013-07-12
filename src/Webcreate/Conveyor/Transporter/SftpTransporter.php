@@ -257,6 +257,10 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
             $src = $this->sftp->pwd() . '/' . $src;
         }
 
+        // strip end slashes
+        $src  = rtrim($src, '/');
+        $dest = rtrim($dest, '/');
+
         $success = $this->sftp->exec(sprintf("ln -s -T -f %s %s", escapeshellarg($src), escapeshellarg($dest)));
         if (false === $success) {
             throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", (array) $this->sftp->getErrors()));

@@ -133,8 +133,12 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
         return array_values($retval); // reindex
     }
 
-    public function has($pattern)
+    public function has($pattern, $exact = false)
     {
+        if ($exact) {
+            return in_array($pattern, $this->files);
+        }
+
         $regex = Glob::toRegex($pattern, false);
         $regex = str_replace('$', '', $regex);
 

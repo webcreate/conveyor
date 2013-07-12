@@ -15,6 +15,8 @@ use Webcreate\Conveyor\Repository\Version;
 
 class SimpleStrategy implements StrategyInterface
 {
+    protected $options;
+
     /**
      * Returns an array contain the required directories relative
      * to the target's basepath
@@ -45,5 +47,16 @@ class SimpleStrategy implements StrategyInterface
     public function getUploadPath(Version $version)
     {
         return '';
+    }
+
+    /**
+     * Sets options
+     *
+     * @param array $options
+     * @return mixed
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
     }
 }
