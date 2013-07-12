@@ -39,4 +39,12 @@ interface StrategyInterface
      * @return mixed
      */
     public function getUploadPath(Version $version);
+
+    /**
+     * Sets options
+     *
+     * @param array $options
+     * @return mixed
+     */
+    public function setOptions(array $options);
 }

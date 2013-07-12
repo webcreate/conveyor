@@ -12,11 +12,14 @@
 namespace Webcreate\Conveyor\Strategy;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Webcreate\Conveyor\Context;
 use Webcreate\Conveyor\DependencyInjection\TransporterAwareInterface;
 use Webcreate\Conveyor\Event\StageEvent;
 use Webcreate\Conveyor\Event\StageEvents;
+use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Transporter\AbstractTransporter;
+use Webcreate\Conveyor\Util\FileCollection;
 
 class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, EventSubscriberInterface
 {
@@ -24,6 +27,28 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
      * @var AbstractTransporter
      */
     protected $transporter;
+
+    protected $options;
+    protected $io;
+
+    protected $sharedFiles;
+    protected $uploadPath;
+
+    public function __construct(IOInterface $io)
+    {
+        $this->io = $io;
+    }
+
+    /**
+     * Sets options
+     *
+     * @param array $options
+     * @return mixed
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
+    }
 
     public function setTransporter($transporter)
     {
@@ -40,6 +65,7 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
     {
         return array(
             'releases',
+            'shared',
         );
     }
 
@@ -54,14 +80,30 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
     }
 
     /**
-     * Returns the upload path for a specific version
+     * Returns the upload path for a specific version. Adds
+     * a suffix if the path already exists (can happen with a
+     * full deploy)
      *
      * @param  \Webcreate\Conveyor\Repository\Version $version
      * @return mixed
      */
     public function getUploadPath(Version $version)
     {
-        return 'releases/' . $version->getName() . '-' . substr($version->getBuild(), 0, 6);
+        $basepath = $this->transporter->getPath();
+
+        if (null === $this->uploadPath) {
+            $suffix = '';
+            $count = 0;
+
+            do {
+                $releasePath = 'releases/' . $version->getName() . '-' . substr($version->getBuild(), 0, 6) . $suffix;
+                $suffix = '_' . ++$count;
+            } while ($this->transporter->exists($basepath . '/' . $releasePath));
+
+            $this->uploadPath = $releasePath;
+        }
+
+        return $this->uploadPath;
     }
 
     /**
@@ -92,7 +134,116 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
         );
     }
 
-    protected function updateCurrentReleasePathSymlink($context)
+    public function onStagePreExecute(StageEvent $e)
+    {
+        if ('deploy.before' === $e->getStageName()) {
+            $this->uploadPath = null; // reset the cached uploadPath
+
+            $this->prepareUploadPath($e->getContext());
+            $this->prepareSharedFilesAndFolders($e->getContext());
+        } elseif ('transfer' === $e->getStageName()) {
+            $this->filterSharedFilesAndFolders($e->getContext());
+        }
+    }
+
+    public function onStagePostExecute(StageEvent $e)
+    {
+        if ('deploy.after' === $e->getStageName()) {
+            $this->updateCurrentReleasePathSymlink($e->getContext());
+        } elseif ('transfer' === $e->getStageName()) {
+            $this->symlinkSharedFilesAndFolders($e->getContext());
+
+            if (count($this->sharedFiles) > 0) {
+                $this->putDeferedSharedFiles($this->sharedFiles, $e->getContext());
+            }
+        }
+    }
+
+    /**
+     * @param FileCollection $sharedFiles
+     * @param Context $context
+     */
+    protected function putDeferedSharedFiles($sharedFiles, Context $context)
+    {
+        $basepath   = $this->transporter->getPath();
+        $sharedPath = $basepath . '/shared';
+
+        foreach($sharedFiles as $fileOrFolder) {
+            $sharedFilepath = $sharedPath . '/' . $fileOrFolder;
+
+            $answer = $this->io->askConfirmation(
+                sprintf('<error>Warning</error> Would you like to create/overwrite the shared file/folder <info>%s</info> to <info>%s</info>? (n/Y): ', $fileOrFolder, $sharedFilepath),
+                false
+            );
+
+            if ($answer) {
+                $this->transporter->put($fileOrFolder, $sharedFilepath);
+            }
+        }
+    }
+
+    /**
+     * Symlinks the shared locations
+     *
+     * @param Context $context
+     */
+    protected function symlinkSharedFilesAndFolders(Context $context)
+    {
+        $basepath           = $this->transporter->getPath();
+        $sharedPath         = $basepath . '/shared';
+        $uploadPath         = $basepath . '/' . $this->getUploadPath($context->getVersion());
+
+        $shared = (array) $this->options['shared'];
+        foreach ($shared as $fileOrFolder) {
+            $sharedFilepath = $sharedPath . '/' . $fileOrFolder;
+            $uploadFilepath = $uploadPath . '/' . $fileOrFolder;
+
+            // make sure the symlink destination doesn't exist
+            if (true === $this->transporter->exists($uploadFilepath)) {
+                $answer = $this->io->askConfirmation(
+                    sprintf('<error>Warning</error> Shared file/folder <info>%s</info> already exists, continue with removing it? (n/Y): ', $uploadFilepath),
+                    false
+                );
+
+                if ($answer) {
+                    $this->transporter->remove($uploadFilepath, true);
+                } else {
+                    $this->io->write('Aborted');
+                    die();
+                }
+            }
+
+            $this->transporter->symlink($sharedFilepath, $uploadFilepath);
+        }
+    }
+
+    /**
+     * Makes sure we don't upload to locations that are shared
+     *
+     * @param Context $context
+     */
+    protected function filterSharedFilesAndFolders(Context $context)
+    {
+        $this->sharedFiles = new FileCollection($context->getBuilddir());
+
+        $filesModified = $context->getFilesModified();
+
+        $shared = (array) $this->options['shared'];
+        foreach ($shared as $fileOrFolder) {
+            if ($filesModified->has($fileOrFolder, true)) {
+                $filesModified->remove($fileOrFolder);
+
+                $this->sharedFiles->add($fileOrFolder);
+            }
+        }
+    }
+
+    /**
+     * Updates the symlink for the current release
+     *
+     * @param Context $context
+     */
+    protected function updateCurrentReleasePathSymlink(Context $context)
     {
         $basepath = $this->transporter->getPath();
 
@@ -114,13 +265,6 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
         $uploadPath         = $basepath . '/' . $this->getUploadPath($context->getVersion());
         $currentReleasePath = $basepath . '/' . $this->getCurrentReleasePath();
 
-        // remove the uploadPath if the already exists, eg. after a previous aborted deploy
-        // this solves issues with copying, when the target dir (uploadPath) already exists, like
-        // copying into a subfolder of uploadPath..
-        if ($this->transporter->exists($uploadPath)) {
-            $this->transporter->remove($uploadPath);
-        }
-
         if (false === $context->isFullDeploy()) {
             $this->transporter->copy(
                 $currentReleasePath,
@@ -129,17 +273,32 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
         }
     }
 
-    public function onStagePreExecute(StageEvent $e)
+    /**
+     * Creates shared files and folders
+     */
+    protected function prepareSharedFilesAndFolders(Context $context)
     {
-        if ('deploy.before' === $e->getStageName()) {
-            $this->prepareUploadPath($e->getContext());
-        }
-    }
+        $basepath   = $this->transporter->getPath();
+        $sharedPath = $basepath . '/shared';
+        $uploadPath = $basepath . '/' . $this->getUploadPath($context->getVersion());
 
-    public function onStagePostExecute(StageEvent $e)
-    {
-        if ('deploy.after' === $e->getStageName()) {
-            $this->updateCurrentReleasePathSymlink($e->getContext());
+        $shared = (array) $this->options['shared'];
+
+        foreach ($shared as $fileOrFolder) {
+            $sharedFilepath = $sharedPath . '/' . $fileOrFolder;
+            $uploadFilepath = $uploadPath . '/' . $fileOrFolder;
+
+            if (false === $this->transporter->exists($sharedFilepath)) {
+                // Hmm, the shared entity doesn't exist
+
+                // is it a directory?
+                if ('/' === substr($sharedFilepath, -1)) {
+                    $this->transporter->mkdir($sharedFilepath);
+                } else {
+                    $this->transporter->mkdir(dirname($sharedFilepath));
+                    $this->transporter->putContent('', $sharedFilepath); // make a dummy file
+                }
+            }
         }
     }
 }

@@ -5,4 +5,4 @@ services:
   strategy.releases:
     class: Webcreate\Conveyor\Strategy\ReleasesStrategy
     arguments:
-      - @task.factory
+      - @io
