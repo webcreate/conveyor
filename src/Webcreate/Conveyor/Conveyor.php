@@ -299,6 +299,8 @@ class Conveyor
             $version = $this->getRepository()->getVersion($version);
         }
 
+        $this->getConfig()->setParameter('target', $target);
+
         $builder = $this->getBuilder();
         $io      = $this->getIO();
 
@@ -331,6 +333,8 @@ class Conveyor
             'full_deploy'       => false,
             'deploy_after_only' => false,
         );
+
+        $this->getConfig()->setParameter('target', $target);
 
         $config         = $this->getConfig()->getConfig();
         $derived        = $config['build']['derived'];
@@ -414,6 +418,8 @@ class Conveyor
         $options += array(
             'full_deploy' => false,
         );
+
+        $this->getConfig()->setParameter('target', $target);
 
         $transporter = $this->getTransporter($target);
         $readOnlyTransporter = $this->container->get('transporter.readonly');
