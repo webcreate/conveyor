@@ -26,6 +26,7 @@ use Webcreate\Conveyor\Config\Definition\DeployConfiguration;
 class YamlConfig
 {
     protected $processed;
+    protected $parameters = array();
 
     public function __construct($file, TaskFactory $taskFactory, TransporterFactory $transporterFactory)
     {
@@ -56,10 +57,27 @@ class YamlConfig
     {
         $config = Yaml::parse($this->file);
 
+        $config = $this->replaceParameters($config, $this->parameters);
+
         $configuration = new DeployConfiguration($this->taskFactory, $this->transporterFactory);
         $processor = new Processor();
 
         return $this->processed = $processor->processConfiguration($configuration, $config);
+    }
+
+    protected function replaceParameters($config, $parameters)
+    {
+        foreach($config as &$value) {
+            if (is_array($value)) {
+                $value = $this->replaceParameters($value, $parameters);
+            } elseif (is_string($value)) {
+                foreach($parameters as $key => $val) {
+                    $value = str_replace(sprintf('{{%s}}', $key), $val, $value);
+                }
+            }
+        }
+
+        return $config;
     }
 
     public function flatten()
@@ -67,5 +85,18 @@ class YamlConfig
         $util = new ArrayUtil();
 
         return $util->flatten($this->getConfig());
+    }
+
+    public function setParameter($name, $value)
+    {
+        $this->parameters[$name] = $value;
+
+        if ('target' === $name) {
+            foreach($this->processed['targets'][$value]['parameters'] as $key => $value) {
+                $this->setParameter('target.' . $key, $value);
+            }
+        }
+
+        $this->processed = null;
     }
 }

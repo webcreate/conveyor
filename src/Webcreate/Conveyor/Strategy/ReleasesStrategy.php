@@ -20,6 +20,7 @@ use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Transporter\AbstractTransporter;
 use Webcreate\Conveyor\Util\FileCollection;
+use Webcreate\Conveyor\Util\FilePath;
 
 class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, EventSubscriberInterface
 {
@@ -168,16 +169,21 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
         $basepath   = $this->transporter->getPath();
         $sharedPath = $basepath . '/shared';
 
-        foreach($sharedFiles as $fileOrFolder) {
-            $sharedFilepath = $sharedPath . '/' . $fileOrFolder;
+        foreach($sharedFiles as $file) {
+            $src = FilePath::join($context->getBuilddir(), $file);
+            $sharedFilepath = $sharedPath . '/' . $file;
 
-            $answer = $this->io->askConfirmation(
-                sprintf('<error>Warning</error> Would you like to create/overwrite the shared file/folder <info>%s</info> to <info>%s</info>? (n/Y): ', $fileOrFolder, $sharedFilepath),
-                false
-            );
+            if ($this->transporter->exists($sharedFilepath)) {
+                $answer = $this->io->askConfirmation(
+                    sprintf('<error>Warning</error> Would you like to create/overwrite the shared file/folder <info>%s</info> to <info>%s</info>? (n/Y): ', $fileOrFolder, $sharedFilepath),
+                    false
+                );
 
-            if ($answer) {
-                $this->transporter->put($fileOrFolder, $sharedFilepath);
+                if ($answer) {
+                    $this->transporter->put($src, $sharedFilepath);
+                }
+            } else {
+                $this->transporter->put($src, $sharedFilepath);
             }
         }
     }
@@ -201,15 +207,14 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
             // make sure the symlink destination doesn't exist
             if (true === $this->transporter->exists($uploadFilepath)) {
                 $answer = $this->io->askConfirmation(
-                    sprintf('<error>Warning</error> Shared file/folder <info>%s</info> already exists, continue with removing it? (n/Y): ', $uploadFilepath),
+                    sprintf('<error>Warning</error> Shared file/folder <info>%s</info> already exists, do you want to overwrite it? (n/Y): ', $uploadFilepath),
                     false
                 );
 
                 if ($answer) {
                     $this->transporter->remove($uploadFilepath, true);
                 } else {
-                    $this->io->write('Aborted');
-                    die();
+                    continue;
                 }
             }
 
@@ -230,7 +235,7 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
 
         $shared = (array) $this->options['shared'];
         foreach ($shared as $fileOrFolder) {
-            if ($filesModified->has($fileOrFolder, true)) {
+            if ($filesModified->has($fileOrFolder)) {
                 $filesModified->remove($fileOrFolder);
 
                 $this->sharedFiles->add($fileOrFolder);
