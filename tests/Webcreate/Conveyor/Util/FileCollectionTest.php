@@ -114,10 +114,12 @@ class FileCollectionTest extends \PHPUnit_Framework_TestCase
         $collection = new Webcreate\Conveyor\Util\FileCollection(__DIR__ . '/../../../../');
 
         $collection->add('vendor/');
-        $collection->add('*.dist');
-        $collection->add('conveyor.yml');
+        $collection->add('conveyor.yml.dist');
 
-        $this->assertTrue($collection->has('*.yml'));
+
+        $this->assertTrue($collection->has('*.dist'));
+        $this->assertTrue($collection->has('vendor/autoload.php'));
+        $this->assertTrue($collection->has('conveyor.yml.dist'));
         $this->assertFalse($collection->has('you_dont_have_me'));
     }
 

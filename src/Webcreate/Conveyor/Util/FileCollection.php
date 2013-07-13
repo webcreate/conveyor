@@ -57,8 +57,25 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
             return $this;
         }
 
+        if (is_dir($filepath) || '*' === $pattern) {
+            $regex = Glob::toRegex($pattern, false);
+            $regex = str_replace('$', '', $regex);
+
+            $finder = new Finder();
+            $finder
+                ->files()
+                ->ignoreDotFiles(false)
+                ->in($this->basepath)
+                ->path($regex)
+            ;
+
+            $this->files = array_merge($this->files, $this->mapFinder($finder));
+            $this->files = array_unique($this->files);
+
+            return $this;
+        }
+
         $regex = Glob::toRegex($pattern, false);
-        $regex = str_replace('$', '', $regex);
 
         $finder = new Finder();
         $finder
@@ -140,7 +157,6 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
         }
 
         $regex = Glob::toRegex($pattern, false);
-        $regex = str_replace('$', '', $regex);
 
         foreach ($this->files as $file) {
             if (1 === preg_match($regex, $file)) {
