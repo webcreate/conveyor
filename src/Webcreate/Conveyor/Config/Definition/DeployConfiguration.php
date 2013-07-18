@@ -127,8 +127,10 @@ class DeployConfiguration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('deploy')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('strategy')
+                            ->addDefaultsIfNotSet()
                             ->beforeNormalization()
                                 ->ifString()
                                 ->then(function($v) {
@@ -136,7 +138,9 @@ class DeployConfiguration implements ConfigurationInterface
                                 })
                             ->end()
                             ->children()
-                                ->scalarNode('type')->end()
+                                ->scalarNode('type')
+                                    ->defaultValue('releases')
+                                ->end()
                                 // @todo the 'shared' section is only relevant for the ReleasesStrategy
                                 //       refactor to a dedicated configuration per strategy type
                                 ->arrayNode('shared')

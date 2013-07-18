@@ -68,7 +68,13 @@ class SshTask extends Task implements TransporterAwareInterface
                     $this->io->write('');
                     $hasOutput = true;
                 }
-                $self->io->write(sprintf('> %s', trim($buffer)));
+
+                $lines = explode("\n", $buffer);
+                foreach($lines as $line) {
+                    if ($output = trim($line, "\r\n")) {
+                        $self->io->write(sprintf('> %s', $output));
+                    }
+                }
             }
         };
 
