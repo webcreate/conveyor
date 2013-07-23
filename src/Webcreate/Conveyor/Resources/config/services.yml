@@ -5,6 +5,8 @@ services:
 
   cli:
     class: Webcreate\Util\Cli
+    calls:
+      - [setTimeout, [900]]
 
   dispatcher:
     class: Symfony\Component\EventDispatcher\EventDispatcher
