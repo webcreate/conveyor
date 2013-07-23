@@ -336,6 +336,19 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
         }
     }
 
+    public function exec($command, $callback = null)
+    {
+        if (false === $this->isConnected()) {
+            $this->connectAndLogin();
+        }
+
+        $success = $this->sftp->exec($command, $callback);
+
+        if (false === $success) {
+            throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", (array) $this->sftp->getErrors()));
+        }
+    }
+
     protected function isConnected()
     {
         return $this->sftp->isConnected();

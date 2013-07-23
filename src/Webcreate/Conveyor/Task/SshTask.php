@@ -23,7 +23,7 @@ use Webcreate\Util\Cli;
 class SshTask extends Task implements TransporterAwareInterface
 {
     /**
-     * @var AbstractTransporter
+     * @var AbstractTransporter|SshCapableTransporterInterface
      */
     protected $transporter;
 
@@ -59,31 +59,24 @@ class SshTask extends Task implements TransporterAwareInterface
         $hasOutput = false;
 
         $self = $this;
-        $outputter = function ($type, $buffer) use ($self, &$hasOutput) {
+        $outputter = function ($buffer) use ($self, &$hasOutput) {
             if (false === $self->io->isVerbose()) return;
 
-            if (1 || 'out' === $type) {
-                if (!$hasOutput) {
-                    $this->io->write('');
-                    $this->io->write('');
-                    $hasOutput = true;
-                }
+            if (!$hasOutput) {
+                $this->io->write('');
+                $this->io->write('');
+                $hasOutput = true;
+            }
 
-                $lines = explode("\n", $buffer);
-                foreach($lines as $line) {
-                    if ($output = trim($line, "\r\n")) {
-                        $self->io->write(sprintf('> %s', $output));
-                    }
+            $lines = explode("\n", $buffer);
+            foreach($lines as $line) {
+                if ($output = trim($line, "\r\n")) {
+                    $self->io->write(sprintf('> %s', $output));
                 }
             }
         };
 
-        if ($this->cli->execute($command, $outputter) <> 0) {
-            throw new ProcessFailedException($this->cli->getProcess());
-        }
-//        elseif ($message = $this->cli->getErrorOutput()) {
-//            $this->output(sprintf('<comment>%s</comment>', $message));
-//        }
+        $this->transporter->exec($command, $outputter);
     }
 
     public function simulate($target, Version $version)
@@ -95,15 +88,13 @@ class SshTask extends Task implements TransporterAwareInterface
 
     protected function getCommand($target, $version, $command)
     {
-        $host = $this->transporter->getHost();
-        $user = $this->transporter->getUser();
         $path = $this->transporter->getPath();
 
         if (isset($this->options['path']) && $this->options['path']) {
             $path = $this->options['path'];
         }
 
-        $command = sprintf('ssh %s@%s "cd %s && %s"', $user, $host, $path, $command);
+        $command = sprintf('cd %s && %s', $path, $command);
 
         return $command;
     }

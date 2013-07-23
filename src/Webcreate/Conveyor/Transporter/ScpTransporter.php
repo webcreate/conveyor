@@ -219,4 +219,20 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
             throw new \RuntimeException($this->cli->getErrorOutput());
         }
     }
+
+    /**
+     * @todo this is just a simple implementation which should be improved
+     *
+     * @param $command
+     * @param null $callback
+     * @throws \RuntimeException
+     */
+    public function exec($command, $callback = null)
+    {
+        $commandline   = sprintf("ssh %s@%s \"%s\"", $this->getUser(), $this->getHost(), $command);
+
+        if ($this->cli->execute($commandline, $callback)) {
+            throw new \RuntimeException($this->cli->getErrorOutput());
+        }
+    }
 }
