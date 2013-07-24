@@ -147,13 +147,6 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
             $parent = dirname($path);
             $result = $this->sftp->nlist($parent);
 
-            if (!$result) {
-                $errors = $this->sftp->getSFTPErrors();
-                if (count($errors)) {
-                    var_dump($this->getHost(), $path, $parent, $errors); //die(sprintf('Dump originated from %s on line %s', __FILE__, __LINE__));
-                }
-            }
-
             if (false !== $result) {
                 if (in_array(basename($path), $result)) {
                     return true;
