@@ -76,7 +76,15 @@ class SshTask extends Task implements TransporterAwareInterface
             }
         };
 
-        $this->transporter->exec($command, $outputter);
+        if ($exitCode = $this->transporter->exec($command, $outputter) <> 0) {
+            throw new \RuntimeException(
+                sprintf(
+                    'The command "%s" failed.'."\nExit Code: %s",
+                    $command,
+                    $exitCode
+                )
+            );
+        }
     }
 
     public function simulate($target, Version $version)
