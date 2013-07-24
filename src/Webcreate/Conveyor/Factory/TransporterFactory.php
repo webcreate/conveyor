@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class TransporterFactory
 {
     protected $container;
-    protected $transporter    = array();
+    protected $transporters   = array();
     protected $configurations = array();
 
     public function __construct(ContainerInterface $container)
