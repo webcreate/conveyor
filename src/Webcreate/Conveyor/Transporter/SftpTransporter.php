@@ -98,6 +98,8 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
                             return $success;
                         } else {
                             if ($attempts > 0) {
+                                $this->keyPassword = null;
+
                                 $this->io->write('Permission denied, please try again.');
                             }
                         }
