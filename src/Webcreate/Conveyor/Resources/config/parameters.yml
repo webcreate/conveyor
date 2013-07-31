@@ -3,3 +3,4 @@ parameters:
   conveyor.remoteinfofile:  .conveyor
   conveyor.userdir:         ~/.conveyor.d
   conveyor.logdir:          %conveyor.userdir%/logs
+  conveyor.cachedir.vcs:    %conveyor.userdir%/vcs-cache

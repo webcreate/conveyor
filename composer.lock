@@ -478,17 +478,17 @@
         },
         {
             "name": "symfony/process",
-            "version": "v2.3.1",
+            "version": "v2.3.2",
             "target-dir": "Symfony/Component/Process",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process.git",
-                "reference": "v2.3.1"
+                "reference": "v2.3.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Process/zipball/v2.3.1",
-                "reference": "v2.3.1",
+                "url": "https://api.github.com/repos/symfony/Process/zipball/v2.3.2",
+                "reference": "v2.3.2",
                 "shasum": ""
             },
             "require": {
@@ -521,7 +521,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "http://symfony.com",
-            "time": "2013-05-06 20:03:44"
+            "time": "2013-07-01 12:24:43"
         },
         {
             "name": "symfony/yaml",
@@ -614,16 +614,16 @@
         },
         {
             "name": "webcreate/vcs",
-            "version": "1.1.8",
+            "version": "1.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webcreate/vcs.git",
-                "reference": "1.1.8"
+                "reference": "1.1.9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webcreate/vcs/zipball/1.1.8",
-                "reference": "1.1.8",
+                "url": "https://api.github.com/repos/webcreate/vcs/zipball/1.1.9",
+                "reference": "1.1.9",
                 "shasum": ""
             },
             "require": {
@@ -661,7 +661,7 @@
                 "vcs",
                 "versioncontrol"
             ],
-            "time": "2013-04-10 14:04:26"
+            "time": "2013-07-31 12:27:00"
         }
     ],
     "packages-dev": [

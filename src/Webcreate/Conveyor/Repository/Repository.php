@@ -17,12 +17,22 @@ use Webcreate\Conveyor\Repository\Driver\DriverInterface;
 class Repository
 {
     protected $drivers = array();
+
+    /** @var  DriverInterface */
     protected $driver;
     protected $type;
     protected $url;
     protected $io;
+    protected $cacheDir;
 
-    public function __construct($type, $url, IOInterface $io = null, array $drivers = null)
+    /**
+     * @param string $type name of a registered driver
+     * @param string $url
+     * @param null|IOInterface $io
+     * @param null|array $drivers
+     * @param null|string $cacheDir
+     */
+    public function __construct($type, $url, IOInterface $io = null, array $drivers = null, $cacheDir = null)
     {
         $this->drivers = $drivers ? $drivers : array(
             'svn' => 'Webcreate\\Conveyor\\Repository\\Driver\\SvnDriver',
@@ -32,6 +42,8 @@ class Repository
         $this->io   = $io;
         $this->type = $type;
         $this->url  = $url;
+        $this->cacheDir = preg_replace('/^\~/', getenv('HOME'), $cacheDir);
+
     }
 
     /**
@@ -46,7 +58,10 @@ class Repository
 
         if (isset($this->drivers[$this->type])) {
             $class = $this->drivers[$this->type];
+
             $this->driver = new $class($this->url, $this->io);
+            $this->driver->setCacheDir($this->cacheDir);
+            $this->driver->initialize();
         }
 
         if (!$this->driver) {
