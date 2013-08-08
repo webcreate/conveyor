@@ -12,6 +12,7 @@
 namespace Webcreate\Conveyor\Stage;
 
 use Webcreate\Conveyor\IO\IOInterface;
+use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Task\TaskRunner;
 use Webcreate\Conveyor\Context;
 use Webcreate\Conveyor\Stage\AbstractStage;
@@ -34,10 +35,19 @@ class DeployBeforeStage extends AbstractStage
 
     public function execute(Context $context)
     {
-        if (false === $this->taskRunner->hasTasks()) {
-            return;
-        }
+        $target = $context->getTarget();
+        $version = $context->getVersion();
 
+        $tasks = $this->getSupportedTasks($target, $version);
+        $this->taskRunner->setTasks($tasks);
+
+        if (true === $this->taskRunner->hasTasks()) {
+            $this->executeTaskrunner($context);
+        }
+    }
+
+    protected function executeTaskrunner(Context $context)
+    {
         $this->io->write('');
 
         if (true === $context->isSimulate()) {
@@ -55,5 +65,26 @@ class DeployBeforeStage extends AbstractStage
         }
 
         $this->io->decreaseIndention(1);
+    }
+
+    /**
+     * Filters the tasks for given target
+     *
+     * @param  string $target
+     * @param \Webcreate\Conveyor\Repository\Version $version
+     * @return \Webcreate\Conveyor\Task\Task[]                 task for the specific target
+     */
+    protected function getSupportedTasks($target, Version $version)
+    {
+        $tasks = array_filter($this->taskRunner->getTasks(),
+            function($task) use ($target, $version) {
+                return (true === $task->supports($target, $version));
+            }
+        );
+
+        // reindex
+        $tasks = array_values($tasks);
+
+        return $tasks;
     }
 }
