@@ -302,7 +302,7 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
                     $this->transporter->mkdir($sharedFilepath);
                 } else {
                     $parentDir = dirname($sharedFilepath);
-                    if (false === $this->transporter->exists($parentDir)) {
+                    if (false === $this->transporter->exists($parentDir) && $parentDir != $sharedPath) {
                         $this->transporter->mkdir($parentDir);
                     }
                     $this->transporter->putContent('', $sharedFilepath); // make a dummy file
