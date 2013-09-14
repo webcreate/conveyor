@@ -175,7 +175,7 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
 
             if ($this->transporter->exists($sharedFilepath)) {
                 $answer = $this->io->askConfirmation(
-                    sprintf('<error>Warning</error> Would you like to create/overwrite the shared file/folder <info>%s</info> to <info>%s</info>? (n/Y): ', $fileOrFolder, $sharedFilepath),
+                    sprintf('<error>Warning</error> Would you like to create/overwrite the shared file/folder <info>%s</info> to <info>%s</info>? (n/Y): ', $file, $sharedFilepath),
                     false
                 );
 
@@ -292,15 +292,19 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
         foreach ($shared as $fileOrFolder) {
             $sharedFilepath = $sharedPath . '/' . $fileOrFolder;
             $uploadFilepath = $uploadPath . '/' . $fileOrFolder;
+            $localFilepath = $context->getBuilddir() . '/' . $fileOrFolder;
 
             if (false === $this->transporter->exists($sharedFilepath)) {
                 // Hmm, the shared entity doesn't exist
 
                 // is it a directory?
-                if ('/' === substr($sharedFilepath, -1)) {
+                if (is_dir($localFilepath) || '/' === substr($sharedFilepath, -1)) {
                     $this->transporter->mkdir($sharedFilepath);
                 } else {
-                    $this->transporter->mkdir(dirname($sharedFilepath));
+                    $parentDir = dirname($sharedFilepath);
+                    if (false === $this->transporter->exists($parentDir)) {
+                        $this->transporter->mkdir($parentDir);
+                    }
                     $this->transporter->putContent('', $sharedFilepath); // make a dummy file
                 }
             }

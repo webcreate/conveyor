@@ -150,13 +150,13 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
         return array_values($retval); // reindex
     }
 
-    public function has($pattern, $exact = false)
+    public function has($pattern)
     {
-        if ($exact) {
-            return in_array($pattern, $this->files);
+        if ('*' !== substr($pattern, -1)) {
+            $pattern .= '*';
         }
 
-        $regex = Glob::toRegex($pattern, false);
+        $regex = Glob::toRegex($pattern, false, false);
 
         foreach ($this->files as $file) {
             if (1 === preg_match($regex, $file)) {

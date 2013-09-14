@@ -4,7 +4,7 @@
     "keywords": ["build", "deploy", "php", "tool", "commandline"],
     "description": "Build and deploy tool for PHP",
     "homepage": "http://conveyordeploy.com/",
-    "license": "Commercial",
+    "license": "Dual-license",
     "authors": [
         {
             "name": "Jeroen Fiege",
@@ -12,10 +12,6 @@
             "homepage": "http://webcreate.nl"
         }
     ],
-    "support": {
-        "email": "support@webcreate.nl",
-        "source": "https://github.com/webcreate/conveyor"
-    },
     "autoload": {
         "psr-0": {
             "Webcreate": ["src/", "tests/"]

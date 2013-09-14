@@ -116,10 +116,13 @@ class FileCollectionTest extends \PHPUnit_Framework_TestCase
         $collection->add('vendor/');
         $collection->add('conveyor.yml.dist');
 
-
         $this->assertTrue($collection->has('*.dist'));
-        $this->assertTrue($collection->has('vendor/autoload.php'));
         $this->assertTrue($collection->has('conveyor.yml.dist'));
+        $this->assertTrue($collection->has('vendor/'));
+        $this->assertTrue($collection->has('vendor/autoload.php'));
+        $this->assertTrue($collection->has('vendor/composer'));
+        $this->assertTrue($collection->has('vendor/composer/'));
+        $this->assertTrue($collection->has('vendor/composer/installed.json'));
         $this->assertFalse($collection->has('you_dont_have_me'));
     }
 

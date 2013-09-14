@@ -64,14 +64,14 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
         // try to login using ssh key
         if (null === $password) {
             $identityFilePath = $_SERVER['HOME'] . '/.ssh/id_rsa';
-            if (false !== file_exists($identityFilePath)) {
+            if (file_exists($identityFilePath)) {
                 $identityFile = file_get_contents($identityFilePath);
 
                 // try without pass
                 $key = new \Crypt_RSA();
                 $loaded = $key->loadKey($identityFile);
 
-                if (!$loaded || !$this->sftp->login($username, $key)) {
+                if (!$loaded || false === $success = $this->sftp->login($username, $key)) {
                     $attempts = 3;
 
                     while ($attempts--) {
@@ -92,6 +92,8 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
                         return false;
                     }
                 }
+
+                return $success;
             }
 
             return false;
@@ -234,7 +236,21 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
 
         $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_PUT_CONTENT, new TransporterEvent($this, array('dest' => $dest, 'content' => $content)));
 
-        $this->sftp->put($dest, $content, NET_SFTP_STRING);
+        $success = $this->sftp->put($dest, $content, NET_SFTP_STRING);
+
+        if (!$success) {
+            // maybe the parent directory doesnt exist; try to create it and try again
+            $pwd = dirname($dest);
+            if (false === $this->exists($pwd)) {
+                $this->mkdir($pwd);
+
+                // retry try to put
+                $success = $this->sftp->put($dest, $content, NET_SFTP_STRING);
+                if (!$success) {
+                    throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", $this->sftp->getSFTPErrors()));
+                }
+            }
+        }
     }
 
     /**
