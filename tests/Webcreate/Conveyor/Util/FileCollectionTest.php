@@ -106,7 +106,7 @@ class FileCollectionTest extends \PHPUnit_Framework_TestCase
 
         $matches = $collection->match('*.yml');
 
-        $this->assertEquals(array(0 => 'conveyor.yml.dist'), $matches);
+        $this->assertEquals(array('conveyor.yml.dist', 'conveyor.yml'), $matches);
     }
 
     public function testHas()
