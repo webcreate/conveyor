@@ -21,6 +21,8 @@ class GitDriver extends AbstractVcsDriver
         $client = new Git($url);
         $client->getAdapter()->setExecutable('git');
 
+        $client->setCwd($this->cacheDir . '/git/' . md5($url));
+
         return $client;
     }
 

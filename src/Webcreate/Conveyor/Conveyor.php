@@ -299,7 +299,7 @@ class Conveyor
             $version = $this->getRepository()->getVersion($version);
         }
 
-        $this->getConfig()->setParameter('target', $target);
+        $this->setParametersForTarget($target);
 
         $builder = $this->getBuilder();
         $io      = $this->getIO();
@@ -334,7 +334,7 @@ class Conveyor
             'deploy_after_only' => false,
         );
 
-        $this->getConfig()->setParameter('target', $target);
+        $this->setParametersForTarget($target);
 
         $config         = $this->getConfig()->getConfig();
         $derived        = $config['build']['derived'];
@@ -419,7 +419,7 @@ class Conveyor
             'full_deploy' => false,
         );
 
-        $this->getConfig()->setParameter('target', $target);
+        $this->setParametersForTarget($target);
 
         $transporter = $this->getTransporter($target);
         $readOnlyTransporter = $this->container->get('transporter.readonly');
@@ -499,5 +499,17 @@ class Conveyor
             ->addStage('diff',               new Stage\DiffStage($repository, $io))
             ->execute()
         ;
+    }
+
+    protected function setParametersForTarget($target)
+    {
+        $this->getConfig()->setParameter('target', $target);
+
+        $config = $this->getConfig()->getConfig();
+
+        $transporterOptions = $config['targets'][$target]['transport'];
+        foreach($transporterOptions as $key => $value) {
+            $this->getConfig()->setParameter('target.transport.' . $key, $value);
+        }
     }
 }

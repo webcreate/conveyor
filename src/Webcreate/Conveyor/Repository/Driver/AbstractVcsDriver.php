@@ -21,12 +21,17 @@ abstract class AbstractVcsDriver implements DriverInterface
     protected $url;
     protected $client;
     protected $io;
+    protected $cacheDir;
 
     public function __construct($url, IOInterface $io = null)
     {
         $this->url = $url;
         $this->io = $io;
-        $this->client = $this->getClient($url);
+    }
+
+    public function initialize()
+    {
+        $this->client = $this->getClient($this->url);
     }
 
     /**
@@ -34,6 +39,11 @@ abstract class AbstractVcsDriver implements DriverInterface
      * @return VcsInterface
      */
     abstract protected function getClient($url);
+
+    public function setCacheDir($cacheDir)
+    {
+        $this->cacheDir = $cacheDir;
+    }
 
     public function getVersions()
     {

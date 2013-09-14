@@ -5,6 +5,8 @@ services:
 
   cli:
     class: Webcreate\Util\Cli
+    calls:
+      - [setTimeout, [900]]
 
   dispatcher:
     class: Symfony\Component\EventDispatcher\EventDispatcher
@@ -33,7 +35,7 @@ services:
 
   repository:
     class: Webcreate\Conveyor\Repository\Repository
-    arguments: [ %repository.type%, %repository.url%, @io ]
+    arguments: [ %repository.type%, %repository.url%, @io, null, %conveyor.cachedir.vcs%]
 
   task.factory:
     class: Webcreate\Conveyor\Factory\TaskFactory

@@ -83,6 +83,9 @@ class BuildFilelistStage extends AbstractStage
             //       the `removes` config?) in other words: file_exists on all files?
         }
 
+        // never upload the conveyor configuration!
+        $filesModified->remove('conveyor.yml');
+
         // validate result, throw exception when we have nothing to deploy
         // @todo improve this, throwing exceptions is crap!
         if (0 === count($filesModified) && 0 === count($filesDeleted)) {

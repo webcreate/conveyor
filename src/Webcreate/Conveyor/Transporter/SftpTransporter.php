@@ -30,6 +30,7 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
      */
     protected $sftp;
     protected $io;
+    protected $keyPassword;
 
     public function __construct(EventDispatcherInterface $dispatcher, $sftp = null, IOInterface $io)
     {
@@ -40,6 +41,19 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
         }
         $this->sftp = $sftp;
         $this->io = $io;
+    }
+
+    public function setOptions(array $options)
+    {
+        // if the host, username or password changes, we should disconnect
+        if ($this->host !== $options['host']
+            || $this->username !== $options['user']
+            || $this->password !== $options['pass']
+        ) {
+            $this->sftp->disconnect();
+        }
+
+        parent::setOptions($options);
     }
 
     public function connect()
@@ -76,13 +90,16 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
 
                     while ($attempts--) {
                         // retry with password
-                        $key->setPassword($this->io->askAndHideAnswer(sprintf('Enter passphrase for %s: ', $identityFilePath)));
+                        $this->keyPassword = $this->keyPassword ?: $this->io->askAndHideAnswer(sprintf('Enter passphrase for %s: ', $identityFilePath));
+                        $key->setPassword($this->keyPassword);
                         $loaded = $key->loadKey($identityFile);
 
                         if ($loaded && $success = $this->sftp->login($username, $key)) {
                             return $success;
                         } else {
                             if ($attempts > 0) {
+                                $this->keyPassword = null;
+
                                 $this->io->write('Permission denied, please try again.');
                             }
                         }
@@ -131,6 +148,7 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
             // list the parent directory and check if the file exists
             $parent = dirname($path);
             $result = $this->sftp->nlist($parent);
+
             if (false !== $result) {
                 if (in_array(basename($path), $result)) {
                     return true;
@@ -334,6 +352,33 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
         if (false === $success) {
             throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", (array) $this->sftp->getErrors()));
         }
+    }
+
+    public function exec($command, $callback = null)
+    {
+        if (false === $this->isConnected()) {
+            $this->connectAndLogin();
+        }
+
+//        $this->sftp->enablePTY();
+
+        $success = $this->sftp->exec($command, $callback);
+
+//        $data = $this->sftp->read();
+//        if (is_callable($callback)) {
+//            $callback($data);
+//        }
+
+        if (false === $success) {
+            throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", (array) $this->sftp->getErrors()));
+        }
+
+        $status = $this->sftp->getExitStatus();
+        if ($status === false) {
+            $status = -1;
+        }
+
+        return $status;
     }
 
     protected function isConnected()
