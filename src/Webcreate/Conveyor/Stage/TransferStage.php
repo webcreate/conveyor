@@ -84,7 +84,7 @@ class TransferStage extends AbstractStage
             } else {
                 // @todo we might wanna ask the user if he likes to continue or abort
                 if ($this->io && false === $this->showProgress) {
-                    $this->io->write(sprintf('Warning! <comment>%s</comment> not found', $src));
+                    $this->io->write(sprintf('<error>Warning</error> <comment>%s</comment> not found', $src));
                 }
             }
 

@@ -173,18 +173,16 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
             $src = FilePath::join($context->getBuilddir(), $file);
             $sharedFilepath = $sharedPath . '/' . $file;
 
-            if ($this->transporter->exists($sharedFilepath)) {
-                $answer = $this->io->askConfirmation(
-                    sprintf('<error>Warning</error> Would you like to create/overwrite the shared file/folder <info>%s</info> to <info>%s</info>? (n/Y): ', $file, $sharedFilepath),
-                    false
-                );
-
-                if ($answer) {
-                    $this->transporter->put($src, $sharedFilepath);
+            if (false === file_exists($src)) {
+                // @todo we might wanna ask the user if he likes to continue or abort
+                if ($this->io) {
+                    $this->io->write(sprintf('<error>Warning</error> <comment>%s</comment> not found', $src));
                 }
-            } else {
-                $this->transporter->put($src, $sharedFilepath);
+
+                continue;
             }
+
+            $this->transporter->put($src, $sharedFilepath);
         }
     }
 
