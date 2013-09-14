@@ -203,6 +203,7 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
             $uploadFilepath = $uploadPath . '/' . $fileOrFolder;
 
             // make sure the symlink destination doesn't exist
+            // FIXME this also prompts for symlinks to the sharedFilepath
             if (true === $this->transporter->exists($uploadFilepath)) {
                 $answer = $this->io->askConfirmation(
                     sprintf('<error>Warning</error> Shared file/folder <info>%s</info> already exists, do you want to overwrite it? (n/Y): ', $uploadFilepath),
