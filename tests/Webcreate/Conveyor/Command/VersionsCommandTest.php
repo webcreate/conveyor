@@ -42,10 +42,13 @@ class VersionsCommandTest extends PHPUnit_Framework_TestCase
         $this->filesystem->mkdir($this->tmpdir);
         $this->filesystem->mkdir($this->projectdir);
 
-        $svnadmin = new Svnadmin($this->tmpdir);
+        $svnadminbin = getenv('SVNADMIN_BIN') ? getenv('SVNADMIN_BIN') : '/usr/local/bin/svnadmin';
+        $svnbin = getenv('SVN_BIN') ? getenv('SVN_BIN') : '/usr/local/bin/svn';
+
+        $svnadmin = new Svnadmin($this->tmpdir, $svnadminbin);
         $svnadmin->create(basename($this->reposdir));
 
-        $svn = new Svn($this->reposurl, new CliAdapter('/usr/local/bin/svn', new Cli(), new CliParser()));
+        $svn = new Svn($this->reposurl, new CliAdapter($svnbin, new Cli(), new CliParser()));
         $svn->import(__DIR__ . '/../Test/Fixtures/skeleton/svn/trunk', '/', 'imported skeleton');
 
         $svn->setHead(new Reference('2.1', Reference::TAG));

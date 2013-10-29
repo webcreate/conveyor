@@ -102,11 +102,11 @@ class FileCollectionTest extends \PHPUnit_Framework_TestCase
 
         $collection->add('vendor/');
         $collection->add('*.dist');
-        $collection->add('conveyor.yml');
+        $collection->add('.travis.yml');
 
         $matches = $collection->match('*.yml');
 
-        $this->assertEquals(array('conveyor.yml.dist', 'conveyor.yml'), $matches);
+        $this->assertEquals(array('conveyor.yml.dist', '.travis.yml'), $matches);
     }
 
     public function testHas()

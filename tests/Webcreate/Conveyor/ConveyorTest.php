@@ -20,6 +20,6 @@ class ConveyorTest extends \PHPUnit_Framework_TestCase
         $conveyor = new Conveyor();
         $conveyor->boot(new NullIO());
 
-        $this->assertInstanceOf('Webcreate\Conveyor\Config\YamlConfig', $conveyor->getConfig());
+        $this->assertInstanceOf('Webcreate\Conveyor\Conveyor', $conveyor);
     }
 }
