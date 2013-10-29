@@ -43,7 +43,6 @@ class Repository
         $this->type = $type;
         $this->url  = $url;
         $this->cacheDir = preg_replace('/^\~/', getenv('HOME'), $cacheDir);
-
     }
 
     /**
@@ -57,11 +56,16 @@ class Repository
         }
 
         if (isset($this->drivers[$this->type])) {
-            $class = $this->drivers[$this->type];
+            $driver = $this->drivers[$this->type];
 
-            $this->driver = new $class($this->url, $this->io);
+            if (is_string($driver)) {
+                $this->driver = new $driver($this->url, $this->io);
+            } else {
+                $this->driver = $driver;
+            }
+
             $this->driver->setCacheDir($this->cacheDir);
-            $this->driver->initialize();
+            $this->driver->initialize($this->url);
         }
 
         if (!$this->driver) {
@@ -69,6 +73,11 @@ class Repository
         }
 
         return $this->driver;
+    }
+
+    public function addDriver($type, DriverInterface $driver)
+    {
+        $this->drivers[$type] = $driver;
     }
 
     public function getType()

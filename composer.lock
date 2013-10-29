@@ -181,17 +181,17 @@
         },
         {
             "name": "symfony/config",
-            "version": "v2.2.6",
+            "version": "v2.2.9",
             "target-dir": "Symfony/Component/Config",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Config.git",
-                "reference": "4ab8ad0c0f4bb52b0e7fb12d63b81892fb7f697a"
+                "reference": "c435380fbd9d49055c16375db5d767f089a95045"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/4ab8ad0c0f4bb52b0e7fb12d63b81892fb7f697a",
-                "reference": "4ab8ad0c0f4bb52b0e7fb12d63b81892fb7f697a",
+                "url": "https://api.github.com/repos/symfony/Config/zipball/c435380fbd9d49055c16375db5d767f089a95045",
+                "reference": "c435380fbd9d49055c16375db5d767f089a95045",
                 "shasum": ""
             },
             "require": {
@@ -224,21 +224,21 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "http://symfony.com",
-            "time": "2013-08-06 02:31:28"
+            "time": "2013-09-19 09:36:05"
         },
         {
             "name": "symfony/console",
-            "version": "v2.2.6",
+            "version": "v2.2.9",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "b9ed9d61ff84296c9ace5ac333c15e6f35062eeb"
+                "reference": "7ec2f86df8a0164d1677368f43a4a548b80a1402"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/b9ed9d61ff84296c9ace5ac333c15e6f35062eeb",
-                "reference": "b9ed9d61ff84296c9ace5ac333c15e6f35062eeb",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/7ec2f86df8a0164d1677368f43a4a548b80a1402",
+                "reference": "7ec2f86df8a0164d1677368f43a4a548b80a1402",
                 "shasum": ""
             },
             "require": {
@@ -271,21 +271,21 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2013-08-17 16:29:09"
+            "time": "2013-09-25 05:58:50"
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v2.2.6",
+            "version": "v2.2.9",
             "target-dir": "Symfony/Component/DependencyInjection",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/DependencyInjection.git",
-                "reference": "434b31fe8548e0354d5f93b455d8927481ddfc6f"
+                "reference": "6fdb67aa843b61549c8652fafcc3a3ad58b9d8a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/434b31fe8548e0354d5f93b455d8927481ddfc6f",
-                "reference": "434b31fe8548e0354d5f93b455d8927481ddfc6f",
+                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/6fdb67aa843b61549c8652fafcc3a3ad58b9d8a3",
+                "reference": "6fdb67aa843b61549c8652fafcc3a3ad58b9d8a3",
                 "shasum": ""
             },
             "require": {
@@ -326,21 +326,21 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "http://symfony.com",
-            "time": "2013-07-21 09:38:59"
+            "time": "2013-09-19 09:36:05"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.2.6",
+            "version": "v2.2.9",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "45c43ffa186a0473c71a947981e43e025cd93c87"
+                "reference": "15a03e923e4bd18caaef1c18a2cceca3ee9da226"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/45c43ffa186a0473c71a947981e43e025cd93c87",
-                "reference": "45c43ffa186a0473c71a947981e43e025cd93c87",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/15a03e923e4bd18caaef1c18a2cceca3ee9da226",
+                "reference": "15a03e923e4bd18caaef1c18a2cceca3ee9da226",
                 "shasum": ""
             },
             "require": {
@@ -380,21 +380,21 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2013-02-11 11:26:43"
+            "time": "2013-09-18 07:27:26"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.2.6",
+            "version": "v2.2.9",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "fa16b9ab446b84371a63ab391133ff58134edff1"
+                "reference": "dffe0df31d16718f36ef40e7441f5a8d3e31625a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/fa16b9ab446b84371a63ab391133ff58134edff1",
-                "reference": "fa16b9ab446b84371a63ab391133ff58134edff1",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/dffe0df31d16718f36ef40e7441f5a8d3e31625a",
+                "reference": "dffe0df31d16718f36ef40e7441f5a8d3e31625a",
                 "shasum": ""
             },
             "require": {
@@ -427,21 +427,21 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2013-05-06 20:02:13"
+            "time": "2013-09-18 07:27:26"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.2.6",
+            "version": "v2.2.9",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "5ac3486e27d79116dfe67ae17521f19a033abc58"
+                "reference": "c5bf144230f8f7384d60c05618a7282f5295337e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/5ac3486e27d79116dfe67ae17521f19a033abc58",
-                "reference": "5ac3486e27d79116dfe67ae17521f19a033abc58",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/c5bf144230f8f7384d60c05618a7282f5295337e",
+                "reference": "c5bf144230f8f7384d60c05618a7282f5295337e",
                 "shasum": ""
             },
             "require": {
@@ -474,21 +474,21 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2013-08-13 19:56:24"
+            "time": "2013-09-18 07:27:26"
         },
         {
             "name": "symfony/process",
-            "version": "v2.3.4",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/Process",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process.git",
-                "reference": "1e91553e1cedd0b8fb1da6ea4f89b02e21713d5b"
+                "reference": "81191e354fe9dad0451036ccf0fdf283649d3f1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Process/zipball/1e91553e1cedd0b8fb1da6ea4f89b02e21713d5b",
-                "reference": "1e91553e1cedd0b8fb1da6ea4f89b02e21713d5b",
+                "url": "https://api.github.com/repos/symfony/Process/zipball/81191e354fe9dad0451036ccf0fdf283649d3f1e",
+                "reference": "81191e354fe9dad0451036ccf0fdf283649d3f1e",
                 "shasum": ""
             },
             "require": {
@@ -521,21 +521,21 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "http://symfony.com",
-            "time": "2013-08-22 06:42:25"
+            "time": "2013-10-09 21:17:57"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.2.6",
+            "version": "v2.2.9",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "d135717c1a42cb566cc09433658e7e8dbbe30b0a"
+                "reference": "bb697b6617b90c91b2a65d24ce32035afe5e3418"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/d135717c1a42cb566cc09433658e7e8dbbe30b0a",
-                "reference": "d135717c1a42cb566cc09433658e7e8dbbe30b0a",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/bb697b6617b90c91b2a65d24ce32035afe5e3418",
+                "reference": "bb697b6617b90c91b2a65d24ce32035afe5e3418",
                 "shasum": ""
             },
             "require": {
@@ -568,25 +568,25 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-08-24 06:36:00"
+            "time": "2013-09-22 17:30:19"
         },
         {
             "name": "webcreate/util",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webcreate/util.git",
-                "reference": "838944fcf74b15d943c88660193a43f007b795c8"
+                "reference": "1cfed31017ee92e6db1b291699ef39eeabd3f82d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webcreate/util/zipball/838944fcf74b15d943c88660193a43f007b795c8",
-                "reference": "838944fcf74b15d943c88660193a43f007b795c8",
+                "url": "https://api.github.com/repos/webcreate/util/zipball/1cfed31017ee92e6db1b291699ef39eeabd3f82d",
+                "reference": "1cfed31017ee92e6db1b291699ef39eeabd3f82d",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
-                "symfony/process": ">=2.1.2"
+                "symfony/process": "~2.3"
             },
             "type": "library",
             "autoload": {
@@ -610,20 +610,20 @@
             "keywords": [
                 "util"
             ],
-            "time": "2013-04-10 14:00:31"
+            "time": "2013-10-29 21:14:10"
         },
         {
             "name": "webcreate/vcs",
-            "version": "1.1.10",
+            "version": "1.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webcreate/vcs.git",
-                "reference": "2838fde00e35f217cdd7c89fee86df779d0d910e"
+                "reference": "39501b953d616d5da96cf4208a8fa4664831b8db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webcreate/vcs/zipball/2838fde00e35f217cdd7c89fee86df779d0d910e",
-                "reference": "2838fde00e35f217cdd7c89fee86df779d0d910e",
+                "url": "https://api.github.com/repos/webcreate/vcs/zipball/39501b953d616d5da96cf4208a8fa4664831b8db",
+                "reference": "39501b953d616d5da96cf4208a8fa4664831b8db",
                 "shasum": ""
             },
             "require": {
@@ -631,6 +631,9 @@
                 "symfony/finder": ">=v2.1.2",
                 "symfony/process": ">=v2.1.2",
                 "webcreate/util": "1.*"
+            },
+            "suggest": {
+                "symfony/event-dispatcher": "Allows to hook into VCS with events"
             },
             "type": "library",
             "autoload": {
@@ -661,7 +664,7 @@
                 "vcs",
                 "versioncontrol"
             ],
-            "time": "2013-09-14 15:12:17"
+            "time": "2013-10-29 20:53:41"
         }
     ],
     "packages-dev": [

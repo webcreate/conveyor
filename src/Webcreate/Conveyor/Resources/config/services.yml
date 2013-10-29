@@ -14,6 +14,7 @@ services:
       - [ addSubscriber, [ @subscriber.transporter ] ]
       - [ addSubscriber, [ @subscriber.builder ] ]
       - [ addSubscriber, [ @subscriber.taskrunner ] ]
+      - [ addSubscriber, [ @subscriber.vcs ] ]
 
   logger:
     class: Monolog\Logger
@@ -33,9 +34,24 @@ services:
     class: Webcreate\Conveyor\Subscriber\TaskRunnerSubscriber
     arguments: [ @io ]
 
+  subscriber.vcs:
+    class: Webcreate\Conveyor\Subscriber\VcsSubscriber
+    arguments: [ @io ]
+
   repository:
     class: Webcreate\Conveyor\Repository\Repository
     arguments: [ %repository.type%, %repository.url%, @io, null, %conveyor.cachedir.vcs%]
+    calls:
+      - [ addDriver, ['git', @repository.driver.git] ]
+      - [ addDriver, ['svn', @repository.driver.svn] ]
+
+  repository.driver.git:
+    class: Webcreate\Conveyor\Repository\Driver\GitDriver
+    arguments: ['', @io, @dispatcher]
+
+  repository.driver.svn:
+    class: Webcreate\Conveyor\Repository\Driver\SvnDriver
+    arguments: ['', @io, @dispatcher]
 
   task.factory:
     class: Webcreate\Conveyor\Factory\TaskFactory

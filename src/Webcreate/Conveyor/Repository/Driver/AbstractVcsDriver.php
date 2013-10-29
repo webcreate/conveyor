@@ -29,9 +29,9 @@ abstract class AbstractVcsDriver implements DriverInterface
         $this->io = $io;
     }
 
-    public function initialize()
+    public function initialize($url)
     {
-        $this->client = $this->getClient($this->url);
+        $this->client = $this->getClient($url);
     }
 
     /**

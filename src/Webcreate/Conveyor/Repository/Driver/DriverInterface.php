@@ -21,5 +21,5 @@ interface DriverInterface
     public function diff(Version $oldVersion, Version $newVersion);
     public function changelog(Version $oldVersion, Version $newVersion);
     public function revisionCompare($revision1, $revision2);
-    public function initialize();
+    public function initialize($url);
 }

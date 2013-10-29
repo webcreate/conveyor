@@ -11,15 +11,30 @@
 
 namespace Webcreate\Conveyor\Repository\Driver;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Vcs\Git;
 
 class GitDriver extends AbstractVcsDriver
 {
+    protected $dispatcher;
+
+    public function __construct($url, IOInterface $io = null, EventDispatcherInterface $dispatcher = null)
+    {
+        $this->url        = $url;
+        $this->io         = $io;
+        $this->dispatcher = $dispatcher;
+    }
+
     protected function getClient($url)
     {
         $client = new Git($url);
         $client->getAdapter()->setExecutable('git');
+
+        if (null !== $this->dispatcher) {
+            $client->setDispatcher($this->dispatcher);
+        }
 
         $client->setCwd($this->cacheDir . '/git/' . md5($url));
 
