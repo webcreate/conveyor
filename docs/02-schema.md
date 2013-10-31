@@ -96,7 +96,7 @@ Type of task. See [Build tasks](03-build.md#tasks) for available tasks.
 
 #### strategy
 
-Deploy strategy. See [Build tasks](04-deploy.md#strategy) for more information.
+Deploy strategy. See [Deploy](05-deploy.md#strategy) for more information.
 
 #### before
 
