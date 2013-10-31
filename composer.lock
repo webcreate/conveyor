@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6eabf8f8be44386bccdcac664eec7b7d",
+    "hash": "aaf16a6888033b88b21d8ca6f07f5720",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -614,16 +614,16 @@
         },
         {
             "name": "webcreate/vcs",
-            "version": "1.1.11",
+            "version": "1.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webcreate/vcs.git",
-                "reference": "39501b953d616d5da96cf4208a8fa4664831b8db"
+                "reference": "eaec8e1beac098d897c8d27ccc5106204dc371f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webcreate/vcs/zipball/39501b953d616d5da96cf4208a8fa4664831b8db",
-                "reference": "39501b953d616d5da96cf4208a8fa4664831b8db",
+                "url": "https://api.github.com/repos/webcreate/vcs/zipball/eaec8e1beac098d897c8d27ccc5106204dc371f0",
+                "reference": "eaec8e1beac098d897c8d27ccc5106204dc371f0",
                 "shasum": ""
             },
             "require": {
@@ -664,7 +664,7 @@
                 "vcs",
                 "versioncontrol"
             ],
-            "time": "2013-10-29 20:53:41"
+            "time": "2013-10-31 08:59:10"
         }
     ],
     "packages-dev": [
@@ -678,7 +678,7 @@
 
     ],
     "platform": {
-        "php": ">=5.3.2",
+        "php": ">=5.4",
         "ext-ftp": "*"
     },
     "platform-dev": [
