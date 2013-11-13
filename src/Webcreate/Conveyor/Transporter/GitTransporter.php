@@ -198,6 +198,18 @@ class GitTransporter extends AbstractTransporter implements TransactionalTranspo
     }
 
     /**
+     * Checks for symlink on the remote server
+     *
+     * @param $dest
+     * @return bool
+     */
+    public function isSymlink($dest)
+    {
+        throw new \RuntimeException('Symlinking not supported');
+    }
+
+
+    /**
      * Copies a file/directory on the remote host
      *
      * @param  string $src

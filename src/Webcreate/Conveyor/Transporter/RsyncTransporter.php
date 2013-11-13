@@ -194,6 +194,24 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
     }
 
     /**
+     * Checks for symlink on the remote server
+     *
+     * @param $dest
+     * @return bool
+     */
+    public function isSymlink($dest)
+    {
+        $remoteCommand = sprintf("readlink %s", $dest);
+        $commandline   = sprintf("ssh %s@%s \"%s\"", $this->getUser(), $this->getHost(), $remoteCommand);
+
+        if ($this->cli->execute($commandline)) {
+            return false;
+        }
+
+        return ('' !== trim($this->cli->getOutput()));
+    }
+
+    /**
      * Copies a file/directory on the remote host
      *
      * @param  string            $src

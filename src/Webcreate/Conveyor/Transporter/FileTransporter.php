@@ -114,6 +114,18 @@ class FileTransporter extends AbstractTransporter
     }
 
     /**
+     * Checks for symlink on the remote server
+     *
+     * @param $dest
+     * @return bool
+     */
+    public function isSymlink($dest)
+    {
+        return is_link($dest);
+    }
+
+
+    /**
      * Copies a file/directory on the remote host
      *
      * @param  string $src

@@ -19,6 +19,9 @@ use Webcreate\Conveyor\Event\TransporterEvent;
 
 class ReadOnlyTransporter extends AbstractTransporter
 {
+    /**
+     * @var AbstractTransporter
+     */
     protected $innerTransporter;
 
     public function __construct(EventDispatcherInterface $dispatcher, AbstractTransporter $innerTransporter = null)
@@ -107,6 +110,18 @@ class ReadOnlyTransporter extends AbstractTransporter
     {
         $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_SYMLINK, new TransporterEvent($this, array('dest' => $dest, 'src' => $src)));
     }
+
+    /**
+     * Checks for symlink on the remote server
+     *
+     * @param $dest
+     * @return bool
+     */
+    public function isSymlink($dest)
+    {
+        return $this->innerTransporter->isSymlink($dest);
+    }
+
 
     /**
      * Copies a file/directory on the remote host

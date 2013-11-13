@@ -302,6 +302,23 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
     }
 
     /**
+     * Checks for symlink on the remote server
+     *
+     * @param $dest
+     * @return bool
+     */
+    public function isSymlink($dest)
+    {
+        if (false === $this->isConnected()) {
+            $this->connectAndLogin();
+        }
+
+        $lstat = $this->sftp->lstat($dest);
+
+        return ($lstat['type'] === 3);
+    }
+
+    /**
      * Copies a file/directory on the remote host
      *
      * @param  string            $src
