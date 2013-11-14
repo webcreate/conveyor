@@ -44,9 +44,13 @@ class TaskRunnerSubscriber implements EventSubscriberInterface
         $self = $this;
 
         $task->setOutput(function($output) use ($io, $self) {
-            $io->overwrite(sprintf('%s', $output), false);
-
-            $self->needsNewline = true;
+            if ($io->isVerbose()) {
+                $io->write(sprintf('%s', $output));
+                $self->needsNewline = false;
+            } else {
+                $io->overwrite(sprintf('%s', $output), false);
+                $self->needsNewline = true;
+            }
         });
 
         if ($event->getArgument('index') > 0) {

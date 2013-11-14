@@ -198,13 +198,24 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
         $uploadPath         = $basepath . '/' . $this->getUploadPath($context->getVersion());
 
         $shared = (array) $this->options['shared'];
+
+        // add some white space to the output
+        if (count($shared) > 0) {
+            $this->io->write('');
+        }
+
         foreach ($shared as $fileOrFolder) {
             $sharedFilepath = $sharedPath . '/' . $fileOrFolder;
             $uploadFilepath = $uploadPath . '/' . $fileOrFolder;
 
             // make sure the symlink destination doesn't exist
-            // FIXME this also prompts for symlinks to the sharedFilepath
-            if (true === $this->transporter->exists($uploadFilepath) && false === $this->transporter->isSymlink($uploadFilepath)) {
+            if (true === $this->transporter->exists($uploadFilepath)) {
+                // Ok, it exists, but it's a symlink... let's assume that it was created
+                // in an earlier deploy with conveyor
+                if (true === $this->transporter->isSymlink($uploadFilepath)) {
+                    continue;
+                }
+
                 $answer = $this->io->askConfirmation(
                     sprintf('<error>Warning</error> Shared file/folder <info>%s</info> already exists, do you want to overwrite it? (n/Y): ', $uploadFilepath),
                     false
@@ -251,6 +262,9 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
     {
         $basepath = $this->transporter->getPath();
 
+        // add some white space to the output
+        $this->io->write('');
+
         $this->transporter->symlink(
             $basepath . '/' . $this->getUploadPath($context->getVersion()),
             $basepath . '/' . $this->getCurrentReleasePath()
@@ -270,6 +284,9 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
         $currentReleasePath = $basepath . '/' . $this->getCurrentReleasePath();
 
         if (false === $context->isFullDeploy()) {
+            // add some white space to the output
+            $this->io->write('');
+
             $this->transporter->copy(
                 $currentReleasePath,
                 $uploadPath
@@ -287,6 +304,11 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
         $uploadPath = $basepath . '/' . $this->getUploadPath($context->getVersion());
 
         $shared = (array) $this->options['shared'];
+
+        // add some white space to the output
+        if (count($shared) > 0) {
+            $this->io->write('');
+        }
 
         foreach ($shared as $fileOrFolder) {
             $sharedFilepath = $sharedPath . '/' . $fileOrFolder;

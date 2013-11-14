@@ -68,11 +68,19 @@ abstract class Task
         return $this;
     }
 
+    /**
+     * Probably set via the TaskRunnerSubscriber
+     *
+     * @param callable $callback
+     */
     public function setOutput(\Closure $callback)
     {
         $this->output = $callback;
     }
 
+    /**
+     * @param $output
+     */
     protected function output($output)
     {
         if ($this->output) {
