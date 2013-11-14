@@ -13,7 +13,9 @@ namespace Webcreate\Conveyor\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Webcreate\Conveyor\IO\IOInterface;
-use Webcreate\Vcs\Common\Events\VcsEvent;
+use Webcreate\Vcs\Common\Event\Data\CheckoutEventData;
+use Webcreate\Vcs\Common\Event\Data\ExportEventData;
+use Webcreate\Vcs\Common\Event\VcsEvent;
 use Webcreate\Vcs\Common\VcsEvents;
 
 class VcsSubscriber implements EventSubscriberInterface
@@ -37,14 +39,15 @@ class VcsSubscriber implements EventSubscriberInterface
     {
         if (false === $this->io->isVerbose()) return;
 
+        /** @var CheckoutEventData $data */
         $data = $event->getData();
 
         $this->io->write(
             sprintf(
                 'Checking out <comment>%s</comment> to <comment>%s</comment>...'
                 ,
-                @$data['head'],
-                @$data['dest']
+                $data->getHead()->getName(),
+                $data->getDestination()
             )
         );
     }
@@ -53,14 +56,15 @@ class VcsSubscriber implements EventSubscriberInterface
     {
         if (false === $this->io->isVerbose()) return;
 
+        /** @var ExportEventData $data */
         $data = $event->getData();
 
         $this->io->write(
             sprintf(
                 'Exporting <comment>%s</comment> to <comment>%s</comment>...'
                 ,
-                @$data['head'],
-                @$data['dest']
+                $data->getHead()->getName(),
+                $data->getDestination()
             )
         );
     }

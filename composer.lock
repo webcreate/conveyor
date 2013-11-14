@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "aaf16a6888033b88b21d8ca6f07f5720",
+    "hash": "f82f15a99298ef6b8a982ed29418a2b3",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -478,17 +478,17 @@
         },
         {
             "name": "symfony/process",
-            "version": "v2.3.6",
+            "version": "v2.3.7",
             "target-dir": "Symfony/Component/Process",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process.git",
-                "reference": "81191e354fe9dad0451036ccf0fdf283649d3f1e"
+                "reference": "82898108f79040314a7b3ba430a72c32c7f61d14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Process/zipball/81191e354fe9dad0451036ccf0fdf283649d3f1e",
-                "reference": "81191e354fe9dad0451036ccf0fdf283649d3f1e",
+                "url": "https://api.github.com/repos/symfony/Process/zipball/82898108f79040314a7b3ba430a72c32c7f61d14",
+                "reference": "82898108f79040314a7b3ba430a72c32c7f61d14",
                 "shasum": ""
             },
             "require": {
@@ -521,7 +521,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "http://symfony.com",
-            "time": "2013-10-09 21:17:57"
+            "time": "2013-10-30 08:30:20"
         },
         {
             "name": "symfony/yaml",
@@ -614,22 +614,22 @@
         },
         {
             "name": "webcreate/vcs",
-            "version": "1.1.12",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webcreate/vcs.git",
-                "reference": "eaec8e1beac098d897c8d27ccc5106204dc371f0"
+                "reference": "177e02238f5d09ee9ce8987cf0a02b79d445fc8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webcreate/vcs/zipball/eaec8e1beac098d897c8d27ccc5106204dc371f0",
-                "reference": "eaec8e1beac098d897c8d27ccc5106204dc371f0",
+                "url": "https://api.github.com/repos/webcreate/vcs/zipball/177e02238f5d09ee9ce8987cf0a02b79d445fc8c",
+                "reference": "177e02238f5d09ee9ce8987cf0a02b79d445fc8c",
                 "shasum": ""
             },
             "require": {
                 "symfony/filesystem": ">=v2.1.2",
                 "symfony/finder": ">=v2.1.2",
-                "symfony/process": ">=v2.1.2",
+                "symfony/process": "~2.3",
                 "webcreate/util": "1.*"
             },
             "suggest": {
@@ -664,7 +664,7 @@
                 "vcs",
                 "versioncontrol"
             ],
-            "time": "2013-10-31 08:59:10"
+            "time": "2013-11-14 15:00:53"
         }
     ],
     "packages-dev": [

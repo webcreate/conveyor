@@ -30,6 +30,10 @@ Example:
 	      user: user
 	      pass: userpass
 
+You can use ssh key authentication by setting `pass` to `~`:
+
+    pass: ~
+
 ### RsyncTransporter
 
 _Note: This transporter is still experimental._

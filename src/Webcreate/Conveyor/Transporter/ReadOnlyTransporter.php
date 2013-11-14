@@ -17,8 +17,11 @@ use Webcreate\Conveyor\Transporter\AbstractTransporter;
 use Webcreate\Conveyor\Event\TransporterEvents;
 use Webcreate\Conveyor\Event\TransporterEvent;
 
-class ReadOnlyTransporter extends AbstractTransporter
+class ReadOnlyTransporter extends AbstractTransporter implements SshCapableTransporterInterface, TransactionalTransporterInterface
 {
+    /**
+     * @var AbstractTransporter
+     */
     protected $innerTransporter;
 
     public function __construct(EventDispatcherInterface $dispatcher, AbstractTransporter $innerTransporter = null)
@@ -109,6 +112,17 @@ class ReadOnlyTransporter extends AbstractTransporter
     }
 
     /**
+     * Checks for symlink on the remote server
+     *
+     * @param $dest
+     * @return bool
+     */
+    public function isSymlink($dest)
+    {
+        return $this->innerTransporter->isSymlink($dest);
+    }
+
+    /**
      * Copies a file/directory on the remote host
      *
      * @param  string $src
@@ -131,5 +145,20 @@ class ReadOnlyTransporter extends AbstractTransporter
     public function remove($path, $recursive = true)
     {
         $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_REMOVE, new TransporterEvent($this, array('path' => $path)));
+    }
+
+    public function exec($command, $callback = null)
+    {
+        // nothing here
+    }
+
+    public function begin()
+    {
+        // nothing here
+    }
+
+    public function commit()
+    {
+        // nothing here
     }
 }

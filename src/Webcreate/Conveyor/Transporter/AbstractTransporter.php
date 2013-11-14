@@ -147,6 +147,14 @@ abstract class AbstractTransporter
     abstract public function symlink($src, $dest);
 
     /**
+     * Checks for symlink on the remote server
+     *
+     * @param $dest
+     * @return bool
+     */
+    abstract public function isSymlink($dest);
+
+    /**
      * Copies a file/directory on the remote host
      *
      * @param  string $src
