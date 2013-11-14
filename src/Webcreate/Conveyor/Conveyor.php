@@ -435,8 +435,8 @@ class Conveyor
         $remoteInfoFile = $this->container->getParameter('conveyor.remoteinfofile');
         $strategy       = $this->getStrategy($readOnlyTransporter);
 
-        $trDeployBefore->setTransporter($transporter);
-        $trDeployAfter->setTransporter($transporter);
+        $trDeployBefore->setTransporter($readOnlyTransporter);
+        $trDeployAfter->setTransporter($readOnlyTransporter);
 
         $context = new Context();
         $context
@@ -450,13 +450,13 @@ class Conveyor
 
         $manager = new StageManager($context, $this->container->get('dispatcher'));
         $manager
-            ->addStage('validate.remote',    new Stage\ValidateRemoteStage($transporter, $io, $remoteInfoFile))
-            ->addStage('get.remote.version', new Stage\RetrieveRemoteVersionInfoStage($transporter, $repository, $io, $remoteInfoFile))
+            ->addStage('validate.remote',    new Stage\ValidateRemoteStage($readOnlyTransporter, $io, $remoteInfoFile))
+            ->addStage('get.remote.version', new Stage\RetrieveRemoteVersionInfoStage($readOnlyTransporter, $repository, $io, $remoteInfoFile))
             ->addStage('build',              new Stage\BuildStage($builder, $io))
             ->addStage('filelist',           new Stage\BuildFilelistStage($repository, $derived))
             ->addStage('deploy.before',      new Stage\DeployBeforeStage($trDeployBefore, $io))
             ->addStage('transfer',           new Stage\TransferStage($readOnlyTransporter, $io))
-            ->addStage('set.remote.version', new Stage\WriteRemoteInfoFileStage($transporter, $remoteInfoFile, $io))
+            ->addStage('set.remote.version', new Stage\WriteRemoteInfoFileStage($readOnlyTransporter, $remoteInfoFile, $io))
             ->addStage('deploy.after',       new Stage\DeployAfterStage($trDeployAfter, $io))
         ;
 
