@@ -345,15 +345,22 @@ class Conveyor
         $trDeployBefore = $this->container->get('deploy.taskrunner.before');
         /** @var $trDeployAfter TaskRunner */
         $trDeployAfter  = $this->container->get('deploy.taskrunner.after');
+        $trDeployFinal  = $this->container->get('deploy.taskrunner.final');
         $remoteInfoFile = $this->container->getParameter('conveyor.remoteinfofile');
         $strategy       = $this->getStrategy($transporter);
 
         // @todo I don't like how the transporter is set here
         $trDeployBefore->setTransporter($transporter);
         $trDeployAfter->setTransporter($transporter);
+        $trDeployFinal->setTransporter($transporter);
 
         // @todo Think of a better way to set the correct path for the SshTask and REFACTOR this shit!
         foreach ($trDeployAfter->getTasks() as $task) {
+            if ($task instanceof SshTask) {
+                $task->setOption('path', FilePath::join($transporter->getPath(), $strategy->getUploadPath($version)));
+            }
+        }
+        foreach ($trDeployFinal->getTasks() as $task) {
             if ($task instanceof SshTask) {
                 $task->setOption('path', FilePath::join($transporter->getPath(), $strategy->getUploadPath($version)));
             }
@@ -382,6 +389,7 @@ class Conveyor
             ->addStage('transfer',           new Stage\TransferStage($transporter, $io))
             ->addStage('set.remote.version', new Stage\WriteRemoteInfoFileStage($transporter, $remoteInfoFile, $io))
             ->addStage('deploy.after',       new Stage\DeployAfterStage($trDeployAfter, $io))
+            ->addStage('deploy.final',       new Stage\DeployFinalStage($trDeployFinal, $io))
         ;
 
         if (true === $options['deploy_after_only']) {
@@ -432,11 +440,13 @@ class Conveyor
         $io             = $this->getIO();
         $trDeployBefore = $this->container->get('deploy.taskrunner.before');
         $trDeployAfter  = $this->container->get('deploy.taskrunner.after');
+        $trDeployFinal  = $this->container->get('deploy.taskrunner.final');
         $remoteInfoFile = $this->container->getParameter('conveyor.remoteinfofile');
         $strategy       = $this->getStrategy($readOnlyTransporter);
 
         $trDeployBefore->setTransporter($readOnlyTransporter);
         $trDeployAfter->setTransporter($readOnlyTransporter);
+        $trDeployFinal->setTransporter($readOnlyTransporter);
 
         $context = new Context();
         $context
@@ -458,6 +468,7 @@ class Conveyor
             ->addStage('transfer',           new Stage\TransferStage($readOnlyTransporter, $io))
             ->addStage('set.remote.version', new Stage\WriteRemoteInfoFileStage($readOnlyTransporter, $remoteInfoFile, $io))
             ->addStage('deploy.after',       new Stage\DeployAfterStage($trDeployAfter, $io))
+            ->addStage('deploy.final',       new Stage\DeployFinalStage($trDeployFinal, $io))
         ;
 
         $result = $manager->execute();
