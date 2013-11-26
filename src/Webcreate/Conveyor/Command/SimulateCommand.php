@@ -32,7 +32,7 @@ class SimulateCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $deploy = $this->getConveyor($input, $output, $this->getHelperSet());
+        $conveyor = $this->getConveyor($input, $output, $this->getHelperSet());
 
         $options = array();
 
@@ -40,6 +40,14 @@ class SimulateCommand extends AbstractCommand
             $options['full_deploy'] = true;
         }
 
-        $deploy->simulate($input->getArgument('target'), $input->getArgument('version'), $options);
+        $targets = array($input->getArgument('target'));
+
+        if (false !== strpos($input->getArgument('target'), ',')) {
+            $targets = explode(',', $input->getArgument('target'));
+        }
+
+        foreach ($targets as $target) {
+            $conveyor->simulate($target, $input->getArgument('version'), $options);
+        }
     }
 }

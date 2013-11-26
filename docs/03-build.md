@@ -9,17 +9,19 @@ Tasks are executed in the order they are defined. The first task is always the E
 
 ### ExportTask
 
-This task will export your codebase. This task is always executed before any other task that is defined.
+This task will export your codebase. This task is always executed before any other task that is
+defined.
 
 You don't have to define this task in your `conveyor.yml` configuration.
 
 ### ShellTask
 
-The ShellTask is a primitive task which will run a task on the commandline. It is very flexible and can handle
-almost every task. Although it's recommended to use task that have been developed for a specific task, instead
-of using the ShellTask.
+The ShellTask is a primitive task which will run a task on the commandline. It is very flexible
+and can handle almost every task. Although it's recommended to use task that have been developed
+for a specific task, instead of using the ShellTask.
 
-You could for example call ant or phing with the ShellTask, but you get better results to use the AntTask or PhingTask.
+You could for example call ant or phing with the ShellTask, but you get better results to use the
+AntTask or PhingTask.
 
 Available options:
 
@@ -40,7 +42,8 @@ The PharTask can create a Phar file from your codebase.
 Available options:
 
 - `filename`: name of the phar file that will be created
-- `stub`: initial file to be called when the archive is executed (read [more](http://php.net/manual/en/phar.fileformat.stub.php))
+- `stub`: initial file to be called when the archive is executed (read
+[more](http://php.net/manual/en/phar.fileformat.stub.php))
 
 Example:
 
@@ -70,7 +73,7 @@ Task to run Phing.
 Available options:
 
 - `target`: can be a string or an array of multiple targets
-- `buildfile`: name of the buildfile to use
+- `buildfile`: name of the build file to use
 
 Example:
 

@@ -15,7 +15,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Command\Command;
 
 class DeployCommand extends AbstractCommand
 {
@@ -24,8 +23,8 @@ class DeployCommand extends AbstractCommand
         $this
             ->setName('deploy')
             ->setDescription('Deploy')
-            ->addArgument('target', InputArgument::REQUIRED, 'Target to simulate')
-            ->addArgument('version', InputArgument::REQUIRED, 'Version to simulate')
+            ->addArgument('target', InputArgument::REQUIRED, 'Target to deploy')
+            ->addArgument('version', InputArgument::REQUIRED, 'Version to deploy')
             ->addOption('full', 'F', InputOption::VALUE_NONE, 'Force full deploy instead of incremental deploy')
             ->addOption('after', null, InputOption::VALUE_NONE, 'Only run deploy after tasks')
         ;
@@ -33,7 +32,7 @@ class DeployCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $deploy = $this->getConveyor($input, $output, $this->getHelperSet());
+        $conveyor = $this->getConveyor($input, $output, $this->getHelperSet());
 
         $options = array();
 
@@ -45,6 +44,14 @@ class DeployCommand extends AbstractCommand
             $options['deploy_after_only'] = true;
         }
 
-        $deploy->deploy($input->getArgument('target'), $input->getArgument('version'), $options);
+        $targets = array($input->getArgument('target'));
+
+        if (false !== strpos($input->getArgument('target'), ',')) {
+            $targets = explode(',', $input->getArgument('target'));
+        }
+
+        foreach ($targets as $target) {
+            $conveyor->deploy($target, $input->getArgument('version'), $options);
+        }
     }
 }

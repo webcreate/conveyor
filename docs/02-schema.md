@@ -77,7 +77,7 @@ Specify derived files and folders.
 On default Conveyor does an incremental deploy: only changed files are uploaded. But when some
 files are changed the implication is that other files should also be updated.
 
-Here is an example for the Composer lockfile.
+Here is an example for the Composer lock file.
 
     derived:
       - { source: composer.lock, derived: vendor/ }
@@ -100,7 +100,8 @@ Deploy strategy. See [Deploy](05-deploy.md#strategy) for more information.
 
 #### before
 
-Array of tasks that are executed on the remote host before the build is uploaded.
+Array of tasks that are executed (on the remote host) before the build is uploaded. See
+[Deploy](05-deploy.md#before) for more information.
 
 ##### type
 
@@ -108,7 +109,17 @@ Type of task. See [Build tasks](03-build.md#tasks) for available tasks.
 
 #### after
 
-Array of tasks that are executed on the remote host after the build is uploaded.
+Array of tasks that are executed (on the remote host) after the build is uploaded.See
+[Deploy](05-deploy.md#after) for more information.
+
+##### type
+
+Type of task. See [Build tasks](03-build.md#tasks) for available tasks.
+
+#### final
+
+Array of tasks that are executed (on the remote host) after the build is uploaded and the deploy
+strategy is finished. See [Deploy](05-deploy.md#final) for more information.
 
 ##### type
 
