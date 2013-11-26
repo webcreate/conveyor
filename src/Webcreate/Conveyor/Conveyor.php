@@ -11,7 +11,6 @@
 
 namespace Webcreate\Conveyor;
 
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,11 +22,12 @@ use Webcreate\Conveyor\DependencyInjection\Compiler\TransporterCompilerPass;
 use Webcreate\Conveyor\DependencyInjection\Compiler\ParameterCompilerPass;
 use Webcreate\Conveyor\DependencyInjection\Compiler\TaskCompilerPass;
 use Webcreate\Conveyor\DependencyInjection\TransporterAwareInterface;
+use Webcreate\Conveyor\Event\StageEvent;
+use Webcreate\Conveyor\Event\StageEvents;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\IO\NullIO;
 use Webcreate\Conveyor\Stage\Manager\StageManager;
 use Webcreate\Conveyor\Repository\Version;
-use Webcreate\Conveyor\Repository\Repository;
 use Webcreate\Conveyor\Strategy\StrategyInterface;
 use Webcreate\Conveyor\Task\SshTask;
 use Webcreate\Conveyor\Task\TaskRunner;
@@ -42,6 +42,7 @@ class Conveyor
      */
     protected $container;
     protected $booted;
+    protected $strategy;
 
     public function boot(IOInterface $io)
     {
@@ -55,7 +56,7 @@ class Conveyor
     }
 
     /**
-     * @param IOInterface $io
+     * @param  IOInterface                          $io
      * @return ContainerBuilder
      * @throws \Exception|\InvalidArgumentException
      */
@@ -152,19 +153,24 @@ class Conveyor
     public function getStrategy($transporter = null)
     {
         $config = $this->getConfig()->getConfig();
+        $dispatcher = $this->container->get('dispatcher');
 
-        $strategy = $this->container->get('strategy.' . $config['deploy']['strategy']['type']);
-        $strategy->setOptions($config['deploy']['strategy']);
+        if (null === $this->strategy) {
+            $strategy = $this->container->get('strategy.' . $config['deploy']['strategy']['type']);
+            $strategy->setOptions($config['deploy']['strategy']);
 
-        if ($strategy instanceof TransporterAwareInterface) {
-            $strategy->setTransporter($transporter);
+            if ($strategy instanceof TransporterAwareInterface) {
+                $strategy->setTransporter($transporter);
+            }
+
+            if ($strategy instanceof EventSubscriberInterface) {
+                $dispatcher->addSubscriber($strategy);
+            }
+
+            $this->strategy = $strategy;
         }
 
-        if ($strategy instanceof EventSubscriberInterface) {
-            $this->container->get('dispatcher')->addSubscriber($strategy);
-        }
-
-        return $strategy;
+        return $this->strategy;
     }
 
     /**
@@ -342,6 +348,7 @@ class Conveyor
         $builder        = $this->getBuilder();
         $repository     = $this->getRepository();
         $io             = $this->getIO();
+        $dispatcher     = $this->container->get('dispatcher');
         $trDeployBefore = $this->container->get('deploy.taskrunner.before');
         /** @var $trDeployAfter TaskRunner */
         $trDeployAfter  = $this->container->get('deploy.taskrunner.after');
@@ -379,7 +386,7 @@ class Conveyor
             $transporter->begin();
         }
 
-        $manager = new StageManager($context, $this->container->get('dispatcher'));
+        $manager = new StageManager($context, $dispatcher);
         $manager
             ->addStage('validate.remote',    new Stage\ValidateRemoteStage($transporter, $io, $remoteInfoFile))
             ->addStage('get.remote.version', new Stage\RetrieveRemoteVersionInfoStage($transporter, $repository, $io, $remoteInfoFile))
@@ -392,16 +399,22 @@ class Conveyor
             ->addStage('deploy.final',       new Stage\DeployFinalStage($trDeployFinal, $io))
         ;
 
+        if ($transporter instanceof TransactionalTransporterInterface) {
+            $dispatcher->addListener(
+                StageEvents::STAGE_PRE_EXECUTE,
+                function (StageEvent $event) use ($transporter) {
+                    if ('deploy.after' === $event->getStageName()) {
+                        $transporter->commit();
+                    }
+                }
+            );
+        }
+
         if (true === $options['deploy_after_only']) {
             $runnableStages = array('deploy.after');
             $result = $manager->execute($runnableStages);
         } else {
             $result = $manager->execute();
-        }
-
-        // @todo this should happend BEFORE deploy.after stage
-        if ($transporter instanceof TransactionalTransporterInterface) {
-            $transporter->commit();
         }
 
         // cleanup
@@ -438,6 +451,7 @@ class Conveyor
         $builder        = $this->getBuilder();
         $repository     = $this->getRepository();
         $io             = $this->getIO();
+        $dispatcher     = $this->container->get('dispatcher');
         $trDeployBefore = $this->container->get('deploy.taskrunner.before');
         $trDeployAfter  = $this->container->get('deploy.taskrunner.after');
         $trDeployFinal  = $this->container->get('deploy.taskrunner.final');
@@ -458,7 +472,11 @@ class Conveyor
             ->setStrategy($strategy)
         ;
 
-        $manager = new StageManager($context, $this->container->get('dispatcher'));
+        if ($transporter instanceof TransactionalTransporterInterface) {
+            $transporter->begin();
+        }
+
+        $manager = new StageManager($context, $dispatcher);
         $manager
             ->addStage('validate.remote',    new Stage\ValidateRemoteStage($readOnlyTransporter, $io, $remoteInfoFile))
             ->addStage('get.remote.version', new Stage\RetrieveRemoteVersionInfoStage($readOnlyTransporter, $repository, $io, $remoteInfoFile))
@@ -470,6 +488,17 @@ class Conveyor
             ->addStage('deploy.after',       new Stage\DeployAfterStage($trDeployAfter, $io))
             ->addStage('deploy.final',       new Stage\DeployFinalStage($trDeployFinal, $io))
         ;
+
+        if ($transporter instanceof TransactionalTransporterInterface) {
+            $dispatcher->addListener(
+                StageEvents::STAGE_PRE_EXECUTE,
+                function (StageEvent $event) use ($transporter) {
+                    if ('deploy.after' === $event->getStageName()) {
+                        $transporter->commit();
+                    }
+                }
+            );
+        }
 
         $result = $manager->execute();
 
@@ -519,7 +548,7 @@ class Conveyor
         $config = $this->getConfig()->getConfig();
 
         $transporterOptions = $config['targets'][$target]['transport'];
-        foreach($transporterOptions as $key => $value) {
+        foreach ($transporterOptions as $key => $value) {
             $this->getConfig()->setParameter('target.transport.' . $key, $value);
         }
     }

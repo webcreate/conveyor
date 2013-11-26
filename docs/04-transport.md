@@ -1,11 +1,12 @@
 Transport
 =========
 
-After your project is build it will be transfered to the selected target. Conveyor supports a lot of different transport protocols.
+After your project is build it will be transferred to the selected target. Conveyor supports a lot
+of different transport protocols.
 
 ## Transporters
 
-Each transfer protocol is handled by a specific transporter. The following transporters are available
+Each transfer protocol is handled by a specific transporter. Below are the available transporters.
 
 ### FileTransporter
 
@@ -13,11 +14,11 @@ Can be used to deploy to the local filesystem.
 
 ### FtpTransporter
 
-Tranfer using FTP.
+Transfer using FTP.
 
 ### SftpTransporter
 
-Tranfer using SFTP.
+Transfer using SFTP.
 
 Example:
 

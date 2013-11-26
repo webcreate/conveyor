@@ -3,7 +3,7 @@ Deploy
 
 Deploy stage.
 
-## Strategy
+## Strategies
 
 Available strategies:
 
@@ -56,8 +56,9 @@ Example:
 ## Final
 
 Run tasks just before the complete deploy run is finished. At this step the files are transferred,
-the deploy after tasks have all been runned and the strategy is finished (e.g. in case of the releases
-strategy: after symlinking the release folder to the current folder).
+the deploy after tasks have all been runned and the strategy is finished (e.g. in case of the
+releases [strategy](05-deploy.md#strategy): after symlinking the release folder to the current
+folder).
 
 Run final tasks.
 
