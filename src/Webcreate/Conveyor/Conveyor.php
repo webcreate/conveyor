@@ -18,12 +18,14 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
+use Webcreate\Conveyor\DependencyInjection\Compiler\StrategyCompilerPass;
 use Webcreate\Conveyor\DependencyInjection\Compiler\TransporterCompilerPass;
 use Webcreate\Conveyor\DependencyInjection\Compiler\ParameterCompilerPass;
 use Webcreate\Conveyor\DependencyInjection\Compiler\TaskCompilerPass;
 use Webcreate\Conveyor\DependencyInjection\TransporterAwareInterface;
 use Webcreate\Conveyor\Event\StageEvent;
 use Webcreate\Conveyor\Event\StageEvents;
+use Webcreate\Conveyor\Factory\StrategyFactory;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\IO\NullIO;
 use Webcreate\Conveyor\Stage\Manager\StageManager;
@@ -74,6 +76,7 @@ class Conveyor
 
         $container->addCompilerPass(new TaskCompilerPass());
         $container->addCompilerPass(new TransporterCompilerPass());
+        $container->addCompilerPass(new StrategyCompilerPass());
         $container->addCompilerPass(new ParameterCompilerPass());
 
         try {
@@ -119,8 +122,8 @@ class Conveyor
     }
 
     /**
-     * @param  string                                              $target name of the target to get the transporter for
-     * @return \Webcreate\Conveyor\Transporter\AbstractTransporter
+     * @param  string              $target name of the target to get the transporter for
+     * @return AbstractTransporter
      */
     public function getTransporter($target)
     {
@@ -142,22 +145,20 @@ class Conveyor
     }
 
     /**
-     * @todo refactory initialisation of strategy
-     *          - currently there is no error handling (does the service exist?)
-     *          - no validation during "validate" command
-     *          - move to a dedicated Factory
-     *
      * @param  null|AbstractTransporter $transporter
      * @return StrategyInterface
      */
     public function getStrategy($transporter = null)
     {
+        /** @var StrategyFactory $factory */
+        $factory = $this->container->get('strategy.factory');
         $config = $this->getConfig()->getConfig();
         $dispatcher = $this->container->get('dispatcher');
 
         if (null === $this->strategy) {
-            $strategy = $this->container->get('strategy.' . $config['deploy']['strategy']['type']);
-            $strategy->setOptions($config['deploy']['strategy']);
+            $options = $config['deploy']['strategy'];
+
+            $strategy = $factory->get($options['type'], $options);
 
             if ($strategy instanceof TransporterAwareInterface) {
                 $strategy->setTransporter($transporter);
