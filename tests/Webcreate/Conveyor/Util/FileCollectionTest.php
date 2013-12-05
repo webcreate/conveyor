@@ -109,21 +109,35 @@ class FileCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('conveyor.yml.dist', '.travis.yml'), $matches);
     }
 
-    public function testHas()
+    /**
+     * @dataProvider dataproviderHas
+     */
+    public function testHas($input, $expected)
     {
         $collection = new Webcreate\Conveyor\Util\FileCollection(__DIR__ . '/../../../../');
 
         $collection->add('vendor/');
         $collection->add('conveyor.yml.dist');
 
-        $this->assertTrue($collection->has('*.dist'));
-        $this->assertTrue($collection->has('conveyor.yml.dist'));
-        $this->assertTrue($collection->has('vendor/'));
-        $this->assertTrue($collection->has('vendor/autoload.php'));
-        $this->assertTrue($collection->has('vendor/composer'));
-        $this->assertTrue($collection->has('vendor/composer/'));
-        $this->assertTrue($collection->has('vendor/composer/installed.json'));
-        $this->assertFalse($collection->has('you_dont_have_me'));
+        $this->assertEquals($expected, $collection->has($input));
+    }
+
+    public function dataproviderHas()
+    {
+        return array(
+            // positives
+            array('*.dist', true),
+            array('conveyor.yml.dist', true),
+            array('vendor/', true),
+            array('vendor/autoload.php', true),
+            array('vendor/composer/', true),
+            array('vendor/composer/installed.json', true),
+
+            // negatives
+            array('conveyor.yml', false),
+            array('vendor/composer', false),
+            array('you_dont_have_me', false),
+        );
     }
 
     public function testHasWildcard()
