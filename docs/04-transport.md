@@ -29,7 +29,7 @@ Transfer using FTP.
 
 ### SftpTransporter (recommended)
 
-Transfer using SFTP. The SFTP is currently the most mature transporter in Conveyor and therefor recommended to use.
+Transfer using SFTP. The SFTP is currently the most mature transporter in Conveyor and therefore recommended to use.
 
 Example:
 
