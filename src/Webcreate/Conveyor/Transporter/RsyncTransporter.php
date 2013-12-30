@@ -53,6 +53,8 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
      * Create a directory on the remote server
      *
      * @param string $dest remote path
+     * @param bool $recursive
+     * @throws \RuntimeException
      */
     public function mkdir($dest, $recursive = true)
     {
@@ -76,8 +78,10 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
     /**
      * Retrieve file or directory from remote server
      *
-     * @param string $src  remote source path
+     * @param string $src remote source path
      * @param string $dest (optional) local destination path
+     * @throws \RuntimeException
+     * @return string
      */
     public function get($src, $dest = null)
     {
@@ -106,8 +110,10 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
     /**
      * Upload a file or directory to remote server
      *
-     * @param string $src  local source path
+     * @param string $src local source path
      * @param string $dest remote destination path
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
      */
     public function put($src, $dest)
     {
@@ -238,7 +244,8 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
      * Removes a file/directory on the remote host
      *
      * @param  string $path
-     * @param  bool   $recursive
+     * @param  bool $recursive
+     * @throws \RuntimeException
      * @return mixed
      */
     public function remove($path, $recursive = true)
@@ -269,5 +276,26 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
         if ($this->cli->execute($commandline, $callback)) {
             throw new \RuntimeException($this->cli->getErrorOutput());
         }
+    }
+
+    /**
+     * Lists files and directories
+     *
+     * returns an array with the following format:
+     *
+     * array(
+     *   'filename' => array(
+     *     'type' => 'directory', // or 'file'
+     *     'mtime' => new \DateTime(),
+     *   ),
+     * );
+     *
+     * @param  string $path
+     * @throws \RuntimeException
+     * @return array
+     */
+    public function ls($path)
+    {
+        throw new \RuntimeException('Listing of files and directories is not supported (yet)');
     }
 }

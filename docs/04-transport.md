@@ -12,6 +12,17 @@ Each transfer protocol is handled by a specific transporter. Below are the avail
 
 Can be used to deploy to the local filesystem.
 
+Example:
+
+	targets:
+	  production:
+	    transporter:
+	      type: file
+	      host: ~
+	      path: /tmp/my-project
+	      user: ~
+	      pass: ~
+
 ### FtpTransporter
 
 Transfer using FTP.

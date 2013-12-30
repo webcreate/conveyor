@@ -161,4 +161,9 @@ class ReadOnlyTransporter extends AbstractTransporter implements SshCapableTrans
     {
         // nothing here
     }
+
+    public function ls($path)
+    {
+        return $this->innerTransporter->ls($path);
+    }
 }

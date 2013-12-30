@@ -19,6 +19,7 @@ use Webcreate\Conveyor\Event\StageEvents;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Transporter\AbstractTransporter;
+use Webcreate\Conveyor\Transporter\TransactionalTransporterInterface;
 use Webcreate\Conveyor\Util\FileCollection;
 use Webcreate\Conveyor\Util\FilePath;
 
@@ -51,8 +52,18 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
         $this->options = $options;
     }
 
+    /**
+     * Sets transporter
+     *
+     * @param $transporter
+     * @throws \InvalidArgumentException
+     */
     public function setTransporter($transporter)
     {
+        if ($transporter instanceof TransactionalTransporterInterface) {
+            throw new \InvalidArgumentException(sprintf('Transporter "%s" is not supported by the releases strategy', get_class($transporter)));
+        }
+
         $this->transporter = $transporter;
     }
 
@@ -157,10 +168,203 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
             if (count($this->sharedFiles) > 0) {
                 $this->putDeferedSharedFiles($this->sharedFiles, $e->getContext());
             }
+        } elseif ('deploy.final' === $e->getStageName()) {
+            $this->cleanupOldReleases($this->options['keep']);
         }
     }
 
     /**
+     * Removes old releases
+     *
+     * @param $keep
+     */
+    protected function cleanupOldReleases($keep)
+    {
+        $basepath   = $this->transporter->getPath();
+        $uploadPath = $basepath . '/releases';
+        $transporter = $this->transporter;
+
+        $this->io->write('Searching for outdated releases');
+        $this->io->increaseIndention(1);
+
+        $files = $transporter->ls($uploadPath);
+
+        $this->array_qsort2($files, 'mtime', $order='DESC');
+
+        $removableFiles = array();
+        $i = 0;
+
+        foreach ($files as $file => $info) {
+            if ($i > $keep) {
+                $removableFiles[] = $file;
+            }
+
+            $i++;
+        }
+
+        // if it's only 1 directory to remove, just remove it without asking
+        // for permission of the user
+        if (1 === count($removableFiles)) {
+            $file = array_pop($removableFiles);
+
+            // use safe guard, because transport can throw an exception in case
+            // of a permission denied
+            $this->safeGuard(
+                function() use ($transporter, $uploadPath, $file) {
+                    $transporter->remove($uploadPath . '/' . $file, true);
+                }
+            );
+        }
+
+        // More then 1 file to remove? Let's inform the used and ask for permission.
+        // This can happen if the user decides to turn this feature on after some
+        // deploys have already been done.
+        if (count($removableFiles) > 0) {
+            $askAgain = true;
+
+            while ($askAgain) {
+                $askAgain = false; // don't ask again on default
+
+                $answer = $this->io->select(
+                    sprintf('Found %d out of %d releases which can be removed, would you like to remove them?', count($removableFiles), count($files)),
+                    array(
+                        'y' => 'remove outdated releases step by step',
+                        'a' => 'remove all outdated releases at once',
+                        'n' => 'abort and let you manually clean things up',
+                        'v' => 'view outdated release folders',
+                    )
+                );
+
+                switch ($answer) {
+                    case 'y':
+                        while($file = array_pop($removableFiles)) {
+                            if ($this->io->askConfirmation(sprintf('Would you like to remove %s? [Y/n] ', $file), true)) {
+                                // use safe guard, because transport can throw an exception in case
+                                // of a permission denied
+                                $this->safeGuard(
+                                    function() use ($transporter, $uploadPath, $file) {
+                                        $transporter->remove($uploadPath . '/' . $file, true);
+                                    }
+                                );
+                            } else {
+                                $askAgain = true;
+                                break;
+                            }
+                        }
+                        break;
+
+                    case 'a':
+                        // remove all in reversed order (oldest first)
+                        while($file = array_pop($removableFiles)) {
+                            // use safe guard, because transport can throw an exception in case
+                            // of a permission denied
+                            $this->safeGuard(
+                                function() use ($transporter, $uploadPath, $file) {
+                                    $transporter->remove($uploadPath . '/' . $file, true);
+                                }
+                            );
+                        }
+                        break;
+
+                    case 'n':
+                        break;
+
+                    case 'v':
+                    default:
+                        $askAgain = true;
+
+                        foreach ($removableFiles as $file) {
+                            $info = $files[$file];
+
+                            $this->io->write(sprintf('[%s] <comment>%s</comment>', $info['mtime']->format('Y-m-d H:i:s'), $uploadPath . '/' . $file));
+
+                            $i++;
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Catches exceptions and asks if you want to retry
+     *
+     * @param callable $operation
+     */
+    protected function safeGuard($operation)
+    {
+        while (true) {
+            try {
+                $operation();
+
+                break;
+            } catch (\Exception $e) {
+                $this->io->renderException($e);
+
+                if (false === $this->tryAgain()) {
+                    // skip
+                    break;
+                }
+            }
+        }
+    }
+
+    protected function tryAgain()
+    {
+        while (true) {
+            $answer = $this->io->select(
+                '<info>Select an action</info>',
+                array(
+                    'a' => 'abort',
+                    'r' => 'retry this operation',
+                    's' => 'skip this operation and continue with the next',
+                ),
+                'r'
+            );
+
+            switch ($answer) {
+                case "a":
+                    $this->io->setIndention(0);
+                    $this->io->write('Aborted.');
+                    die();
+                    break;
+                case "r":
+                    return true;
+                    break;
+                case "s":
+                    return false;
+                    break;
+            }
+        }
+
+        return true;
+    }
+
+    /*
+     * Sort a multidimensional array on a column
+     *
+     * For example:
+     * <code>
+     * <?php array_qsort2($users, "username", "ASC"); ?>
+     * </code>
+     *
+     * @param array $array array with hash array
+     * @param mixed $column key that you want to sort on
+     * @param enum $order asc or desc
+     */
+    protected function array_qsort2(&$array, $column=0, $order="ASC")
+    {
+        $oper = ($order == "ASC")?">":"<";
+
+        if(!is_array($array)) return;
+
+        uasort($array, create_function('$a,$b',"return (\$a['$column'] $oper \$b['$column']);"));
+
+        reset($array);
+    }
+
+    /**
+     *
      * @param FileCollection $sharedFiles
      * @param Context $context
      */
@@ -301,7 +505,6 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
     {
         $basepath   = $this->transporter->getPath();
         $sharedPath = $basepath . '/shared';
-        $uploadPath = $basepath . '/' . $this->getUploadPath($context->getVersion());
 
         $shared = (array) $this->options['shared'];
 
@@ -312,7 +515,6 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
 
         foreach ($shared as $fileOrFolder) {
             $sharedFilepath = $sharedPath . '/' . $fileOrFolder;
-            $uploadFilepath = $uploadPath . '/' . $fileOrFolder;
             $localFilepath = $context->getBuilddir() . '/' . $fileOrFolder;
 
             if (false === $this->transporter->exists($sharedFilepath)) {

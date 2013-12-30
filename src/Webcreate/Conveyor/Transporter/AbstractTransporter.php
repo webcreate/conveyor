@@ -172,4 +172,21 @@ abstract class AbstractTransporter
      * @return mixed
      */
     abstract public function remove($path, $recursive = true);
+
+    /**
+     * Lists files and directories on the remote host
+     *
+     * returns an array with the following format:
+     *
+     * array(
+     *   'filename' => array(
+     *     'type' => 'directory', // or 'file'
+     *     'mtime' => new \DateTime(),
+     *   ),
+     * );
+     *
+     * @param  string $path
+     * @return array
+     */
+    abstract public function ls($path);
 }

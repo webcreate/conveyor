@@ -26,6 +26,10 @@ class ReleasesStrategyConfiguration implements ConfigurationInterface
                 ->arrayNode('shared')
                     ->prototype('scalar')->end()
                 ->end()
+                ->scalarNode('keep')
+                    ->defaultValue(5)
+                    ->info('Number of releases to keep on the server')
+                ->end()
             ->end()
         ;
 
