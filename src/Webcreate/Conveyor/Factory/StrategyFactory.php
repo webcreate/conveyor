@@ -11,14 +11,13 @@
 
 namespace Webcreate\Conveyor\Factory;
 
-use Webcreate\Conveyor\Transporter\AbstractTransporter;
-
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Webcreate\Conveyor\Strategy\StrategyInterface;
 
-class TransporterFactory
+class StrategyFactory
 {
     protected $container;
-    protected $transporters   = array();
+    protected $strategies   = array();
     protected $configurations = array();
 
     public function __construct(ContainerInterface $container)
@@ -26,15 +25,15 @@ class TransporterFactory
         $this->container = $container;
     }
 
-    public function addTransporter($serviceId, $alias, $configuration = false)
+    public function addStrategy($serviceId, $alias, $configuration = false)
     {
-        $this->transporters[$alias]   = $serviceId;
+        $this->strategies[$alias]     = $serviceId;
         $this->configurations[$alias] = $configuration;
     }
 
-    public function getTransporters()
+    public function getStrategies()
     {
-        return $this->transporters;
+        return $this->strategies;
     }
 
     /**
@@ -43,15 +42,15 @@ class TransporterFactory
      * @param  string                    $alias   name of transporter
      * @param  array                     $options transporter settings
      * @throws \InvalidArgumentException
-     * @return AbstractTransporter
+     * @return StrategyInterface
      */
     public function get($alias, array $options = array())
     {
-        if (!isset($this->transporters[$alias])) {
-            throw new \InvalidArgumentException(sprintf('Transporter type \'%s\' does not exist', $alias));
+        if (!isset($this->strategies[$alias])) {
+            throw new \InvalidArgumentException(sprintf('Strategy \'%s\' does not exist', $alias));
         }
 
-        $serviceId  = $this->transporters[$alias];
+        $serviceId  = $this->strategies[$alias];
 
         $transporter = $this->container->get($serviceId);
         $transporter->setOptions($options);

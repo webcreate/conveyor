@@ -17,17 +17,17 @@ use Symfony\Component\Config\Definition\NodeInterface;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
-use Webcreate\Conveyor\Factory\TransporterFactory;
+use Webcreate\Conveyor\Factory\StrategyFactory;
 
-class TransporterNode extends ArrayNode
+class StrategyNode extends ArrayNode
 {
     protected $prepared = false;
     protected $originalChildren = array();
 
     /**
-     * @var TransporterFactory
+     * @var StrategyFactory
      */
-    protected $transporterFactory;
+    protected $strategyFactory;
 
     /**
      * Constructor.
@@ -43,11 +43,11 @@ class TransporterNode extends ArrayNode
     /**
      * Set transporter factory
      *
-     * @param TransporterFactory|null $factory
+     * @param StrategyFactory|null $factory
      */
-    public function setTransporterFactory($factory)
+    public function setStrategyFactory($factory)
     {
-        $this->transporterFactory = $factory;
+        $this->strategyFactory = $factory;
     }
 
     /**
@@ -68,12 +68,12 @@ class TransporterNode extends ArrayNode
             $this->prepared = true;
         }
 
-        $transporters = $this->transporterFactory->getTransporters();
+        $strategies = $this->strategyFactory->getStrategies();
 
         $this->children = $this->originalChildren;
 
-        if (isset($transporters[$type])) {
-            $configuration = $this->transporterFactory->configuration($type);
+        if (isset($strategies[$type])) {
+            $configuration = $this->strategyFactory->configuration($type);
 
             if ($configuration instanceof ConfigurationInterface) {
                 $tree = $configuration->getConfigTreeBuilder()->buildTree();
@@ -83,9 +83,9 @@ class TransporterNode extends ArrayNode
             }
         } else {
             throw new InvalidConfigurationException(sprintf(
-                    'Transporter type "%s" does not exist at path "%s". Did you mean any of %s?', $type,
+                    'Strategy type "%s" does not exist at path "%s". Did you mean any of %s?', $type,
                     $this->getPath(),
-                    implode(', ', array_keys($transporters))
+                    implode(', ', array_keys($strategies))
             ));
         }
     }

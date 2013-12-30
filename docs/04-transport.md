@@ -12,13 +12,24 @@ Each transfer protocol is handled by a specific transporter. Below are the avail
 
 Can be used to deploy to the local filesystem.
 
+Example:
+
+	targets:
+	  production:
+	    transporter:
+	      type: file
+	      host: ~
+	      path: /tmp/my-project
+	      user: ~
+	      pass: ~
+
 ### FtpTransporter
 
 Transfer using FTP.
 
-### SftpTransporter
+### SftpTransporter (recommended)
 
-Transfer using SFTP.
+Transfer using SFTP. The SFTP is currently the most mature transporter in Conveyor and therefore recommended to use.
 
 Example:
 
@@ -34,6 +45,8 @@ Example:
 You can use ssh key authentication by setting `pass` to `~`:
 
     pass: ~
+
+This will look for your key in `~/.ssh/id_rsa`. If the key contains a passphrase you will be prompt about it. Your passphrase will NEVER be stored.
 
 ### RsyncTransporter
 

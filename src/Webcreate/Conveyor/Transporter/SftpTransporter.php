@@ -366,8 +366,15 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
         $recursiveFlag = ($recursive ? 'r' : '');
 
         $success = $this->sftp->exec(sprintf("rm -{$recursiveFlag}f %s", escapeshellarg($path)));
+
         if (false === $success) {
-            throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", (array) $this->sftp->getErrors()));
+            $errors = (array) $this->sftp->getErrors();
+
+            throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", $errors));
+        }
+        // ieuww, Net_Ssh doesn't return false, but does put errors in the getStdError()
+        elseif ($error = $this->sftp->getStdError()) {
+            throw new \RuntimeException('Something went wrong: ' . "\n" . $error);
         }
     }
 
@@ -396,6 +403,36 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
         }
 
         return $status;
+    }
+
+    /**
+     * Lists files and directories
+     *
+     * @param  string $path
+     * @return mixed
+     */
+    public function ls($path)
+    {
+        if (false === $this->isConnected()) {
+            $this->connectAndLogin();
+        }
+
+        $list = $this->sftp->rawlist($path);
+
+        $retval = array();
+
+        foreach ($list as $fileOrDirectory => $info) {
+            if ('..' === $fileOrDirectory || '.' === $fileOrDirectory) {
+                continue;
+            }
+
+            $retval[$fileOrDirectory] = array(
+                'type' => (2 == $info['type'] ? 'directory' : 'file'), // @todo improve
+                'mtime' => new \DateTime('@' . $info['mtime'])
+            );
+        }
+
+        return $retval;
     }
 
     protected function isConnected()

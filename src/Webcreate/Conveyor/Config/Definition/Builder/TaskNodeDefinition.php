@@ -11,6 +11,7 @@
 
 namespace Webcreate\Conveyor\Config\Definition\Builder;
 
+use Symfony\Component\Config\Definition\Builder\NodeParentInterface;
 use Symfony\Component\Config\Definition\Builder\ParentNodeDefinitionInterface;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
@@ -28,6 +29,7 @@ class TaskNodeDefinition extends NodeDefinition implements
 {
     protected $nodeBuilder;
     protected $children;
+    protected $taskFactory;
 
     public function __construct($name, NodeParentInterface $parent = null)
     {
@@ -64,6 +66,11 @@ class TaskNodeDefinition extends NodeDefinition implements
         foreach ($this->children as $child) {
             $child->parent = $node;
             $node->addChild($child->getNode());
+        }
+
+        if (null !== $this->normalization) {
+            $node->setNormalizationClosures($this->normalization->before);
+            $node->setXmlRemappings($this->normalization->remappings);
         }
 
         return $node;

@@ -53,6 +53,7 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
      * Create a directory on the remote server
      *
      * @param string $dest remote path
+     * @throws \RuntimeException
      */
     public function mkdir($dest)
     {
@@ -76,8 +77,10 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
     /**
      * Retrieve file or directory from remote server
      *
-     * @param string $src  remote source path
+     * @param string $src remote source path
      * @param string $dest (optional) local destination path
+     * @throws \RuntimeException
+     * @return string
      */
     public function get($src, $dest = null)
     {
@@ -106,8 +109,10 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
     /**
      * Upload a file or directory to remote server
      *
-     * @param string $src  local source path
+     * @param string $src local source path
      * @param string $dest remote destination path
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
      */
     public function put($src, $dest)
     {
@@ -135,7 +140,8 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
      * Upload a string to remote server
      *
      * @param string $content content
-     * @param string $dest    remote destination path
+     * @param string $dest remote destination path
+     * @throws \RuntimeException
      */
     public function putContent($content, $dest)
     {
@@ -163,6 +169,7 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
      *
      * @param $src
      * @param $dest
+     * @throws \RuntimeException
      * @return mixed
      */
     public function symlink($src, $dest)
@@ -200,7 +207,8 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
      *
      * @param  string $src
      * @param  string $dest
-     * @param  bool   $recursive
+     * @param  bool $recursive
+     * @throws \RuntimeException
      * @return mixed
      */
     public function copy($src, $dest, $recursive = true)
@@ -221,7 +229,8 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
      * Removes a file/directory on the remote host
      *
      * @param  string $path
-     * @param  bool   $recursive
+     * @param  bool $recursive
+     * @throws \RuntimeException
      * @return mixed
      */
     public function remove($path, $recursive = true)
@@ -247,10 +256,31 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
      */
     public function exec($command, $callback = null)
     {
-        $commandline   = sprintf("ssh %s@%s \"%s\"", $this->getUser(), $this->getHost(), $command);
+        $commandline = sprintf("ssh %s@%s \"%s\"", $this->getUser(), $this->getHost(), $command);
 
         if ($this->cli->execute($commandline, $callback)) {
             throw new \RuntimeException($this->cli->getErrorOutput());
         }
+    }
+
+    /**
+     * Lists files and directories
+     *
+     * returns an array with the following format:
+     *
+     * array(
+     *   'filename' => array(
+     *     'type' => 'directory', // or 'file'
+     *     'mtime' => new \DateTime(),
+     *   ),
+     * );
+     *
+     * @param  string $path
+     * @throws \RuntimeException
+     * @return array
+     */
+    public function ls($path)
+    {
+        throw new \RuntimeException('Listing of files and directories is not supported (yet)');
     }
 }

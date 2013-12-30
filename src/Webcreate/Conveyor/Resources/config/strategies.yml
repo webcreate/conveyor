@@ -1,8 +1,13 @@
 services:
   strategy.simple:
     class: Webcreate\Conveyor\Strategy\SimpleStrategy
+    tags:
+      - { name: strategy, alias: simple }
 
   strategy.releases:
     class: Webcreate\Conveyor\Strategy\ReleasesStrategy
     arguments:
       - @io
+    tags:
+      - { name: strategy, alias: releases, configuration: Webcreate\Conveyor\Strategy\Configuration\ReleasesStrategyConfiguration }
+

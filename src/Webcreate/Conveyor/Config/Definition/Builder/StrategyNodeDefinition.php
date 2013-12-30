@@ -16,20 +16,20 @@ use Symfony\Component\Config\Definition\Builder\ParentNodeDefinitionInterface;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 
-use Webcreate\Conveyor\Config\Definition\TransporterNode;
-use Webcreate\Conveyor\Factory\TransporterFactory;
+use Webcreate\Conveyor\Config\Definition\StrategyNode;
+use Webcreate\Conveyor\Factory\StrategyFactory;
 
 /**
  * This class provides a fluent interface for defining an transporter node.
  *
  * @author Jeroen Fiege
  */
-class TransporterNodeDefinition extends NodeDefinition implements
+class StrategyNodeDefinition extends NodeDefinition implements
         ParentNodeDefinitionInterface
 {
     protected $nodeBuilder;
     protected $children;
-    protected $transporterFactory;
+    protected $strategyFactory;
 
     public function __construct($name, NodeParentInterface $parent = null)
     {
@@ -60,8 +60,8 @@ class TransporterNodeDefinition extends NodeDefinition implements
      */
     protected function createNode()
     {
-        $node = new TransporterNode($this->name, $this->parent);
-        $node->setTransporterFactory($this->transporterFactory);
+        $node = new StrategyNode($this->name, $this->parent);
+        $node->setStrategyFactory($this->strategyFactory);
 
         foreach ($this->children as $child) {
             $child->parent = $node;
@@ -106,14 +106,14 @@ class TransporterNodeDefinition extends NodeDefinition implements
     }
 
     /**
-     * Set TransporterFactory
+     * Set StrategyFactory
      *
-     * @param  TransporterFactory|null                                                 $factory
+     * @param  StrategyFactory|null                                                    $factory
      * @return \Webcreate\Conveyor\Config\Definition\Builder\TransporterNodeDefinition
      */
-    public function setTransporterFactory($factory)
+    public function setStrategyFactory($factory)
     {
-        $this->transporterFactory = $factory;
+        $this->strategyFactory = $factory;
 
         return $this;
     }

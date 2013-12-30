@@ -14,6 +14,7 @@ namespace Webcreate\Conveyor\Transporter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
+use Symfony\Component\Finder\SplFileInfo;
 use Webcreate\Conveyor\Event\TransporterEvent;
 use Webcreate\Conveyor\Event\TransporterEvents;
 
@@ -101,12 +102,14 @@ class FileTransporter extends AbstractTransporter
     /**
      * Creates a symlink on the remote server
      *
-     * @param $src
-     * @param $dest
+     * @param string $src
+     * @param string $dest
      * @return mixed
      */
     public function symlink($src, $dest)
     {
+        $dest = rtrim($dest, '/');
+
         $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_SYMLINK, new TransporterEvent($this, array('dest' => $dest, 'src' => $src)));
 
         $filesystem = new Filesystem();
@@ -159,5 +162,29 @@ class FileTransporter extends AbstractTransporter
 
         $filesystem = new Filesystem();
         $filesystem->remove($path);
+    }
+
+    /**
+     * Lists files and directories
+     *
+     * @param  string $path
+     * @return mixed
+     */
+    public function ls($path)
+    {
+        $finder = new Finder();
+        $test = $finder->in($path)->depth('== 0');
+
+        $retval = array();
+
+        /** @var $file SplFileInfo */
+        foreach ($test as $file) {
+            $retval[$file->getFilename()] = array(
+                'type' => $file->isDir() ? 'directory' : 'file',
+                'mtime' => new \DateTime('@' . $file->getMTime()),
+            );
+        }
+
+        return $retval;
     }
 }

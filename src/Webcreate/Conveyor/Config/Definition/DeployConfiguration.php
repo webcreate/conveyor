@@ -16,15 +16,21 @@ use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
+use Webcreate\Conveyor\Factory\StrategyFactory;
 use Webcreate\Conveyor\Factory\TaskFactory;
 use Webcreate\Conveyor\Factory\TransporterFactory;
 
 class DeployConfiguration implements ConfigurationInterface
 {
-    public function __construct(TaskFactory $taskFactory = null, TransporterFactory $transporterFactory = null)
+    protected $taskFactory;
+    protected $transporterFactory;
+    protected $strategyFactory;
+
+    public function __construct(TaskFactory $taskFactory = null, TransporterFactory $transporterFactory = null, StrategyFactory $strategyFactory = null)
     {
-        $this->taskFactory = $taskFactory;
+        $this->taskFactory        = $taskFactory;
         $this->transporterFactory = $transporterFactory;
+        $this->strategyFactory    = $strategyFactory;
     }
 
     public function getConfigTreeBuilder()
@@ -32,6 +38,7 @@ class DeployConfiguration implements ConfigurationInterface
         $nodeBuilder = new NodeBuilder();
         $nodeBuilder->setNodeClass('task', __NAMESPACE__ . '\\Builder\\TaskNodeDefinition');
         $nodeBuilder->setNodeClass('transporter', __NAMESPACE__ . '\\Builder\\TransporterNodeDefinition');
+        $nodeBuilder->setNodeClass('strategy', __NAMESPACE__ . '\\Builder\\StrategyNodeDefinition');
 
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('conveyor', 'array', $nodeBuilder);
@@ -129,24 +136,15 @@ class DeployConfiguration implements ConfigurationInterface
                 ->arrayNode('deploy')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('strategy')
-                            ->addDefaultsIfNotSet()
+                        ->node('strategy', 'strategy')
                             ->beforeNormalization()
                                 ->ifString()
                                 ->then(function($v) {
                                     return array('type' => $v);
                                 })
                             ->end()
-                            ->children()
-                                ->scalarNode('type')
-                                    ->defaultValue('releases')
-                                ->end()
-                                // @todo the 'shared' section is only relevant for the ReleasesStrategy
-                                //       refactor to a dedicated configuration per strategy type
-                                ->arrayNode('shared')
-                                    ->prototype('scalar')->end()
-                                ->end()
-                            ->end()
+                            ->setStrategyFactory($this->strategyFactory)
+                            ->isRequired()
                         ->end()
                         ->arrayNode('before')
                             ->prototype('task')

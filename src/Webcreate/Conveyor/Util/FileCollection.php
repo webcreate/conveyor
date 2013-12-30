@@ -153,7 +153,9 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
     public function has($pattern)
     {
         if ('*' !== substr($pattern, -1)) {
-            $pattern .= '*';
+            if ('/' === substr($pattern, -1, 1)) {
+                $pattern .= '*';
+            }
         }
 
         $regex = Glob::toRegex($pattern, false, false);

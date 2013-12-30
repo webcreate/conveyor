@@ -12,8 +12,10 @@
 namespace Webcreate\Conveyor\Transporter;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Webcreate\Conveyor\Event\TransporterEvents;
 use Webcreate\Conveyor\Event\TransporterEvent;
+use Webcreate\Vcs\Common\VcsFileInfo;
 use Webcreate\Vcs\Git;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -24,6 +26,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class GitTransporter extends AbstractTransporter implements TransactionalTransporterInterface
 {
     protected $dispatcher;
+
+    /**
+     * @var Git
+     */
     protected $git;
     protected $hasCheckout = false;
     protected $cwd;
@@ -122,8 +128,9 @@ class GitTransporter extends AbstractTransporter implements TransactionalTranspo
     /**
      * Retrieve file or directory from remote server
      *
-     * @param string $src  remote source path
+     * @param string $src remote source path
      * @param string $dest (optional) local destination path
+     * @return string
      */
     public function get($src, $dest = null)
     {
@@ -201,6 +208,7 @@ class GitTransporter extends AbstractTransporter implements TransactionalTranspo
      * Checks for symlink on the remote server
      *
      * @param $dest
+     * @throws \RuntimeException
      * @return bool
      */
     public function isSymlink($dest)
@@ -243,5 +251,39 @@ class GitTransporter extends AbstractTransporter implements TransactionalTranspo
 
         $filesystem = new Filesystem();
         $filesystem->remove($path);
+    }
+
+    /**
+     * Lists files and directories
+     *
+     * @todo WARNING: this is UNTESTED code!!
+     *
+     * returns an array with the following format:
+     *
+     * array(
+     *   'filename' => array(
+     *     'type' => 'directory', // or 'file'
+     *     'mtime' => new \DateTime(),
+     *   ),
+     * );
+     *
+     * @param  string $path
+     * @return array
+     */
+    public function ls($path)
+    {
+        $retval = array();
+
+        $list = $this->git->ls($path);
+
+        /** @var $vcsFile VcsFileInfo */
+        foreach($list as $vcsFile) {
+            $retval[$vcsFile->getFilename()] = array(
+                'type' => $vcsFile->isDir() ? 'directory' : 'file',
+                'mtime' => null, // @todo how to get this?
+            );
+        }
+
+        return $retval;
     }
 }

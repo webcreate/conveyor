@@ -186,6 +186,7 @@ class FtpTransporter extends AbstractTransporter
      * Checks for symlink on the remote server
      *
      * @param $dest
+     * @throws \RuntimeException
      * @return bool
      */
     public function isSymlink($dest)
@@ -193,13 +194,13 @@ class FtpTransporter extends AbstractTransporter
         throw new \RuntimeException('Symlinking not supported');
     }
 
-
     /**
      * Copies a file/directory on the remote host
      *
      * @param  string $src
      * @param  string $dest
-     * @param  bool   $recursive
+     * @param  bool $recursive
+     * @throws \RuntimeException
      * @return mixed
      */
     public function copy($src, $dest, $recursive = true)
@@ -211,12 +212,63 @@ class FtpTransporter extends AbstractTransporter
      * Removes a file/directory on the remote host
      *
      * @param  string $path
-     * @param  bool   $recursive
+     * @param  bool $recursive
+     * @throws \RuntimeException
      * @return mixed
      */
     public function remove($path, $recursive = true)
     {
         throw new \RuntimeException('Remove (yet) not supported');
+    }
+
+    /**
+     * Lists files and directories
+     *
+     * @todo WARNING: this is untested code!!
+     *
+     * @param  string $path
+     * @return mixed
+     */
+    public function ls($path)
+    {
+        if (!$this->stream) {
+            $this->connectAndLogin();
+        }
+
+        $list = ftp_rawlist($this->stream, $path);
+
+        $retval = array();
+
+        foreach ($list as $info) {
+            $item = array();
+            $chunks = preg_split('/\s+/', $info);
+
+            list(
+                $item['rights'],
+                $item['number'],
+                $item['user'],
+                $item['group'],
+                $item['size'],
+                $item['month'],
+                $item['day'],
+                $item['time']) = $chunks;
+
+            $item['type'] = $chunks[0]{0} === 'd' ? 'directory' : 'file';
+
+            array_splice($chunks, 0, 8);
+            $fileOrDirectory = implode(" ", $chunks);
+
+            if ('..' === $fileOrDirectory || '.' === $fileOrDirectory) {
+                continue;
+            }
+
+            $retval[$fileOrDirectory] = array(
+                'type' => $item['type'],
+                'mtime' => new \DateTime(sprintf('%s %s %s', $item['month'], $item['day'], $item['time'])),
+            );
+        }
+
+        return $retval;
     }
 
     public function __destruct()

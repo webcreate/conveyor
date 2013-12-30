@@ -14,6 +14,7 @@ namespace Webcreate\Conveyor\Config;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
 
+use Webcreate\Conveyor\Factory\StrategyFactory;
 use Webcreate\Conveyor\Factory\TaskFactory;
 use Webcreate\Conveyor\Factory\TransporterFactory;
 use Webcreate\Conveyor\Util\ArrayUtil;
@@ -27,8 +28,12 @@ class YamlConfig
 {
     protected $processed;
     protected $parameters = array();
+    protected $taskFactory;
+    protected $transporterFactory;
+    protected $strategyFactory;
+    protected $file;
 
-    public function __construct($file, TaskFactory $taskFactory, TransporterFactory $transporterFactory)
+    public function __construct($file, TaskFactory $taskFactory, TransporterFactory $transporterFactory, StrategyFactory $strategyFactory)
     {
         if (!file_exists($file)) {
             throw new \InvalidArgumentException(sprintf('File %s does not exists', $file));
@@ -37,6 +42,7 @@ class YamlConfig
         $this->file        = $file;
         $this->taskFactory = $taskFactory;
         $this->transporterFactory = $transporterFactory;
+        $this->strategyFactory = $strategyFactory;
     }
 
     public function getConfig()
@@ -59,7 +65,7 @@ class YamlConfig
 
         $config = $this->replaceParameters($config, $this->parameters);
 
-        $configuration = new DeployConfiguration($this->taskFactory, $this->transporterFactory);
+        $configuration = new DeployConfiguration($this->taskFactory, $this->transporterFactory, $this->strategyFactory);
         $processor = new Processor();
 
         return $this->processed = $processor->processConfiguration($configuration, $config);
