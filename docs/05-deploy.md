@@ -29,6 +29,21 @@ This strategy creates the following directory structure on the server:
         |   `-- dev-master-34ed24c
         `-- shared
 
+The releases strategy has a number of configuration options:
+
+* `shared`: an array of directories or files that will be shared between releases using symlinks
+* `keep`: number of releases to keep (default: 5), the oldest releases will be removed
+
+Example configuration:
+
+    deploy:
+      strategy:
+        type: releases
+        keep: 5
+        shared:
+          - app/config/parameters.yml
+          - app/logs/
+
 ## Before
 
 Run tasks before transfer starts.
