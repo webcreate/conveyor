@@ -614,16 +614,16 @@
         },
         {
             "name": "webcreate/vcs",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webcreate/vcs.git",
-                "reference": "177e02238f5d09ee9ce8987cf0a02b79d445fc8c"
+                "reference": "4f62520aa0a04fd4d47882ff53c5ba439a3a9b4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webcreate/vcs/zipball/177e02238f5d09ee9ce8987cf0a02b79d445fc8c",
-                "reference": "177e02238f5d09ee9ce8987cf0a02b79d445fc8c",
+                "url": "https://api.github.com/repos/webcreate/vcs/zipball/4f62520aa0a04fd4d47882ff53c5ba439a3a9b4e",
+                "reference": "4f62520aa0a04fd4d47882ff53c5ba439a3a9b4e",
                 "shasum": ""
             },
             "require": {
@@ -664,7 +664,7 @@
                 "vcs",
                 "versioncontrol"
             ],
-            "time": "2013-11-14 15:00:53"
+            "time": "2014-01-13 09:38:32"
         }
     ],
     "packages-dev": [
