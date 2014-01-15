@@ -45,6 +45,14 @@ class VersionsCommandTest extends PHPUnit_Framework_TestCase
         $svnadminbin = getenv('SVNADMIN_BIN') ? getenv('SVNADMIN_BIN') : '/usr/local/bin/svnadmin';
         $svnbin = getenv('SVN_BIN') ? getenv('SVN_BIN') : '/usr/local/bin/svn';
 
+        if (!file_exists($svnadminbin)) {
+            $this->markTestSkipped(sprintf('%s not found', $svnadminbin));
+        }
+
+        if (!file_exists($svnbin)) {
+            $this->markTestSkipped(sprintf('%s not found', $svnbin));
+        }
+
         $svnadmin = new Svnadmin($this->tmpdir, $svnadminbin);
         $svnadmin->create(basename($this->reposdir));
 

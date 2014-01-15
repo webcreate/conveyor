@@ -18,6 +18,9 @@ use Webcreate\Conveyor\DependencyInjection\TransporterAwareInterface;
 use Webcreate\Conveyor\Event\TaskRunnerEvents;
 use Webcreate\Conveyor\IO\IOInterface;
 
+/**
+ * @todo remove Transporter dependency because it is not related to running tasks!
+ */
 class TaskRunner implements TransporterAwareInterface
 {
     /**
@@ -29,6 +32,7 @@ class TaskRunner implements TransporterAwareInterface
     protected $dispatcher;
 
     /**
+     * Constructor.
      *
      * @todo I think it's better NOT to have the taskrunner depend on the IOinterface
      *
@@ -56,7 +60,11 @@ class TaskRunner implements TransporterAwareInterface
         return (count($this->tasks) > 0);
     }
 
-    public function setTasks($tasks)
+    /**
+     * @param Task[] $tasks
+     * @return $this
+     */
+    public function setTasks(array $tasks)
     {
         $this->tasks = $tasks;
 
@@ -76,7 +84,7 @@ class TaskRunner implements TransporterAwareInterface
         $this->transporter = $transporter;
 
         // also apply it to the tasks
-        // @todo I don't this should be done here
+        // @todo remove this because it's plain wrong!
         array_walk(
             $this->tasks,
             function ($task) use ($transporter) {
