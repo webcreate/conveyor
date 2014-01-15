@@ -38,7 +38,11 @@ class Builder
      * @var Context
      */
     protected $context;
-    protected $taskrunner;
+
+    /**
+     * @var \Webcreate\Conveyor\Task\TaskRunner
+     */
+    protected $taskRunner;
 
     /**
      * Constructor.
@@ -57,8 +61,54 @@ class Builder
         $this->builddir   = rtrim($builddir, '/');
         $this->io         = $io;
         $this->dispatcher = $dispatcher;
-        $this->taskrunner = new TaskRunner($this->io, new EventDispatcher());
-        $this->taskrunner->setTasks($tasks);
+        $this->taskRunner = $this->createTaskRunner($tasks);
+    }
+
+    /**
+     * Creates a task runner for builder tasks
+     *
+     * @param Task[] $tasks
+     * @return TaskRunner
+     */
+    protected function createTaskRunner(array $tasks)
+    {
+        $self = $this;
+
+        $taskRunner = new TaskRunner($this->io, new EventDispatcher());
+        $taskRunner->setTasks($tasks);
+
+        $taskRunner->getDispatcher()->addListener(
+            TaskRunnerEvents::TASKRUNNER_PRE_EXECUTE_TASK,
+            function (GenericEvent $event) use ($self) {
+                $task  = $event->getSubject();
+                $t     = $event->getArgument('index');
+                $total = $event->getArgument('total');
+
+                $self->dispatch(BuilderEvents::BUILDER_PRE_TASK,
+                    new GenericEvent($task, array('index' => $t, 'total' => $total))
+                );
+            }
+        );
+
+        $taskRunner->getDispatcher()->addListener(
+            TaskRunnerEvents::TASKRUNNER_POST_EXECUTE_TASK,
+            function (GenericEvent $event) use ($self) {
+                $task   = $event->getSubject();
+                $t      = $event->getArgument('index');
+                $total  = $event->getArgument('total');
+                $result = $event->getArgument('result');
+
+                if ($result instanceof ExecuteResult) {
+                    $self->applyResultToFilelist($result);
+                }
+
+                $self->dispatch(BuilderEvents::BUILDER_POST_TASK,
+                    new GenericEvent($task, array('index' => $t, 'total' => $total))
+                );
+            }
+        );
+
+        return $taskRunner;
     }
 
     /**
@@ -69,7 +119,7 @@ class Builder
      */
     public function addTask(Task $task)
     {
-        $this->taskrunner->addTask($task);
+        $this->taskRunner->addTask($task);
 
         return $this;
     }
@@ -106,46 +156,13 @@ class Builder
      */
     public function build($target, Version $version)
     {
-        $self = $this;
-
         $this->dispatch(BuilderEvents::BUILDER_PRE_BUILD);
-
-        $this->taskrunner->getDispatcher()->addListener(
-            TaskRunnerEvents::TASKRUNNER_PRE_EXECUTE_TASK,
-            function (GenericEvent $event) use ($self) {
-                $task  = $event->getSubject();
-                $t     = $event->getArgument('index');
-                $total = $event->getArgument('total');
-
-                $self->dispatch(BuilderEvents::BUILDER_PRE_TASK,
-                    new GenericEvent($task, array('index' => $t, 'total' => $total))
-                );
-            }
-        );
-
-        $this->taskrunner->getDispatcher()->addListener(
-            TaskRunnerEvents::TASKRUNNER_POST_EXECUTE_TASK,
-            function (GenericEvent $event) use ($self) {
-                $task   = $event->getSubject();
-                $t      = $event->getArgument('index');
-                $total  = $event->getArgument('total');
-                $result = $event->getArgument('result');
-
-                if ($result instanceof ExecuteResult) {
-                    $self->applyResultToFilelist($result);
-                }
-
-                $self->dispatch(BuilderEvents::BUILDER_POST_TASK,
-                    new GenericEvent($task, array('index' => $t, 'total' => $total))
-                );
-            }
-        );
 
         $tasks = $this->getSupportedTasks($target, $version);
 
-        $this->taskrunner->setTasks($tasks);
+        $this->taskRunner->setTasks($tasks);
 
-        $this->taskrunner->execute($target, $version);
+        $this->taskRunner->execute($target, $version);
 
         $this->dispatch(BuilderEvents::BUILDER_POST_BUILD);
     }
@@ -172,7 +189,7 @@ class Builder
      */
     protected function getSupportedTasks($target, Version $version)
     {
-        $tasks = array_filter($this->taskrunner->getTasks(), function($task) use ($target, $version) {
+        $tasks = array_filter($this->taskRunner->getTasks(), function($task) use ($target, $version) {
             return (true === $task->supports($target, $version));
         });
 

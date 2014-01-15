@@ -11,7 +11,7 @@
 
 use Webcreate\Conveyor\Builder\Builder;
 
-class BuilderTest extends PHPUnit_Framework_TestCase
+class BuilderTest extends \PHPUnit_Framework_TestCase
 {
     protected $tempdir;
 
@@ -38,6 +38,41 @@ class BuilderTest extends PHPUnit_Framework_TestCase
 
         $builder = new Builder($this->tempdir, array($task1), new \Webcreate\Conveyor\IO\NullIO());
         $builder->build('test', $version);
+    }
+
+    public function testBuildTriggersBuildEvents()
+    {
+        $dispatcher = $this->getMockBuilder('\Symfony\Component\EventDispatcher\EventDispatcher')->getMock();
+        $dispatcher
+            ->expects($this->at(0))
+            ->method('dispatch')
+            ->with($this->equalTo('builder.preBuild'))
+        ;
+        $dispatcher
+            ->expects($this->at(1))
+            ->method('dispatch')
+            ->with($this->equalTo('builder.preTask'))
+        ;
+        $dispatcher
+            ->expects($this->at(2))
+            ->method('dispatch')
+            ->with($this->equalTo('builder.postTask'))
+        ;
+        $dispatcher
+            ->expects($this->at(3))
+            ->method('dispatch')
+            ->with($this->equalTo('builder.postBuild'))
+        ;
+
+        $task1 = $this->getMockBuilder('Webcreate\Conveyor\Task\Task')->disableOriginalConstructor()->getMock();
+        $task1
+            ->expects($this->any())
+            ->method('supports')
+            ->will($this->returnValue(true))
+        ;
+
+        $builder = new Builder($this->tempdir, array($task1), new \Webcreate\Conveyor\IO\NullIO(), $dispatcher);
+        $builder->build('test', new \Webcreate\Conveyor\Repository\Version('dev-master', 'abc123'));
     }
 
     public function testGetBuilddir()
