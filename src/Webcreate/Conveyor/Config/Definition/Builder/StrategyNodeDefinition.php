@@ -11,6 +11,7 @@
 
 namespace Webcreate\Conveyor\Config\Definition\Builder;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeParentInterface;
 use Symfony\Component\Config\Definition\Builder\ParentNodeDefinitionInterface;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
@@ -24,20 +25,20 @@ use Webcreate\Conveyor\Factory\StrategyFactory;
  *
  * @author Jeroen Fiege
  */
-class StrategyNodeDefinition extends NodeDefinition implements
+class StrategyNodeDefinition extends ArrayNodeDefinition implements
         ParentNodeDefinitionInterface
 {
     protected $nodeBuilder;
     protected $children;
+
+    /**
+     * @var StrategyFactory
+     */
     protected $strategyFactory;
 
     public function __construct($name, NodeParentInterface $parent = null)
     {
         parent::__construct($name, $parent);
-
-        $this->children = array(
-                'type' => $this->getNodeBuilder()->node('type', 'scalar')
-                        ->setParent($this)->isRequired(),);
     }
 
     /**
@@ -63,6 +64,9 @@ class StrategyNodeDefinition extends NodeDefinition implements
         $node = new StrategyNode($this->name, $this->parent);
         $node->setStrategyFactory($this->strategyFactory);
 
+        $node->setAddIfNotSet($this->addDefaults);
+        $node->setRequired($this->required);
+
         foreach ($this->children as $child) {
             $child->parent = $node;
             $node->addChild($child->getNode());
@@ -71,6 +75,10 @@ class StrategyNodeDefinition extends NodeDefinition implements
         if (null !== $this->normalization) {
             $node->setNormalizationClosures($this->normalization->before);
             $node->setXmlRemappings($this->normalization->remappings);
+        }
+
+        if (null !== $this->validation) {
+            $node->setFinalValidationClosures($this->validation->rules);
         }
 
         return $node;

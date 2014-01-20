@@ -59,6 +59,10 @@ class StrategyNode extends ArrayNode
      */
     protected function prepareChildren($type)
     {
+        if (null === $this->strategyFactory) {
+            return;
+        }
+
         // when we hit this function for the first time,
         // we store the original children. Each time we
         // hit this function we reset the children to the
@@ -109,5 +113,14 @@ class StrategyNode extends ArrayNode
         }
 
         parent::validateType($value);
+    }
+
+    public function getDefaultValue()
+    {
+        if ($this->children['type']->getDefaultValue()) {
+            $this->prepareChildren($this->children['type']->getDefaultValue());
+        }
+
+        return parent::getDefaultValue();
     }
 }
