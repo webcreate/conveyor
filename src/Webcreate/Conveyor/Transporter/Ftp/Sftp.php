@@ -13,17 +13,41 @@ namespace Webcreate\Conveyor\Transporter\Ftp;
 
 class Sftp
 {
+    /**
+     * @var \Net_SFTP
+     */
     protected $sftp;
 
-    public function connect($host)
+    /**
+     * Possible Phpseclib error
+     *
+     * @var null|string
+     */
+    protected $error = null;
+
+    public function connect($host, $port = 22)
     {
-        $this->sftp = new \Net_SFTP($host);
+        $oldErrorHandler = set_error_handler(array(&$this, 'errorHandler'), E_USER_NOTICE);
+
+        $this->error = null;
+        $this->sftp = new \Net_SFTP($host, $port);
+
+        set_error_handler($oldErrorHandler, E_USER_NOTICE);
 
         if (false == $this->sftp) {
             throw new \RuntimeException(sprintf('Could not connect to host %s', $host));
         }
 
+        if (null !== $this->error) {
+            throw new \RuntimeException(sprintf('Could not connect to host %s: %s', $host, $this->error));
+        }
+
         return true;
+    }
+
+    protected function errorHandler($errno, $errstr, $errfile, $errline)
+    {
+        $this->error = $errstr;
     }
 
     public function isConnected()

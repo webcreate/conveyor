@@ -19,6 +19,7 @@ abstract class AbstractTransporter
     protected $password;
     protected $path;
     protected $host;
+    protected $port;
 
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
@@ -33,6 +34,7 @@ abstract class AbstractTransporter
     public function setOptions(array $options)
     {
         $this->setHost($options['host']);
+        $this->setPort($options['port']);
         $this->setUser($options['user']);
         $this->setPass($options['pass']);
         $this->setPath($options['path']);
@@ -48,6 +50,25 @@ abstract class AbstractTransporter
     public function getHost()
     {
         return $this->host;
+    }
+
+    /**
+     * @param mixed $port
+     * @return self
+     */
+    public function setPort($port)
+    {
+        $this->port = $port;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPort()
+    {
+        return $this->port;
     }
 
     public function setUser($username)

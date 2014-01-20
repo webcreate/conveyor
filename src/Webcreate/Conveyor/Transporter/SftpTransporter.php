@@ -60,10 +60,12 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
     {
         $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_CONNECT, new TransporterEvent($this));
 
-        $success = $this->sftp->connect($this->host);
+        $port = $this->port ?: 22;
+
+        $success = $this->sftp->connect($this->host, $port);
 
         if (false === $success) {
-            throw new \RuntimeException(sprintf('Could not connect to host %s', $this->host));
+            throw new \RuntimeException(sprintf('Could not connect to host %s on port %s', $this->host, $port));
         }
     }
 

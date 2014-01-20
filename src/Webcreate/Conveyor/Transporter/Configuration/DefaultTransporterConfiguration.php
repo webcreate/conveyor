@@ -26,6 +26,7 @@ class DefaultTransporterConfiguration implements ConfigurationInterface
             ->children()
                 ->scalarNode('host')->isRequired()->end()
                 ->scalarNode('path')->isRequired()->end()
+                ->scalarNode('port')->end()
                 ->scalarNode('user')->defaultValue(get_current_user())->end()
                 ->scalarNode('pass')->end()
             ->end()

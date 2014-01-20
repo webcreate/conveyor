@@ -31,9 +31,11 @@ class FtpTransporter extends AbstractTransporter
     {
         $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_CONNECT, new TransporterEvent($this));
 
-        $this->stream = ftp_connect($this->host);
+        $port = $this->port ?: 21;
+
+        $this->stream = ftp_connect($this->host, $port);
         if (false == $this->stream) {
-            throw new \RuntimeException(sprintf('Could not connect to host %s', $this->host));
+            throw new \RuntimeException(sprintf('Could not connect to host %s on port %s', $this->host, $port));
         }
         ftp_pasv($this->stream, true);
     }
