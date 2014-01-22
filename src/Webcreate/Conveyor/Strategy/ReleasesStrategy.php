@@ -19,6 +19,7 @@ use Webcreate\Conveyor\Event\StageEvents;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Transporter\AbstractTransporter;
+use Webcreate\Conveyor\Transporter\ReadOnlyTransporter;
 use Webcreate\Conveyor\Transporter\TransactionalTransporterInterface;
 use Webcreate\Conveyor\Util\FileCollection;
 use Webcreate\Conveyor\Util\FilePath;
@@ -60,7 +61,10 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
      */
     public function setTransporter($transporter)
     {
-        if ($transporter instanceof TransactionalTransporterInterface) {
+        if (
+            $transporter instanceof TransactionalTransporterInterface
+            && !$transporter instanceof ReadOnlyTransporter
+        ) {
             throw new \InvalidArgumentException(sprintf('Transporter "%s" is not supported by the releases strategy', get_class($transporter)));
         }
 
@@ -284,6 +288,8 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
                 }
             }
         }
+
+        $this->io->decreaseIndention(1);
     }
 
     /**
