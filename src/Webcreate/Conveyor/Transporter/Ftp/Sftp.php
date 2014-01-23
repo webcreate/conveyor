@@ -32,7 +32,10 @@ class Sftp
         $this->error = null;
         $this->sftp = new \Net_SFTP($host, $port);
 
-        set_error_handler($oldErrorHandler, E_USER_NOTICE);
+        // restore the old handler when needed
+        if ($oldErrorHandler) {
+            set_error_handler($oldErrorHandler, E_USER_NOTICE);
+        }
 
         if (false == $this->sftp) {
             throw new \RuntimeException(sprintf('Could not connect to host %s', $host));
