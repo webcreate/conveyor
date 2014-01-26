@@ -81,6 +81,15 @@ class BuildFilelistStage extends AbstractStage
             // @todo we could also check here if all files are accounted for (maybe
             //       some files were deleted and not told to us by setting it in
             //       the `removes` config?) in other words: file_exists on all files?
+        } else {
+            foreach ($this->derivedFiles as $derivable) {
+                $source = $derivable['source'];
+                $derived = $derivable['derived'];
+
+                if ($filesModified->has($source)) {
+                    $filesModified->add($derived);
+                }
+            }
         }
 
         // never upload the conveyor configuration!

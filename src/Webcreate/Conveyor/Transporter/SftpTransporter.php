@@ -423,6 +423,10 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
 
         $retval = array();
 
+        if (false === $list) {
+            return $retval;
+        }
+
         foreach ($list as $fileOrDirectory => $info) {
             if ('..' === $fileOrDirectory || '.' === $fileOrDirectory) {
                 continue;

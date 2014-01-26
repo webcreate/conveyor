@@ -206,6 +206,10 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
             $i++;
         }
 
+        if (0 === count($removableFiles)) {
+            $this->io->write('None found');
+        }
+
         // if it's only 1 directory to remove, just remove it without asking
         // for permission of the user
         if (1 === count($removableFiles)) {
