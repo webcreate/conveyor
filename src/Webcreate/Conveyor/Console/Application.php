@@ -29,6 +29,10 @@ class Application extends BaseApplication
     {
         $this->conveyor = $conveyor;
 
+        if (function_exists('date_default_timezone_set') && function_exists('date_default_timezone_get')) {
+            date_default_timezone_set(@date_default_timezone_get());
+        }
+
         parent::__construct();
     }
 

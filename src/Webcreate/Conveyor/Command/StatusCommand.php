@@ -11,6 +11,7 @@
 
 namespace Webcreate\Conveyor\Command;
 
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 
@@ -21,6 +22,7 @@ class StatusCommand extends AbstractCommand
         $this
             ->setName('status')
             ->setDescription('Show status for each target')
+            ->addArgument('target', InputArgument::OPTIONAL, 'Show the status for a specific target')
         ;
     }
 
@@ -28,7 +30,9 @@ class StatusCommand extends AbstractCommand
     {
         $deploy = $this->getConveyor($input, $output, $this->getHelperSet());
 
-        $status = $deploy->status();
+        $target = $input->getArgument('target');
+
+        $status = $deploy->status($target);
 
         if (count($status) > 0) {
             $output->writeln('<comment>Available targets:</comment>');

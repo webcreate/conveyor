@@ -225,12 +225,13 @@ class Conveyor
     /**
      * Retrieve the status for each target
      *
+     * @param  null|string $target when given only get the status for a single target
      * @return array
      */
-    public function status()
+    public function status($target = null)
     {
         $config         = $this->getConfig()->getConfig();
-        $targets        = array_keys($config['targets']);
+        $targets        = (null !== $target) ? array($target) : array_keys($config['targets']);
         $repository     = $this->getRepository();
         $io             = $this->getIO();
         $remoteInfoFile = $this->container->getParameter('conveyor.remoteinfofile');
