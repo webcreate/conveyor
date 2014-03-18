@@ -26,58 +26,109 @@ use Webcreate\Conveyor\Config\Definition\DeployConfiguration;
  */
 class YamlConfig
 {
-    protected $processed;
+    protected $processedConfig;
+    protected $loadedConfig;
+    protected $compiledConfig;
     protected $parameters = array();
     protected $taskFactory;
     protected $transporterFactory;
     protected $strategyFactory;
     protected $file;
 
+    /**
+     * Constructor.
+     *
+     * @param  string                    $file
+     * @param  TaskFactory               $taskFactory
+     * @param  TransporterFactory        $transporterFactory
+     * @param  StrategyFactory           $strategyFactory
+     * @throws \InvalidArgumentException
+     */
     public function __construct($file, TaskFactory $taskFactory, TransporterFactory $transporterFactory, StrategyFactory $strategyFactory)
     {
         if (!file_exists($file)) {
             throw new \InvalidArgumentException(sprintf('File %s does not exists', $file));
         }
 
-        $this->file        = $file;
-        $this->taskFactory = $taskFactory;
+        $this->file               = $file;
+        $this->taskFactory        = $taskFactory;
         $this->transporterFactory = $transporterFactory;
-        $this->strategyFactory = $strategyFactory;
+        $this->strategyFactory    = $strategyFactory;
     }
 
+    /**
+     * @return array
+     */
     public function getConfig()
     {
-        if (null === $this->processed) {
-            $this->process();
-        }
+        $this->compile();
 
-        return $this->processed;
+        return $this->compiledConfig;
     }
 
+    /**
+     * @return string
+     */
     public function getFile()
     {
         return $this->file;
     }
 
+    /**
+     * @return array
+     */
     protected function process()
     {
-        $config = Yaml::parse($this->file);
+        if (null === $this->processedConfig) {
+            $this->load();
 
-        $config = $this->replaceParameters($config, $this->parameters);
+            $configuration = new DeployConfiguration($this->taskFactory, $this->transporterFactory, $this->strategyFactory);
+            $processor = new Processor();
 
-        $configuration = new DeployConfiguration($this->taskFactory, $this->transporterFactory, $this->strategyFactory);
-        $processor = new Processor();
+            $this->processedConfig = $processor->processConfiguration($configuration, $this->loadedConfig);
+        }
 
-        return $this->processed = $processor->processConfiguration($configuration, $config);
+        return $this->processedConfig;
     }
 
-    protected function replaceParameters($config, $parameters)
+    /**
+     * @return array
+     */
+    protected function load()
     {
-        foreach($config as &$value) {
+        if (null === $this->loadedConfig) {
+            $this->loadedConfig = Yaml::parse($this->file);
+        }
+
+        return $this->loadedConfig;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function compile()
+    {
+        if (null === $this->compiledConfig) {
+            $this->process();
+
+            $this->compiledConfig = $this->replaceParameters($this->processedConfig, $this->parameters);
+        }
+
+        return $this->compiledConfig;
+    }
+
+    /**
+     * @param  array $config
+     * @param  array $parameters
+     * @return array
+     */
+    protected function replaceParameters(array $config, array $parameters)
+    {
+        foreach ($config as &$value) {
             if (is_array($value)) {
                 $value = $this->replaceParameters($value, $parameters);
             } elseif (is_string($value)) {
-                foreach($parameters as $key => $val) {
+                foreach ($parameters as $key => $val) {
                     $value = str_replace(sprintf('{{%s}}', $key), $val, $value);
                 }
             }
@@ -86,6 +137,9 @@ class YamlConfig
         return $config;
     }
 
+    /**
+     * @return array
+     */
     public function flatten()
     {
         $util = new ArrayUtil();
@@ -93,16 +147,22 @@ class YamlConfig
         return $util->flatten($this->getConfig());
     }
 
+    /**
+     * @param string $name
+     * @param mixed  $value
+     */
     public function setParameter($name, $value)
     {
+        $this->process();
+
         $this->parameters[$name] = $value;
 
         if ('target' === $name) {
-            foreach($this->processed['targets'][$value]['parameters'] as $key => $value) {
+            foreach ($this->processedConfig['targets'][$value]['parameters'] as $key => $value) {
                 $this->setParameter('target.' . $key, $value);
             }
         }
 
-        $this->processed = null;
+        $this->compiledConfig = null;
     }
 }
