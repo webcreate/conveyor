@@ -62,6 +62,7 @@ services:
     factory_class: Webcreate\Conveyor\Factory\BuilderFactory
     factory_method: get
     arguments: [ @config, @io, @dispatcher, @task.factory ]
+    scope: prototype
 
   transporter.factory:
     class: Webcreate\Conveyor\Factory\TransporterFactory
@@ -76,15 +77,18 @@ services:
     factory_class: Webcreate\Conveyor\Factory\TaskRunnerFactory
     factory_method: get
     arguments: [ 'deploy.before', @task.factory, @config, @io, @dispatcher ]
+    scope: prototype
 
   deploy.taskrunner.after:
     class: Webcreate\Conveyor\Task\TaskRunner
     factory_class: Webcreate\Conveyor\Factory\TaskRunnerFactory
     factory_method: get
     arguments: [ 'deploy.after', @task.factory, @config, @io, @dispatcher ]
+    scope: prototype
 
   deploy.taskrunner.final:
     class: Webcreate\Conveyor\Task\TaskRunner
     factory_class: Webcreate\Conveyor\Factory\TaskRunnerFactory
     factory_method: get
     arguments: [ 'deploy.final', @task.factory, @config, @io, @dispatcher ]
+    scope: prototype
