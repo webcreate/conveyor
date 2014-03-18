@@ -171,15 +171,21 @@ class TaskRunner implements TransporterAwareInterface
     protected function tryAgain()
     {
         while (true) {
-            $answer = $this->io->select(
-                '<info>Select an action</info>',
-                array(
-                    'a' => 'abort',
-                    'r' => 'retry this task',
-                    's' => 'skip this task and continue with the next',
-                ),
-                'r'
-            );
+            try {
+                $answer = $this->io->select(
+                    '<info>Select an action</info>',
+                    array(
+                        'a' => 'abort',
+                        'r' => 'retry this task',
+                        's' => 'skip this task and continue with the next',
+                    ),
+                    'r',
+                    5
+                );
+            } catch (\RuntimeException $e) {
+                // can happen when there is no stty available
+                $answer = "a";
+            }
 
             switch ($answer) {
                 case "a":

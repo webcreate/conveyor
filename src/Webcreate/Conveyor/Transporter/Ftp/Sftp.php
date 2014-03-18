@@ -48,7 +48,7 @@ class Sftp
         return true;
     }
 
-    protected function errorHandler($errno, $errstr, $errfile, $errline)
+    public function errorHandler($errno, $errstr, $errfile, $errline)
     {
         $this->error = $errstr;
     }
