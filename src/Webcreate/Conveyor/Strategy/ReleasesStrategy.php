@@ -240,7 +240,9 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
                         'a' => 'remove all outdated releases at once',
                         'n' => 'abort and let you manually clean things up',
                         'v' => 'view outdated release folders',
-                    )
+                    ),
+                    "a",
+                    5
                 );
 
                 switch ($answer) {
