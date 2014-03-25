@@ -57,6 +57,16 @@ class FileCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('src/Webcreate/Conveyor/Conveyor.php', $files);
     }
 
+    public function testAddArrayNotation()
+    {
+        $collection = new Webcreate\Conveyor\Util\FileCollection(__DIR__ . '/../../../../');
+        $collection[] = 'vendor';
+
+        $files = iterator_to_array($collection);
+
+        $this->assertContains('vendor/autoload.php', $files);
+    }
+
     public function testRemove()
     {
         $collection = new Webcreate\Conveyor\Util\FileCollection(__DIR__ . '/../../../../');

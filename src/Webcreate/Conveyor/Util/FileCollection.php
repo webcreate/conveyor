@@ -191,11 +191,7 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
 
     public function offsetSet($offset, $value)
     {
-        if (is_null($offset)) {
-            $this->files[] = $value;
-        } else {
-            $this->files[$offset] = $value;
-        }
+        $this->add($value);
     }
 
     public function offsetUnset($offset)
