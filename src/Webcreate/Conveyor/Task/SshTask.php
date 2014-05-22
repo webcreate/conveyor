@@ -11,13 +11,12 @@
 
 namespace Webcreate\Conveyor\Task;
 
-use Symfony\Component\Process\Exception\ProcessFailedException;
-
 use Webcreate\Conveyor\DependencyInjection\TransporterAwareInterface;
-use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\IO\IOInterface;
+use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Transporter\AbstractTransporter;
 use Webcreate\Conveyor\Transporter\SshCapableTransporterInterface;
+use Webcreate\Conveyor\Util\FilePath;
 use Webcreate\Util\Cli;
 
 class SshTask extends Task implements TransporterAwareInterface
@@ -47,8 +46,8 @@ class SshTask extends Task implements TransporterAwareInterface
      * @todo improve output (also @see ShellTask)
      *
      * @param $target
-     * @param  Version                                                     $version
-     * @throws \Symfony\Component\Process\Exception\ProcessFailedException
+     * @param  Version $version
+     * @throws \RuntimeException
      */
     public function execute($target, Version $version)
     {
@@ -69,7 +68,7 @@ class SshTask extends Task implements TransporterAwareInterface
             }
 
             $lines = explode("\n", $buffer);
-            foreach($lines as $line) {
+            foreach ($lines as $line) {
                 if ($output = trim($line, "\r\n")) {
                     $self->io->write(sprintf('> %s', $output));
                 }
@@ -96,10 +95,10 @@ class SshTask extends Task implements TransporterAwareInterface
 
     protected function getCommand($target, $version, $command)
     {
-        $path = $this->transporter->getPath();
+        $basepath = $path = $this->transporter->getPath();
 
         if (isset($this->options['path']) && $this->options['path']) {
-            $path = $this->options['path'];
+            $path = FilePath::join($basepath, $this->options['path']);
         }
 
         $command = sprintf('cd %s && %s', $path, $command);

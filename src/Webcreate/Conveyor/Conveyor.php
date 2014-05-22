@@ -31,7 +31,6 @@ use Webcreate\Conveyor\IO\NullIO;
 use Webcreate\Conveyor\Stage\Manager\StageManager;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Strategy\StrategyInterface;
-use Webcreate\Conveyor\Task\SshTask;
 use Webcreate\Conveyor\Task\TaskRunner;
 use Webcreate\Conveyor\Transporter\AbstractTransporter;
 use Webcreate\Conveyor\Transporter\TransactionalTransporterInterface;
@@ -362,18 +361,6 @@ class Conveyor
         $trDeployBefore->setTransporter($transporter);
         $trDeployAfter->setTransporter($transporter);
         $trDeployFinal->setTransporter($transporter);
-
-        // @todo Think of a better way to set the correct path for the SshTask and REFACTOR this shit!
-        foreach ($trDeployAfter->getTasks() as $task) {
-            if ($task instanceof SshTask) {
-                $task->setOption('path', FilePath::join($transporter->getPath(), $strategy->getUploadPath($version)));
-            }
-        }
-        foreach ($trDeployFinal->getTasks() as $task) {
-            if ($task instanceof SshTask) {
-                $task->setOption('path', FilePath::join($transporter->getPath(), $strategy->getUploadPath($version)));
-            }
-        }
 
         $context = new Context();
         $context

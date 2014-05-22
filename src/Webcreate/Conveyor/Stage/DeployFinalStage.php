@@ -11,10 +11,11 @@
 
 namespace Webcreate\Conveyor\Stage;
 
+use Webcreate\Conveyor\Context;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
+use Webcreate\Conveyor\Task\SshTask;
 use Webcreate\Conveyor\Task\TaskRunner;
-use Webcreate\Conveyor\Context;
 
 class DeployFinalStage extends AbstractStage
 {
@@ -36,11 +37,18 @@ class DeployFinalStage extends AbstractStage
     {
         $target = $context->getTarget();
         $version = $context->getVersion();
+        $strategy = $context->getStrategy();
 
         $tasks = $this->getSupportedTasks($target, $version);
         $this->taskRunner->setTasks($tasks);
 
         if (true === $this->taskRunner->hasTasks()) {
+            foreach ($this->taskRunner->getTasks() as $task) {
+                if ($task instanceof SshTask) {
+                    $task->setOption('path', $strategy->getUploadPath($version));
+                }
+            }
+
             $this->executeTaskrunner($context);
         }
     }
