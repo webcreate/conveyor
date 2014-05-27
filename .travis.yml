@@ -8,7 +8,14 @@ php:
 
 env:
   global:
-    - SVN_BIN=/usr/bin/svn GIT_BIN=/usr/bin/git SVNADMIN_BIN=/usr/bin/svnadmin
+    - SVN_BIN=/usr/bin/svn
+    - GIT_BIN=/usr/bin/git
+    - SVNADMIN_BIN=/usr/bin/svnadmin
+    - SYMFONY_ENV=test
+
+cache:
+  directories:
+    - $HOME/.composer
 
 matrix:
   fast_finish: true
@@ -21,7 +28,7 @@ before_script:
   - composer install --no-interaction --no-scripts
 
 script:
-  - ./bin/phpunit -c app --coverage-clover=coverage.clover
+  - ./vendor/bin/phpunit -c app --coverage-clover=coverage.clover
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
