@@ -15,11 +15,30 @@ use Webcreate\Conveyor\Repository\Version;
 
 interface DriverInterface
 {
+    /**
+     * @return void
+     */
     public function setCacheDir($cacheDir);
     public function getVersions();
+
+    /**
+     * @param Version $svnPath
+     */
     public function export($svnPath, $dest);
+
+    /**
+     * @return \Webcreate\Vcs\Common\VcsFileInfo[]
+     */
     public function diff(Version $oldVersion, Version $newVersion);
     public function changelog(Version $oldVersion, Version $newVersion);
+
+    /**
+     * @return integer
+     */
     public function revisionCompare($revision1, $revision2);
+
+    /**
+     * @return void
+     */
     public function initialize($url);
 }

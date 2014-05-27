@@ -18,8 +18,8 @@ use Webcreate\Conveyor\Task\TaskRunner;
 class TaskRunnerFactory
 {
     /**
-     * @param string      $taskConfigPath path to the tasks configuration in the conveyor.yml config
-     * @param TaskFactory $taskFactory
+     * @param  string                   $taskConfigPath path to the tasks configuration in the conveyor.yml config
+     * @param  TaskFactory              $taskFactory
      * @param $config
      * @param  IOInterface              $io
      * @param  EventDispatcherInterface $dispatcher

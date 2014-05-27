@@ -11,9 +11,9 @@
 
 namespace Webcreate\Conveyor\Repository\Driver;
 
-use Webcreate\Vcs\Common\Reference;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
+use Webcreate\Vcs\Common\Reference;
 use Webcreate\Vcs\VcsInterface;
 
 abstract class AbstractVcsDriver implements DriverInterface
@@ -75,6 +75,9 @@ abstract class AbstractVcsDriver implements DriverInterface
         return $head;
     }
 
+    /**
+     * @param string $prefix
+     */
     protected function createVersion($name, $revision, $prefix = null)
     {
         $name = ($prefix ? $prefix . '-' : '') . $name;
@@ -96,7 +99,7 @@ abstract class AbstractVcsDriver implements DriverInterface
          *
          * if ($this->io) {
          *   $io = $this->io;
-         *   $this->client->setOutput(function($type, $output) use ($io) {
+         *   $this->client->setOutput(function ($type, $output) use ($io) {
          *       if ($io->isVerbose()) {
          *           $io->write($output, false);
          *       }

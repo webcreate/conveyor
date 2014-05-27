@@ -12,10 +12,9 @@
 namespace Webcreate\Conveyor\Transporter;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
-use Webcreate\Conveyor\Transporter\AbstractTransporter;
-use Webcreate\Conveyor\Event\TransporterEvents;
 use Webcreate\Conveyor\Event\TransporterEvent;
+use Webcreate\Conveyor\Event\TransporterEvents;
+use Webcreate\Conveyor\Transporter\AbstractTransporter;
 
 class ReadOnlyTransporter extends AbstractTransporter implements SshCapableTransporterInterface, TransactionalTransporterInterface
 {

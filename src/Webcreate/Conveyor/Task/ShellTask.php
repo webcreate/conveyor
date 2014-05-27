@@ -61,7 +61,7 @@ class ShellTask extends Task
                     }
 
                     $lines = explode("\n", $buffer);
-                    foreach($lines as $line) {
+                    foreach ($lines as $line) {
                         if ($output = trim($line, "\r\n")) {
                             $self->io->write(sprintf('> %s', $output));
                         }

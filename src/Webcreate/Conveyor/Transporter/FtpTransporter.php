@@ -12,9 +12,7 @@
 namespace Webcreate\Conveyor\Transporter;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Finder\Finder;
-
 use Webcreate\Conveyor\Event\TransporterEvent;
 use Webcreate\Conveyor\Event\TransporterEvents;
 
@@ -199,9 +197,9 @@ class FtpTransporter extends AbstractTransporter
     /**
      * Copies a file/directory on the remote host
      *
-     * @param  string $src
-     * @param  string $dest
-     * @param  bool $recursive
+     * @param  string            $src
+     * @param  string            $dest
+     * @param  bool              $recursive
      * @throws \RuntimeException
      * @return mixed
      */
@@ -213,8 +211,8 @@ class FtpTransporter extends AbstractTransporter
     /**
      * Removes a file/directory on the remote host
      *
-     * @param  string $path
-     * @param  bool $recursive
+     * @param  string            $path
+     * @param  bool              $recursive
      * @throws \RuntimeException
      * @return mixed
      */

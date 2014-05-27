@@ -11,25 +11,24 @@
 
 namespace Webcreate\Conveyor;
 
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
-
-use Webcreate\Conveyor\DependencyInjection\Compiler\StrategyCompilerPass;
-use Webcreate\Conveyor\DependencyInjection\Compiler\TransporterCompilerPass;
 use Webcreate\Conveyor\DependencyInjection\Compiler\ParameterCompilerPass;
+use Webcreate\Conveyor\DependencyInjection\Compiler\StrategyCompilerPass;
 use Webcreate\Conveyor\DependencyInjection\Compiler\TaskCompilerPass;
+use Webcreate\Conveyor\DependencyInjection\Compiler\TransporterCompilerPass;
 use Webcreate\Conveyor\DependencyInjection\TransporterAwareInterface;
 use Webcreate\Conveyor\Event\StageEvent;
 use Webcreate\Conveyor\Event\StageEvents;
 use Webcreate\Conveyor\Factory\StrategyFactory;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\IO\NullIO;
-use Webcreate\Conveyor\Stage\Manager\StageManager;
 use Webcreate\Conveyor\Repository\Version;
+use Webcreate\Conveyor\Stage\Manager\StageManager;
 use Webcreate\Conveyor\Strategy\StrategyInterface;
 use Webcreate\Conveyor\Task\TaskRunner;
 use Webcreate\Conveyor\Transporter\AbstractTransporter;
@@ -530,6 +529,9 @@ class Conveyor
         ;
     }
 
+    /**
+     * @param string $target
+     */
     protected function setConfigParametersForTarget($target)
     {
         $this->getConfig()->setParameter('target', $target);

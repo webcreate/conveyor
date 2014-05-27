@@ -11,8 +11,6 @@
 
 namespace Webcreate\Conveyor\IO;
 
-use Webcreate\Conveyor\IO\IOInterface;
-
 class NullIO implements IOInterface
 {
     public function isInteractive()

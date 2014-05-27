@@ -34,27 +34,29 @@ interface IOInterface
     /**
      * Writes a message to the output.
      *
-     * @param string|array $messages The message as an array of lines or a single string
+     * @param string $messages The message as an array of lines or a single string
      * @param bool         $newline  Whether to add a newline or not
+     * @return void
      */
     public function write($messages, $newline = true);
 
     /**
      * Overwrites a previous message to the output.
      *
-     * @param string|array $messages The message as an array of lines or a single string
+     * @param string $messages The message as an array of lines or a single string
      * @param bool         $newline  Whether to add a newline or not
      * @param integer      $size     The size of line
+     * @return void
      */
     public function overwrite($messages, $newline = true, $size = 80);
 
     /**
      * Asks the user to select a value.
      *
-     * @param string|array    $question     The question to ask
+     * @param string    $question     The question to ask
      * @param array           $choices      List of choices to pick from
      * @param Boolean         $default      The default answer if the user enters nothing
-     * @param Boolean|integer $attempts     Max number of times to ask before giving up (false by default, which means infinite)
+     * @param boolean $attempts     Max number of times to ask before giving up (false by default, which means infinite)
      * @param string          $errorMessage Message which will be shown if invalid value from choice list would be picked
      *
      * @return integer|string The selected value (the key of the choices array)
@@ -80,7 +82,7 @@ interface IOInterface
      *
      * The question will be asked until the user answers by nothing, yes, or no.
      *
-     * @param string|array $question The question to ask
+     * @param string $question The question to ask
      * @param bool         $default  The default answer if the user enters nothing
      *
      * @return bool true if the user has confirmed, false otherwise
@@ -118,6 +120,7 @@ interface IOInterface
      * Set indention
      *
      * @param int $indent
+     * @return void
      */
     public function setIndention($indent);
 
@@ -125,6 +128,7 @@ interface IOInterface
      * Increase indention
      *
      * @param int $indent
+     * @return void
      */
     public function increaseIndention($indent);
 
@@ -132,6 +136,7 @@ interface IOInterface
      * Decrease indention
      *
      * @param int $indent
+     * @return void
      */
     public function decreaseIndention($indent);
 

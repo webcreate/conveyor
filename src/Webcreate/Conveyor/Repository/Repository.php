@@ -26,11 +26,11 @@ class Repository
     protected $cacheDir;
 
     /**
-     * @param string $type name of a registered driver
-     * @param string $url
+     * @param string           $type     name of a registered driver
+     * @param string           $url
      * @param null|IOInterface $io
-     * @param null|array $drivers
-     * @param null|string $cacheDir
+     * @param null|array       $drivers
+     * @param null|string      $cacheDir
      */
     public function __construct($type, $url, IOInterface $io = null, array $drivers = null, $cacheDir = null)
     {
@@ -111,6 +111,9 @@ class Repository
         return $this->getDriver()->getVersions();
     }
 
+    /**
+     * @param string $name
+     */
     public function getVersion($name)
     {
         foreach ($this->getVersions() as $version) {
@@ -137,6 +140,9 @@ class Repository
         return $this->getDriver()->diff($oldVersion, $newVersion);
     }
 
+    /**
+     * @param Version $version2
+     */
     public function versionCompare($version1, $version2)
     {
         $build1 = $version1->getBuild();

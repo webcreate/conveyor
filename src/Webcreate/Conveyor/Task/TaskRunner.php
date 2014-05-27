@@ -61,7 +61,7 @@ class TaskRunner implements TransporterAwareInterface
     }
 
     /**
-     * @param Task[] $tasks
+     * @param  Task[] $tasks
      * @return $this
      */
     public function setTasks(array $tasks)
@@ -95,6 +95,9 @@ class TaskRunner implements TransporterAwareInterface
         );
     }
 
+    /**
+     * @param \Webcreate\Conveyor\Repository\Version $version
+     */
     public function execute($target, $version)
     {
         $total = count($this->tasks);
@@ -133,6 +136,9 @@ class TaskRunner implements TransporterAwareInterface
         }
     }
 
+    /**
+     * @param \Webcreate\Conveyor\Repository\Version $version
+     */
     public function simulate($target, $version)
     {
         $io = $this->io;
@@ -151,7 +157,7 @@ class TaskRunner implements TransporterAwareInterface
 
             $self = $this;
 
-            $task->setOutput(function($output) use ($io, $self) {
+            $task->setOutput(function ($output) use ($io, $self) {
                 $io->overwrite(sprintf('%s', $output), false);
 
                 $self->needsNewline = true;

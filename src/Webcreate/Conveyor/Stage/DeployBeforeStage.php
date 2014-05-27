@@ -11,11 +11,11 @@
 
 namespace Webcreate\Conveyor\Stage;
 
+use Webcreate\Conveyor\Context;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
-use Webcreate\Conveyor\Task\TaskRunner;
-use Webcreate\Conveyor\Context;
 use Webcreate\Conveyor\Stage\AbstractStage;
+use Webcreate\Conveyor\Task\TaskRunner;
 
 class DeployBeforeStage extends AbstractStage
 {

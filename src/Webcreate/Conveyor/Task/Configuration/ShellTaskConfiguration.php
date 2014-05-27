@@ -29,7 +29,7 @@ class ShellTaskConfiguration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                     ->beforeNormalization()
                         ->ifString()
-                        ->then(function($v) {
+                        ->then(function ($v) {
                             return array($v);
                         })
                     ->end()

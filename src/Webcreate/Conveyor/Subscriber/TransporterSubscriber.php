@@ -12,11 +12,10 @@
 namespace Webcreate\Conveyor\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-use Webcreate\Conveyor\Event\TransporterEvents;
-use Webcreate\Conveyor\Transporter\FileTransporter;
-use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Event\TransporterEvent;
+use Webcreate\Conveyor\Event\TransporterEvents;
+use Webcreate\Conveyor\IO\IOInterface;
+use Webcreate\Conveyor\Transporter\FileTransporter;
 
 class TransporterSubscriber implements EventSubscriberInterface
 {

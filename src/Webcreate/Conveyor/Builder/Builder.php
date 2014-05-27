@@ -13,16 +13,15 @@ namespace Webcreate\Conveyor\Builder;
 
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
-use Webcreate\Conveyor\Event\TaskRunnerEvents;
-use Webcreate\Conveyor\Task\Result\ExecuteResult;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Webcreate\Conveyor\Context;
-use Webcreate\Conveyor\Task\Task;
 use Webcreate\Conveyor\Event\BuilderEvents;
+use Webcreate\Conveyor\Event\TaskRunnerEvents;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
+use Webcreate\Conveyor\Task\Result\ExecuteResult;
+use Webcreate\Conveyor\Task\Task;
 use Webcreate\Conveyor\Task\TaskRunner;
 
 /**
@@ -67,7 +66,7 @@ class Builder
     /**
      * Creates a task runner for builder tasks
      *
-     * @param Task[] $tasks
+     * @param  Task[]     $tasks
      * @return TaskRunner
      */
     protected function createTaskRunner(array $tasks)
@@ -114,7 +113,7 @@ class Builder
     /**
      * Add task to the build process
      *
-     * @param Task $task
+     * @param  Task  $task
      * @return $this
      */
     public function addTask(Task $task)
@@ -138,7 +137,7 @@ class Builder
      * @deprecated I rather not have the builder depend on the context,
      *             that's something for the BuildStage
      *
-     * @param Context $context
+     * @param  Context $context
      * @return $this
      */
     public function setContext(Context $context)
@@ -189,7 +188,7 @@ class Builder
      */
     protected function getSupportedTasks($target, Version $version)
     {
-        $tasks = array_filter($this->taskRunner->getTasks(), function($task) use ($target, $version) {
+        $tasks = array_filter($this->taskRunner->getTasks(), function ($task) use ($target, $version) {
             return (true === $task->supports($target, $version));
         });
 

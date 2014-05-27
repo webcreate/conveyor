@@ -11,12 +11,11 @@
 
 namespace Webcreate\Conveyor\Stage;
 
-use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Context;
+use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Strategy\StrategyInterface;
 use Webcreate\Conveyor\Transporter\AbstractTransporter;
-use Webcreate\Conveyor\Util\FileCollection;
 use Webcreate\Conveyor\Util\FilePath;
 
 class TransferStage extends AbstractStage

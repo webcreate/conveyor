@@ -11,9 +11,9 @@
 
 namespace Webcreate\Conveyor\Stage;
 
-use Webcreate\Conveyor\Repository\Repository;
-use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Context;
+use Webcreate\Conveyor\IO\IOInterface;
+use Webcreate\Conveyor\Repository\Repository;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Util\FilePath;
 

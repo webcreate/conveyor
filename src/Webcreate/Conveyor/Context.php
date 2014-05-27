@@ -11,9 +11,9 @@
 
 namespace Webcreate\Conveyor;
 
+use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Strategy\StrategyInterface;
 use Webcreate\Conveyor\Util\FileCollection;
-use Webcreate\Conveyor\Repository\Version;
 
 class Context
 {
@@ -70,7 +70,7 @@ class Context
     }
 
     /**
-     * @param \Webcreate\Conveyor\Util\FileCollection $filesDeleted
+     * @param  \Webcreate\Conveyor\Util\FileCollection $filesDeleted
      * @return $this
      */
     public function setFilesDeleted($filesDeleted)
@@ -89,7 +89,7 @@ class Context
     }
 
     /**
-     * @param \Webcreate\Conveyor\Util\FileCollection $filesModified
+     * @param  \Webcreate\Conveyor\Util\FileCollection $filesModified
      * @return $this
      */
     public function setFilesModified($filesModified)
@@ -112,6 +112,9 @@ class Context
         return $this->builddir;
     }
 
+    /**
+     * @param string $builddir
+     */
     public function setBuilddir($builddir)
     {
         $this->builddir = $builddir;
@@ -134,6 +137,9 @@ class Context
         return $this->isFullDeploy;
     }
 
+    /**
+     * @param boolean $value
+     */
     public function setSimulate($value)
     {
         $this->isSimulate = (bool) $value;

@@ -11,14 +11,12 @@
 
 namespace Webcreate\Conveyor\Transporter;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
-use Webcreate\Conveyor\Event\TransporterEvents;
 use Webcreate\Conveyor\Event\TransporterEvent;
+use Webcreate\Conveyor\Event\TransporterEvents;
 use Webcreate\Vcs\Common\VcsFileInfo;
 use Webcreate\Vcs\Git;
-
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @todo research if this transporter could extend the FileTransporter

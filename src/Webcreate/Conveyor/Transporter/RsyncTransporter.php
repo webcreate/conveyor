@@ -11,11 +11,10 @@
 
 namespace Webcreate\Conveyor\Transporter;
 
-use Webcreate\Conveyor\Event\TransporterEvents;
-use Webcreate\Conveyor\Event\TransporterEvent;
-use Webcreate\Util\Cli;
-
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Webcreate\Conveyor\Event\TransporterEvent;
+use Webcreate\Conveyor\Event\TransporterEvents;
+use Webcreate\Util\Cli;
 
 class RsyncTransporter extends AbstractTransporter implements SshCapableTransporterInterface
 {
@@ -52,8 +51,8 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
     /**
      * Create a directory on the remote server
      *
-     * @param string $dest remote path
-     * @param bool $recursive
+     * @param  string            $dest      remote path
+     * @param  bool              $recursive
      * @throws \RuntimeException
      */
     public function mkdir($dest, $recursive = true)
@@ -78,8 +77,8 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
     /**
      * Retrieve file or directory from remote server
      *
-     * @param string $src remote source path
-     * @param string $dest (optional) local destination path
+     * @param  string            $src  remote source path
+     * @param  string            $dest (optional) local destination path
      * @throws \RuntimeException
      * @return string
      */
@@ -110,8 +109,8 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
     /**
      * Upload a file or directory to remote server
      *
-     * @param string $src local source path
-     * @param string $dest remote destination path
+     * @param  string                    $src  local source path
+     * @param  string                    $dest remote destination path
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      */
@@ -243,8 +242,8 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
     /**
      * Removes a file/directory on the remote host
      *
-     * @param  string $path
-     * @param  bool $recursive
+     * @param  string            $path
+     * @param  bool              $recursive
      * @throws \RuntimeException
      * @return mixed
      */
@@ -266,7 +265,7 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
      * @todo this is just a simple implementation which should be improved
      *
      * @param $command
-     * @param null $callback
+     * @param  null              $callback
      * @throws \RuntimeException
      */
     public function exec($command, $callback = null)
@@ -290,7 +289,7 @@ class RsyncTransporter extends AbstractTransporter implements SshCapableTranspor
      *   ),
      * );
      *
-     * @param  string $path
+     * @param  string            $path
      * @throws \RuntimeException
      * @return array
      */
