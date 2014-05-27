@@ -1,5 +1,5 @@
-Conveyor - Build and deploy tool for PHP
-========================================
+Conveyor
+========
 
 Conveyor is a build and deploy for PHP projects.
 
@@ -8,7 +8,7 @@ Full documentation is available at [http://conveyordeploy.com](http://conveyorde
 Installation / Usage
 --------------------
 
-1. Download the [`conveyor.phar`](http://conveyordeploy.com/conveyor.phar) executable.
+1. Download the [`conveyor.phar`](http://conveyordeploy.com/download.html) executable.
 2. Create a conveyor.yml by running: `php conveyor.phar init`
 3. Read the [docs](http://conveyordeploy.com/docs) on how to configure Conveyor for your project
 

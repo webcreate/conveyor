@@ -6,6 +6,17 @@ php:
   - 5.4
   - hhvm
 
+env:
+  global:
+    - SVN_BIN=/usr/bin/svn
+    - GIT_BIN=/usr/bin/git
+    - SVNADMIN_BIN=/usr/bin/svnadmin
+    - SYMFONY_ENV=test
+
+cache:
+  directories:
+    - $HOME/.composer
+
 matrix:
   fast_finish: true
   allow_failures:
@@ -14,7 +25,11 @@ matrix:
 
 before_script:
   - composer selfupdate
-  - composer install
+  - composer install --no-interaction --no-scripts
 
-env:
-  - SVN_BIN=/usr/bin/svn GIT_BIN=/usr/bin/git SVNADMIN_BIN=/usr/bin/svnadmin
+script:
+  - ./vendor/bin/phpunit --coverage-clover=coverage.clover
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --access-token="aac71496b428eba780b9d3c8d3a6cc81d676ee47c9bd7eae5f4682a55b532937" --format=php-clover coverage.clover
