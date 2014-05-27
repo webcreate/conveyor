@@ -12,13 +12,11 @@
 namespace Webcreate\Conveyor\Transporter;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Finder\Finder;
-
-use Webcreate\Conveyor\IO\IOInterface;
-use Webcreate\Conveyor\Transporter\Ftp\Sftp;
 use Webcreate\Conveyor\Event\TransporterEvent;
 use Webcreate\Conveyor\Event\TransporterEvents;
+use Webcreate\Conveyor\IO\IOInterface;
+use Webcreate\Conveyor\Transporter\Ftp\Sftp;
 
 /**
  * @todo refactor the injection of the IOInterface to a event-based solution?

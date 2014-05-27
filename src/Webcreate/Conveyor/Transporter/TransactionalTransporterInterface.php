@@ -13,6 +13,13 @@ namespace Webcreate\Conveyor\Transporter;
 
 interface TransactionalTransporterInterface
 {
+    /**
+     * @return void
+     */
     public function begin();
+
+    /**
+     * @return void
+     */
     public function commit();
 }

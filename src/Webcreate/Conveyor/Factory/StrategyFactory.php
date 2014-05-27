@@ -61,7 +61,7 @@ class StrategyFactory
     /**
      * Returns transporter configuration
      *
-     * @param  string                                                             $alias transporter name
+     * @param  string                                                              $alias transporter name
      * @return \Symfony\Component\Config\Definition\ConfigurationInterface|boolean
      */
     public function configuration($alias)

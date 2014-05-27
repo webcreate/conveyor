@@ -11,10 +11,10 @@
 
 namespace Webcreate\Conveyor\Stage;
 
+use Webcreate\Conveyor\Context;
+use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Repository;
 use Webcreate\Vcs\Common\Status;
-use Webcreate\Conveyor\IO\IOInterface;
-use Webcreate\Conveyor\Context;
 
 class DiffStage extends AbstractStage
 {

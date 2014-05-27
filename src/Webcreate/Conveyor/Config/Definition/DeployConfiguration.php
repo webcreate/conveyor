@@ -11,11 +11,10 @@
 
 namespace Webcreate\Conveyor\Config\Definition;
 
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Webcreate\Conveyor\Factory\StrategyFactory;
 use Webcreate\Conveyor\Factory\TaskFactory;
 use Webcreate\Conveyor\Factory\TransporterFactory;
@@ -55,7 +54,7 @@ class DeployConfiguration implements ConfigurationInterface
                     ->end()
                     ->beforeNormalization()
                         ->ifString()
-                        ->then(function($v) {
+                        ->then(function ($v) {
                             $result = parse_url($v);
 
                             if (false === $result) {
@@ -72,7 +71,7 @@ class DeployConfiguration implements ConfigurationInterface
                         })
                     ->end()
                     ->validate()
-                        ->ifTrue(function($v) use ($validSchemes) {
+                        ->ifTrue(function ($v) use ($validSchemes) {
                             return false === in_array($v['type'], $validSchemes);
                         })
                         ->thenInvalid('Invalid repository type "%s". Valid types are: '.implode(', ', $validSchemes).'.')
@@ -99,7 +98,7 @@ class DeployConfiguration implements ConfigurationInterface
                             ->defaultValue('/tmp/conveyor')
                             ->beforeNormalization()
                                 ->ifString()
-                                ->then(function($v) {
+                                ->then(function ($v) {
                                     // resolve home dir
                                     $path = preg_replace('/^\~/', getenv('HOME'), $v);
 
@@ -122,7 +121,7 @@ class DeployConfiguration implements ConfigurationInterface
                                     ->arrayNode('targets')
                                         ->beforeNormalization()
                                             ->ifString()
-                                            ->then(function($v) {
+                                            ->then(function ($v) {
                                                 return array($v);
                                             })
                                         ->end()
@@ -139,7 +138,7 @@ class DeployConfiguration implements ConfigurationInterface
                         ->node('strategy', 'strategy')
                             ->beforeNormalization()
                                 ->ifString()
-                                ->then(function($v) {
+                                ->then(function ($v) {
                                     return array('type' => $v);
                                 })
                             ->end()
@@ -157,7 +156,7 @@ class DeployConfiguration implements ConfigurationInterface
                                     ->arrayNode('targets')
                                         ->beforeNormalization()
                                             ->ifString()
-                                            ->then(function($v) {
+                                            ->then(function ($v) {
                                                 return array($v);
                                             })
                                         ->end()
@@ -173,7 +172,7 @@ class DeployConfiguration implements ConfigurationInterface
                                     ->arrayNode('targets')
                                         ->beforeNormalization()
                                             ->ifString()
-                                            ->then(function($v) {
+                                            ->then(function ($v) {
                                                     return array($v);
                                                 })
                                         ->end()
@@ -189,7 +188,7 @@ class DeployConfiguration implements ConfigurationInterface
                                     ->arrayNode('targets')
                                         ->beforeNormalization()
                                             ->ifString()
-                                            ->then(function($v) {
+                                            ->then(function ($v) {
                                                     return array($v);
                                                 })
                                         ->end()

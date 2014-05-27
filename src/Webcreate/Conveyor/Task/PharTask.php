@@ -11,12 +11,11 @@
 
 namespace Webcreate\Conveyor\Task;
 
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Finder\Finder;
-
-use Webcreate\Conveyor\Task\Result\ExecuteResult;
+use Symfony\Component\Finder\SplFileInfo;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
+use Webcreate\Conveyor\Task\Result\ExecuteResult;
 
 /**
  * @todo check requirement: phar.readonly = Off in php.ini

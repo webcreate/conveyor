@@ -36,14 +36,14 @@ interface StrategyInterface
      * Returns the upload path for a specific version
      *
      * @param $version
-     * @return mixed
+     * @return string
      */
     public function getUploadPath(Version $version);
 
     /**
      * Sets options
      *
-     * @param array $options
+     * @param  array $options
      * @return mixed
      */
     public function setOptions(array $options);

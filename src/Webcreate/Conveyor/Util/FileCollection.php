@@ -11,8 +11,8 @@
 
 namespace Webcreate\Conveyor\Util;
 
-use Symfony\Component\Finder\Glob;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\Glob;
 
 class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
 {
@@ -40,7 +40,7 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
 
     /**
      * @param $pattern
-     * @param bool $force assumes the $pattern is a absolute file and adds it, even if it doesn't exist
+     * @param  bool            $force assumes the $pattern is a absolute file and adds it, even if it doesn't exist
      * @return $this
      * @throws \LogicException
      */
@@ -91,6 +91,9 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
         return $this;
     }
 
+    /**
+     * @param Finder $finder
+     */
     protected function mapFinder($finder)
     {
         return array_map(function ($file) {
@@ -125,6 +128,9 @@ class FileCollection implements \IteratorAggregate, \Countable, \ArrayAccess
         return $this->files;
     }
 
+    /**
+     * @param FileCollection $array
+     */
     public function intersect($array)
     {
         if ($array instanceof self) {

@@ -11,10 +11,10 @@
 
 namespace Webcreate\Conveyor\Task;
 
-use Webcreate\Conveyor\Task\Result\ExecuteResult;
 use Webcreate\Conveyor\IO\IOInterface;
-use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Repository\Repository;
+use Webcreate\Conveyor\Repository\Version;
+use Webcreate\Conveyor\Task\Result\ExecuteResult;
 
 class ExportTask extends Task
 {
@@ -32,8 +32,8 @@ class ExportTask extends Task
      * @todo better progress (percentage) updating
      *
      * @param $target
-     * @param Version $version
-     * @param array $options
+     * @param  Version       $version
+     * @param  array         $options
      * @return ExecuteResult
      */
     public function execute($target, Version $version, array $options = array())

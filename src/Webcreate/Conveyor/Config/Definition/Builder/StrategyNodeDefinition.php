@@ -12,11 +12,10 @@
 namespace Webcreate\Conveyor\Config\Definition\Builder;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
-use Symfony\Component\Config\Definition\Builder\NodeParentInterface;
-use Symfony\Component\Config\Definition\Builder\ParentNodeDefinitionInterface;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
-
+use Symfony\Component\Config\Definition\Builder\NodeParentInterface;
+use Symfony\Component\Config\Definition\Builder\ParentNodeDefinitionInterface;
 use Webcreate\Conveyor\Config\Definition\StrategyNode;
 use Webcreate\Conveyor\Factory\StrategyFactory;
 
@@ -117,7 +116,7 @@ class StrategyNodeDefinition extends ArrayNodeDefinition implements
      * Set StrategyFactory
      *
      * @param  StrategyFactory|null                                                    $factory
-     * @return \Webcreate\Conveyor\Config\Definition\Builder\TransporterNodeDefinition
+     * @return StrategyNodeDefinition
      */
     public function setStrategyFactory($factory)
     {

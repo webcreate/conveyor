@@ -11,11 +11,10 @@
 
 namespace Webcreate\Conveyor\Transporter;
 
-use Webcreate\Conveyor\Event\TransporterEvents;
-use Webcreate\Conveyor\Event\TransporterEvent;
-use Webcreate\Util\Cli;
-
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Webcreate\Conveyor\Event\TransporterEvent;
+use Webcreate\Conveyor\Event\TransporterEvents;
+use Webcreate\Util\Cli;
 
 class ScpTransporter extends AbstractTransporter implements SshCapableTransporterInterface
 {
@@ -52,7 +51,7 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
     /**
      * Create a directory on the remote server
      *
-     * @param string $dest remote path
+     * @param  string            $dest remote path
      * @throws \RuntimeException
      */
     public function mkdir($dest)
@@ -77,8 +76,8 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
     /**
      * Retrieve file or directory from remote server
      *
-     * @param string $src remote source path
-     * @param string $dest (optional) local destination path
+     * @param  string            $src  remote source path
+     * @param  string            $dest (optional) local destination path
      * @throws \RuntimeException
      * @return string
      */
@@ -109,8 +108,8 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
     /**
      * Upload a file or directory to remote server
      *
-     * @param string $src local source path
-     * @param string $dest remote destination path
+     * @param  string                    $src  local source path
+     * @param  string                    $dest remote destination path
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      */
@@ -139,8 +138,8 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
     /**
      * Upload a string to remote server
      *
-     * @param string $content content
-     * @param string $dest remote destination path
+     * @param  string            $content content
+     * @param  string            $dest    remote destination path
      * @throws \RuntimeException
      */
     public function putContent($content, $dest)
@@ -205,9 +204,9 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
     /**
      * Copies a file/directory on the remote host
      *
-     * @param  string $src
-     * @param  string $dest
-     * @param  bool $recursive
+     * @param  string            $src
+     * @param  string            $dest
+     * @param  bool              $recursive
      * @throws \RuntimeException
      * @return mixed
      */
@@ -228,8 +227,8 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
     /**
      * Removes a file/directory on the remote host
      *
-     * @param  string $path
-     * @param  bool $recursive
+     * @param  string            $path
+     * @param  bool              $recursive
      * @throws \RuntimeException
      * @return mixed
      */
@@ -251,7 +250,7 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
      * @todo this is just a simple implementation which should be improved
      *
      * @param $command
-     * @param null $callback
+     * @param  null              $callback
      * @throws \RuntimeException
      */
     public function exec($command, $callback = null)
@@ -275,7 +274,7 @@ class ScpTransporter extends AbstractTransporter implements SshCapableTransporte
      *   ),
      * );
      *
-     * @param  string $path
+     * @param  string            $path
      * @throws \RuntimeException
      * @return array
      */

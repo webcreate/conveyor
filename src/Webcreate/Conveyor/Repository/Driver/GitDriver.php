@@ -48,7 +48,7 @@ class GitDriver extends AbstractVcsDriver
      *
      * @param  Version $oldVersion
      * @param  Version $newVersion
-     * @return mixed
+     * @return \Webcreate\Vcs\Common\VcsFileInfo[]
      */
     public function diff(Version $oldVersion, Version $newVersion)
     {

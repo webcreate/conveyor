@@ -11,8 +11,8 @@
 
 namespace Webcreate\Conveyor\Stage;
 
-use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Context;
+use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Util\FilePath;
 
 class ValidateRemoteStage extends AbstractStage

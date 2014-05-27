@@ -57,7 +57,7 @@ abstract class Task
      *
      * @todo validate $name
      *
-     * @param $name
+     * @param string $name
      * @param $value
      * @return Task
      */
@@ -71,7 +71,7 @@ abstract class Task
     /**
      * Probably set via the TaskRunnerSubscriber
      *
-     * @param callable $callback
+     * @param \Closure $callback
      */
     public function setOutput(\Closure $callback)
     {
@@ -79,7 +79,7 @@ abstract class Task
     }
 
     /**
-     * @param $output
+     * @param string $output
      */
     protected function output($output)
     {

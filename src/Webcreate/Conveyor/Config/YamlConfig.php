@@ -13,12 +13,11 @@ namespace Webcreate\Conveyor\Config;
 
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
-
+use Webcreate\Conveyor\Config\Definition\DeployConfiguration;
 use Webcreate\Conveyor\Factory\StrategyFactory;
 use Webcreate\Conveyor\Factory\TaskFactory;
 use Webcreate\Conveyor\Factory\TransporterFactory;
 use Webcreate\Conveyor\Util\ArrayUtil;
-use Webcreate\Conveyor\Config\Definition\DeployConfiguration;
 
 /**
  * @todo refactor getConfig() method: might want to implement \ArrayAccess interface

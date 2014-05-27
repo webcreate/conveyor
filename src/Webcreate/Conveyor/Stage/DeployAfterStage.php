@@ -11,11 +11,11 @@
 
 namespace Webcreate\Conveyor\Stage;
 
+use Webcreate\Conveyor\Context;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Task\SshTask;
 use Webcreate\Conveyor\Task\TaskRunner;
-use Webcreate\Conveyor\Context;
 
 class DeployAfterStage extends AbstractStage
 {
@@ -84,7 +84,7 @@ class DeployAfterStage extends AbstractStage
     protected function getSupportedTasks($target, Version $version)
     {
         $tasks = array_filter($this->taskRunner->getTasks(),
-            function($task) use ($target, $version) {
+            function ($task) use ($target, $version) {
                 return (true === $task->supports($target, $version));
             }
         );

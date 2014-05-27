@@ -11,9 +11,9 @@
 
 namespace Webcreate\Conveyor\Command;
 
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractCommand extends Command
 {
@@ -22,7 +22,7 @@ abstract class AbstractCommand extends Command
      *
      * @param  InputInterface               $input     The input instance
      * @param  OutputInterface              $output    The output instance
-     * @param  HelperSet                    $helperSet The helperSet instance
+     * @param  null|\Symfony\Component\Console\Helper\HelperSet                    $helperSet The helperSet instance
      * @return \Webcreate\Conveyor\Conveyor
      */
     public function getConveyor(InputInterface $input, OutputInterface $output, $helperSet)

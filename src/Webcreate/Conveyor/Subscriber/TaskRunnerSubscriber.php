@@ -11,9 +11,8 @@
 
 namespace Webcreate\Conveyor\Subscriber;
 
-use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Webcreate\Conveyor\Event\TaskRunnerEvents;
 use Webcreate\Conveyor\IO\IOInterface;
 
@@ -43,7 +42,7 @@ class TaskRunnerSubscriber implements EventSubscriberInterface
 
         $self = $this;
 
-        $task->setOutput(function($output) use ($io, $self) {
+        $task->setOutput(function ($output) use ($io, $self) {
             if ($io->isVerbose()) {
                 $io->write(sprintf('%s', $output));
                 $self->needsNewline = false;

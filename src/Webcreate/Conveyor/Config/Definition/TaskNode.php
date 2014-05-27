@@ -11,11 +11,10 @@
 
 namespace Webcreate\Conveyor\Config\Definition;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\NodeInterface;
 use Symfony\Component\Config\Definition\ArrayNode;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-
+use Symfony\Component\Config\Definition\NodeInterface;
 use Webcreate\Conveyor\Factory\TaskFactory;
 
 class TaskNode extends ArrayNode

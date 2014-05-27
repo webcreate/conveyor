@@ -30,6 +30,9 @@ class StageManager
         $this->dispatcher = $dispatcher;
     }
 
+    /**
+     * @param string $name
+     */
     public function addStage($name, AbstractStage $stage)
     {
         $this->stages[$name] = array('name' => $name, 'stage' => $stage);

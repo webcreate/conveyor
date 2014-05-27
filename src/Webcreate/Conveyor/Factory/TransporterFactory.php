@@ -11,9 +11,8 @@
 
 namespace Webcreate\Conveyor\Factory;
 
-use Webcreate\Conveyor\Transporter\AbstractTransporter;
-
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Webcreate\Conveyor\Transporter\AbstractTransporter;
 
 class TransporterFactory
 {
@@ -62,7 +61,7 @@ class TransporterFactory
     /**
      * Returns transporter configuration
      *
-     * @param  string                                                             $alias transporter name
+     * @param  string                                                              $alias transporter name
      * @return \Symfony\Component\Config\Definition\ConfigurationInterface|boolean
      */
     public function configuration($alias)

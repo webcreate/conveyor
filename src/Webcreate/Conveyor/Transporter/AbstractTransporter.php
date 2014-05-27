@@ -53,7 +53,7 @@ abstract class AbstractTransporter
     }
 
     /**
-     * @param mixed $port
+     * @param  mixed $port
      * @return self
      */
     public function setPort($port)
@@ -161,8 +161,8 @@ abstract class AbstractTransporter
     /**
      * Creates a symlink on the remote server
      *
-     * @param $src
-     * @param $dest
+     * @param string $src
+     * @param string $dest
      * @return mixed
      */
     abstract public function symlink($src, $dest);

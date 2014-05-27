@@ -45,7 +45,7 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
     /**
      * Sets options
      *
-     * @param array $options
+     * @param  array $options
      * @return mixed
      */
     public function setOptions(array $options)
@@ -101,7 +101,7 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
      * full deploy)
      *
      * @param  \Webcreate\Conveyor\Repository\Version $version
-     * @return mixed
+     * @return string
      */
     public function getUploadPath(Version $version)
     {
@@ -218,7 +218,7 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
             // use safe guard, because transport can throw an exception in case
             // of a permission denied
             $this->safeGuard(
-                function() use ($transporter, $uploadPath, $file) {
+                function () use ($transporter, $uploadPath, $file) {
                     $transporter->remove($uploadPath . '/' . $file, true);
                 }
             );
@@ -247,12 +247,12 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
 
                 switch ($answer) {
                     case 'y':
-                        while($file = array_pop($removableFiles)) {
+                        while ($file = array_pop($removableFiles)) {
                             if ($this->io->askConfirmation(sprintf('Would you like to remove %s? [Y/n] ', $file), true)) {
                                 // use safe guard, because transport can throw an exception in case
                                 // of a permission denied
                                 $this->safeGuard(
-                                    function() use ($transporter, $uploadPath, $file) {
+                                    function () use ($transporter, $uploadPath, $file) {
                                         $transporter->remove($uploadPath . '/' . $file, true);
                                     }
                                 );
@@ -265,11 +265,11 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
 
                     case 'a':
                         // remove all in reversed order (oldest first)
-                        while($file = array_pop($removableFiles)) {
+                        while ($file = array_pop($removableFiles)) {
                             // use safe guard, because transport can throw an exception in case
                             // of a permission denied
                             $this->safeGuard(
-                                function() use ($transporter, $uploadPath, $file) {
+                                function () use ($transporter, $uploadPath, $file) {
                                     $transporter->remove($uploadPath . '/' . $file, true);
                                 }
                             );
@@ -360,9 +360,9 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
      * <?php array_qsort2($users, "username", "ASC"); ?>
      * </code>
      *
-     * @param array $array array with hash array
+     * @param array $array  array with hash array
      * @param mixed $column key that you want to sort on
-     * @param enum $order asc or desc
+     * @param enum  $order  asc or desc
      */
     protected function array_qsort2(&$array, $column=0, $order="ASC")
     {
@@ -378,14 +378,14 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
     /**
      *
      * @param FileCollection $sharedFiles
-     * @param Context $context
+     * @param Context        $context
      */
     protected function putDeferedSharedFiles($sharedFiles, Context $context)
     {
         $basepath   = $this->transporter->getPath();
         $sharedPath = $basepath . '/shared';
 
-        foreach($sharedFiles as $file) {
+        foreach ($sharedFiles as $file) {
             $src = FilePath::join($context->getBuilddir(), $file);
             $sharedFilepath = $sharedPath . '/' . $file;
 

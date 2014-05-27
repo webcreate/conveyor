@@ -18,6 +18,9 @@ class ArrayUtil
         return $this->_flatten($array, '');
     }
 
+    /**
+     * @param string $opath
+     */
     protected function _flatten($array, $opath)
     {
         $flatten = array();

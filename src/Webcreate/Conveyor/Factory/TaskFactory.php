@@ -12,7 +12,6 @@
 namespace Webcreate\Conveyor\Factory;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-
 use Webcreate\Conveyor\Task\Task;
 
 class TaskFactory

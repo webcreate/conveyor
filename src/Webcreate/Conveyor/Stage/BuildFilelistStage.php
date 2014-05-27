@@ -11,10 +11,10 @@
 
 namespace Webcreate\Conveyor\Stage;
 
-use Webcreate\Conveyor\Util\FileCollection;
-use Webcreate\Vcs\Common\Status;
 use Webcreate\Conveyor\Context;
 use Webcreate\Conveyor\Repository\Repository;
+use Webcreate\Conveyor\Util\FileCollection;
+use Webcreate\Vcs\Common\Status;
 
 class BuildFilelistStage extends AbstractStage
 {

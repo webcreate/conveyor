@@ -13,7 +13,6 @@ namespace Webcreate\Conveyor\Transporter;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-
 use Symfony\Component\Finder\SplFileInfo;
 use Webcreate\Conveyor\Event\TransporterEvent;
 use Webcreate\Conveyor\Event\TransporterEvents;
@@ -102,8 +101,8 @@ class FileTransporter extends AbstractTransporter
     /**
      * Creates a symlink on the remote server
      *
-     * @param string $src
-     * @param string $dest
+     * @param  string $src
+     * @param  string $dest
      * @return mixed
      */
     public function symlink($src, $dest)
@@ -126,7 +125,6 @@ class FileTransporter extends AbstractTransporter
     {
         return is_link($dest);
     }
-
 
     /**
      * Copies a file/directory on the remote host

@@ -12,11 +12,10 @@
 namespace Webcreate\Conveyor\Task;
 
 use Symfony\Component\Process\Exception\ProcessFailedException;
-
 use Webcreate\Conveyor\IO\IOInterface;
-use Webcreate\Util\Cli;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Task\Task;
+use Webcreate\Util\Cli;
 
 /**
  * Phing task

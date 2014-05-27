@@ -42,7 +42,7 @@ class SimpleStrategy implements StrategyInterface
      * Returns the upload path for a specific version
      *
      * @param  \Webcreate\Conveyor\Repository\Version $version
-     * @return mixed
+     * @return string
      */
     public function getUploadPath(Version $version)
     {
@@ -52,7 +52,7 @@ class SimpleStrategy implements StrategyInterface
     /**
      * Sets options
      *
-     * @param array $options
+     * @param  array $options
      * @return mixed
      */
     public function setOptions(array $options)

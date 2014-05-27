@@ -11,13 +11,15 @@
 
 namespace Webcreate\Conveyor\Stage;
 
-use Webcreate\Conveyor\IO\IOInterface;
-use Webcreate\Conveyor\Context;
-
 use Symfony\Component\Filesystem\Filesystem;
+use Webcreate\Conveyor\Context;
+use Webcreate\Conveyor\IO\IOInterface;
 
 class BuildStage extends AbstractStage
 {
+    /**
+     * @param \Webcreate\Conveyor\Builder\Builder $builder
+     */
     public function __construct($builder, IOInterface $io)
     {
         $this->builder = $builder;

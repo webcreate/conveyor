@@ -13,5 +13,9 @@ namespace Webcreate\Conveyor\Transporter;
 
 interface SshCapableTransporterInterface
 {
+    /**
+     * @param string $command
+     * @param \Closure $callback
+     */
     public function exec($command, $callback = null);
 }

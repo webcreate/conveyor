@@ -11,11 +11,10 @@
 
 namespace Webcreate\Conveyor\Stage;
 
-use Webcreate\Conveyor\IO\IOInterface;
-
-use Webcreate\Conveyor\Transporter\AbstractTransporter;
 use Webcreate\Conveyor\Context;
+use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Stage\AbstractStage;
+use Webcreate\Conveyor\Transporter\AbstractTransporter;
 use Webcreate\Conveyor\Util\FilePath;
 
 class WriteRemoteInfoFileStage extends AbstractStage

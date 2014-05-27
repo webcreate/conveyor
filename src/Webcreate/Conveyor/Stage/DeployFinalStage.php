@@ -84,7 +84,7 @@ class DeployFinalStage extends AbstractStage
     protected function getSupportedTasks($target, Version $version)
     {
         $tasks = array_filter($this->taskRunner->getTasks(),
-            function($task) use ($target, $version) {
+            function ($task) use ($target, $version) {
                 return (true === $task->supports($target, $version));
             }
         );
