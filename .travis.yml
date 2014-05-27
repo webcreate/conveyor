@@ -1,8 +1,19 @@
 language: php
+
 php:
-  - "5.5"
-  - "5.4"
+  - 5.6
+  - 5.5
+  - 5.4
+  - hhvm
+
+matrix:
+  allow_failures:
+    - php: 5.6
+    - php: hhvm
+
 before_script:
   - composer selfupdate
   - composer install
-env: SVN_BIN=/usr/bin/svn GIT_BIN=/usr/bin/git SVNADMIN_BIN=/usr/bin/svnadmin
+
+env:
+  - SVN_BIN=/usr/bin/svn GIT_BIN=/usr/bin/git SVNADMIN_BIN=/usr/bin/svnadmin
