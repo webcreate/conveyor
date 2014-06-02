@@ -19,6 +19,10 @@ use Webcreate\Vcs\VcsInterface;
 abstract class AbstractVcsDriver implements DriverInterface
 {
     protected $url;
+
+    /**
+     * @var VcsInterface
+     */
     protected $client;
     protected $io;
     protected $cacheDir;
@@ -76,7 +80,10 @@ abstract class AbstractVcsDriver implements DriverInterface
     }
 
     /**
+     * @param string $name
+     * @param string $revision
      * @param string $prefix
+     * @return \Webcreate\Conveyor\Repository\Version
      */
     protected function createVersion($name, $revision, $prefix = null)
     {
@@ -89,7 +96,7 @@ abstract class AbstractVcsDriver implements DriverInterface
         return $version;
     }
 
-    public function export($version, $dest)
+    public function export(Version $version, $dest)
     {
         $head = $this->getHead($version);
         $this->client->setHead($head);

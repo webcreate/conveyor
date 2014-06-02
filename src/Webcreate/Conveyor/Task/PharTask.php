@@ -24,24 +24,37 @@ use Webcreate\Conveyor\Task\Result\ExecuteResult;
  */
 class PharTask extends Task
 {
-    protected $builddir;
+    /**
+     * @var string
+     */
+    protected $buildDir;
+
+    /**
+     * @var \Webcreate\Conveyor\IO\IOInterface
+     */
     protected $io;
     protected $conveyorFile;
     protected $filename;
     protected $stub;
 
-    public function __construct($builddir, $conveyorFile, IOInterface $io = null)
+    /**
+     * Constructor.
+     *
+     * @param string $buildDir
+     * @param $conveyorFile
+     * @param IOInterface $io
+     */
+    public function __construct($buildDir, $conveyorFile, IOInterface $io = null)
     {
-        $this->io = $io;
-        $this->builddir = $builddir;
+        $this->io           = $io;
+        $this->buildDir     = $buildDir;
         $this->conveyorFile = $conveyorFile;
     }
 
     /**
      * @todo implement an excluded file list, instead of hard-coding the filter for the conveyorFile
      *
-     * (non-PHPdoc)
-     * @see Webcreate\Conveyor\Task.Task::execute()
+     * @inheritdoc
      */
     public function execute($target, Version $version = null)
     {
@@ -50,7 +63,7 @@ class PharTask extends Task
 
         $this->output(sprintf('Creating Phar...'));
 
-        $phar = new \Phar($this->builddir . '/' . $filename, 0, $filename);
+        $phar = new \Phar($this->buildDir . '/' . $filename, 0, $filename);
         $phar->setSignatureAlgorithm(\Phar::SHA1);
 
         $phar->startBuffering();
@@ -59,7 +72,7 @@ class PharTask extends Task
         $finder
             ->files()
             ->ignoreVCS(true)
-            ->in($this->builddir)
+            ->in($this->buildDir)
         ;
 
         foreach ($finder as $file) {
@@ -76,7 +89,11 @@ class PharTask extends Task
         return new ExecuteResult(array($filename));
     }
 
-    private function addFile($phar, \SplFileInfo $file)
+    /**
+     * @param \Phar $phar
+     * @param SplFileInfo $file
+     */
+    private function addFile(\Phar $phar, SplFileInfo $file)
     {
         $path = $file->getRelativePathname();
 
@@ -87,6 +104,9 @@ class PharTask extends Task
         $phar->addFromString($path, $content);
     }
 
+    /**
+     * @return string
+     */
     private function getStub()
     {
         $stub = <<<'EOF'

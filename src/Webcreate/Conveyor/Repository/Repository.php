@@ -106,6 +106,9 @@ class Repository
         return $branch;
     }
 
+    /**
+     * @return Version[]
+     */
     public function getVersions()
     {
         return $this->getDriver()->getVersions();
@@ -113,6 +116,8 @@ class Repository
 
     /**
      * @param string $name
+     * @throws \InvalidArgumentException
+     * @return Version
      */
     public function getVersion($name)
     {
@@ -141,9 +146,11 @@ class Repository
     }
 
     /**
+     * @param Version $version1
      * @param Version $version2
+     * @return int
      */
-    public function versionCompare($version1, $version2)
+    public function versionCompare(Version $version1, Version $version2)
     {
         $build1 = $version1->getBuild();
         $build2 = $version2->getBuild();

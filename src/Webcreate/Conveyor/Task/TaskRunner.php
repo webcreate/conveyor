@@ -17,6 +17,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 use Webcreate\Conveyor\DependencyInjection\TransporterAwareInterface;
 use Webcreate\Conveyor\Event\TaskRunnerEvents;
 use Webcreate\Conveyor\IO\IOInterface;
+use Webcreate\Conveyor\Repository\Version;
 
 /**
  * @todo remove Transporter dependency because it is not related to running tasks!
@@ -96,9 +97,10 @@ class TaskRunner implements TransporterAwareInterface
     }
 
     /**
+     * @param string $target
      * @param \Webcreate\Conveyor\Repository\Version $version
      */
-    public function execute($target, $version)
+    public function execute($target, Version $version)
     {
         $total = count($this->tasks);
 
@@ -137,6 +139,7 @@ class TaskRunner implements TransporterAwareInterface
     }
 
     /**
+     * @param string $target
      * @param \Webcreate\Conveyor\Repository\Version $version
      */
     public function simulate($target, $version)

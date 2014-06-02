@@ -55,41 +55,6 @@ class Conveyor
         $this->booted = true;
     }
 
-    /**
-     * @param  IOInterface                          $io
-     * @return ContainerBuilder
-     * @throws \Exception|\InvalidArgumentException
-     */
-    protected function buildContainer(IOInterface $io)
-    {
-        $container = new ContainerBuilder();
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/Resources/config'));
-        $loader->load('parameters.yml');
-        $loader->load('services.yml');
-        $loader->load('tasks.yml');
-        $loader->load('transporters.yml');
-        $loader->load('strategies.yml');
-
-        $container->set('io', $io);
-
-        $container->addCompilerPass(new TaskCompilerPass());
-        $container->addCompilerPass(new TransporterCompilerPass());
-        $container->addCompilerPass(new StrategyCompilerPass());
-        $container->addCompilerPass(new ParameterCompilerPass());
-
-        try {
-            $container->compile();
-        } catch (\InvalidArgumentException $e) {
-               // Ignore an InvalidArgumentException for YamlConfig,
-               // otherwise init() would not be possible
-            if ('YamlConfig.php' !== basename($e->getFile())) {
-                throw $e;
-            }
-        }
-
-        return $container;
-    }
-
     public function getContainer()
     {
         return $this->container;
@@ -237,6 +202,10 @@ class Conveyor
         $retval = array();
 
         foreach ($targets as $target) {
+            $this->assertTargetExists($target, $config);
+        }
+
+        foreach ($targets as $target) {
             $transporter = $this->getTransporter($target);
             $strategy    = $this->getStrategy($transporter);
 
@@ -305,6 +274,8 @@ class Conveyor
             $version = $this->getRepository()->getVersion($version);
         }
 
+        $this->assertTargetExists($target, $this->getConfig()->getConfig());
+
         $this->setConfigParametersForTarget($target);
 
         $builder = $this->getBuilder();
@@ -339,6 +310,8 @@ class Conveyor
             'full_deploy'       => false,
             'deploy_after_only' => false,
         );
+
+        $this->assertTargetExists($target, $this->getConfig()->getConfig());
 
         $this->setConfigParametersForTarget($target);
 
@@ -428,6 +401,8 @@ class Conveyor
             'full_deploy' => false,
         );
 
+        $this->assertTargetExists($target, $this->getConfig()->getConfig());
+
         $this->setConfigParametersForTarget($target);
 
         $transporter = $this->getTransporter($target);
@@ -508,6 +483,8 @@ class Conveyor
     {
         $version = $this->getRepository()->getVersion($version);
 
+        $this->assertTargetExists($target, $this->getConfig()->getConfig());
+
         $transporter    = $this->getTransporter($target);
         $repository     = $this->getRepository();
         $io             = $this->getIO();
@@ -530,6 +507,41 @@ class Conveyor
     }
 
     /**
+     * @param  IOInterface                          $io
+     * @return ContainerBuilder
+     * @throws \Exception|\InvalidArgumentException
+     */
+    protected function buildContainer(IOInterface $io)
+    {
+        $container = new ContainerBuilder();
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/Resources/config'));
+        $loader->load('parameters.yml');
+        $loader->load('services.yml');
+        $loader->load('tasks.yml');
+        $loader->load('transporters.yml');
+        $loader->load('strategies.yml');
+
+        $container->set('io', $io);
+
+        $container->addCompilerPass(new TaskCompilerPass());
+        $container->addCompilerPass(new TransporterCompilerPass());
+        $container->addCompilerPass(new StrategyCompilerPass());
+        $container->addCompilerPass(new ParameterCompilerPass());
+
+        try {
+            $container->compile();
+        } catch (\InvalidArgumentException $e) {
+            // Ignore an InvalidArgumentException for YamlConfig,
+            // otherwise init() would not be possible
+            if ('YamlConfig.php' !== basename($e->getFile())) {
+                throw $e;
+            }
+        }
+
+        return $container;
+    }
+
+    /**
      * @param string $target
      */
     protected function setConfigParametersForTarget($target)
@@ -542,5 +554,20 @@ class Conveyor
         foreach ($transporterOptions as $key => $value) {
             $this->getConfig()->setParameter('target.transport.' . $key, $value);
         }
+    }
+
+    /**
+     * @param string $target
+     * @param array $config
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    protected function assertTargetExists($target, array $config)
+    {
+        if (!isset($config['targets'][$target])) {
+            throw new \InvalidArgumentException(sprintf("Target '%s' does not exist, available targets are: %s.", $target, implode(", ", array_keys($config['targets']))));
+        }
+
+        return true;
     }
 }
