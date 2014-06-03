@@ -85,32 +85,32 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
                 $key = new \Crypt_RSA();
                 $loaded = $key->loadKey($identityFile);
 
+                // first try without keypass
                 if (!$loaded || false === $success = $this->sftp->login($username, $key)) {
                     $attempts = 3;
 
+                    // now N attempts to load the identity file
                     while ($attempts--) {
                         // retry with password
                         $this->keyPassword = $this->keyPassword ?: $this->io->askAndHideAnswer(sprintf('Enter passphrase for %s: ', $identityFilePath));
                         $key->setPassword($this->keyPassword);
                         $loaded = $key->loadKey($identityFile);
 
-                        if ($loaded && $success = $this->sftp->login($username, $key)) {
-                            return $success;
-                        } else {
+                        if (!$loaded) {
                             if ($attempts > 0) {
                                 $this->keyPassword = null;
 
                                 $this->io->write('Permission denied, please try again.');
                             }
+                        } else {
+                            if (false === $success = $this->sftp->login($username, $key)) {
+                                $this->io->write(sprintf('%s@%s: Permission denied (publickey)', $this->username, $this->host));
+                            }
+
+                            return $success;
                         }
                     }
-
-                    if (!$loaded || !$this->sftp->login($username, $key)) {
-                        return false;
-                    }
                 }
-
-                return $success;
             }
 
             return false;

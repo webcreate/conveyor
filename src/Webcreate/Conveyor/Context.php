@@ -19,30 +19,59 @@ class Context
 {
     protected $isFullDeploy = false;
     protected $isSimulate = false;
-    protected $builddir;
+    protected $buildDir;
     protected $filesModified;
     protected $filesDeleted;
+
+    /**
+     * @var Version
+     */
     protected $version;
+
+    /**
+     * @var Version
+     */
     protected $remoteVersion;
+
+    /**
+     * @var string
+     */
     protected $target;
+
+    /**
+     * @var StrategyInterface
+     */
     protected $strategy;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->filesModified = new FileCollection();
         $this->filesDeleted = new FileCollection();
     }
 
+    /**
+     * @return string
+     */
     public function getTarget()
     {
         return $this->target;
     }
 
+    /**
+     * @return mixed
+     */
     public function getRemoteVersion()
     {
         return $this->remoteVersion;
     }
 
+    /**
+     * @param Version $remoteVersion
+     * @return $this
+     */
     public function setRemoteVersion(Version $remoteVersion)
     {
         $this->remoteVersion = $remoteVersion;
@@ -50,6 +79,10 @@ class Context
         return $this;
     }
 
+    /**
+     * @param string $target
+     * @return $this
+     */
     public function setTarget($target)
     {
         $this->target = $target;
@@ -57,11 +90,18 @@ class Context
         return $this;
     }
 
+    /**
+     * @return Version
+     */
     public function getVersion()
     {
         return $this->version;
     }
 
+    /**
+     * @param Version $version
+     * @return $this
+     */
     public function setVersion(Version $version)
     {
         $this->version = $version;
@@ -107,24 +147,32 @@ class Context
         return $this->filesModified;
     }
 
+    /**
+     * @return mixed
+     */
     public function getBuilddir()
     {
-        return $this->builddir;
+        return $this->buildDir;
     }
 
     /**
      * @param string $builddir
+     * @return $this
      */
     public function setBuilddir($builddir)
     {
-        $this->builddir = $builddir;
+        $this->buildDir = $builddir;
 
-        $this->filesModified->setBasepath($this->builddir);
-        $this->filesDeleted->setBasepath($this->builddir);
+        $this->filesModified->setBasepath($this->buildDir);
+        $this->filesDeleted->setBasepath($this->buildDir);
 
         return $this;
     }
 
+    /**
+     * @param $value
+     * @return $this
+     */
     public function setFullDeploy($value)
     {
         $this->isFullDeploy = (bool) $value;
@@ -132,6 +180,9 @@ class Context
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function isFullDeploy()
     {
         return $this->isFullDeploy;
@@ -139,6 +190,7 @@ class Context
 
     /**
      * @param boolean $value
+     * @return $this
      */
     public function setSimulate($value)
     {
@@ -147,11 +199,18 @@ class Context
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function isSimulate()
     {
         return $this->isSimulate;
     }
 
+    /**
+     * @param StrategyInterface $strategy
+     * @return $this
+     */
     public function setStrategy(StrategyInterface $strategy)
     {
         $this->strategy = $strategy;
