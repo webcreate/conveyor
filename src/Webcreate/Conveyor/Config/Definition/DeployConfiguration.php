@@ -143,7 +143,6 @@ class DeployConfiguration implements ConfigurationInterface
                                 })
                             ->end()
                             ->setStrategyFactory($this->strategyFactory)
-                            ->isRequired()
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('type')->isRequired()->defaultValue('releases')->end()
