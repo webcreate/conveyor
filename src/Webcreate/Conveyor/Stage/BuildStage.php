@@ -19,6 +19,7 @@ class BuildStage extends AbstractStage
 {
     /**
      * @param \Webcreate\Conveyor\Builder\Builder $builder
+     * @param \Webcreate\Conveyor\IO\IOInterface  $io
      */
     public function __construct($builder, IOInterface $io)
     {
@@ -33,25 +34,27 @@ class BuildStage extends AbstractStage
 
     public function execute(Context $context)
     {
-        if (true === $this->validateBuilddir()) {
-            $this->io->write('');
-            $this->io->write(
-                sprintf('Building <info>%s</info> (<comment>%s</comment>) to <info>%s</info>',
-                    $context->getVersion()->getName(),
-                    $context->getTarget(),
-                    $context->getBuilddir()
-                )
-            );
-
-            $this->io->increaseIndention(1);
-
-            $this->builder->setContext($context);
-            $this->builder->build($context->getTarget(), $context->getVersion());
-
-            $this->io->decreaseIndention(1);
-        } else {
+        if (true !== $this->validateBuilddir()) {
             return false;
         }
+
+        $this->io->write('');
+        $this->io->write(
+            sprintf('Building <info>%s</info> (<comment>%s</comment>) to <info>%s</info>',
+                $context->getVersion()->getName(),
+                $context->getTarget(),
+                $context->getBuilddir()
+            )
+        );
+
+        $this->io->increaseIndention(1);
+
+        $this->builder->setContext($context);
+        $this->builder->build($context->getTarget(), $context->getVersion());
+
+        $this->io->decreaseIndention(1);
+
+        return true;
     }
 
     protected function validateBuilddir()

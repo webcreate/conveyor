@@ -11,11 +11,13 @@
 
 namespace Webcreate\Conveyor\Factory;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Webcreate\Conveyor\Builder\Builder;
+use Webcreate\Conveyor\Config\YamlConfig;
 
 class BuilderFactory
 {
-    public static function get($config, $io, $dispatcher, $taskFactory)
+    public static function get(YamlConfig $config, $io, EventDispatcherInterface $dispatcher, $taskFactory)
     {
         $_config = $config->getConfig();
 
@@ -27,7 +29,7 @@ class BuilderFactory
 
         foreach ($_config['build']['tasks'] as $taskConfig) {
             $task = $taskFactory->get($taskConfig['type'], $taskConfig);
-            $builderTasks = array_merge($builderTasks, array($task));
+            $builderTasks[] = $task;
         }
 
         $builder = new Builder($builddir, $builderTasks, $io, $dispatcher);
