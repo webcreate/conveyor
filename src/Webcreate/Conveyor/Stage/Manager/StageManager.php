@@ -31,7 +31,10 @@ class StageManager
     }
 
     /**
-     * @param string $name
+     * @param string                                  $name
+     * @param \Webcreate\Conveyor\Stage\AbstractStage $stage
+     *
+     * @return $this
      */
     public function addStage($name, AbstractStage $stage)
     {

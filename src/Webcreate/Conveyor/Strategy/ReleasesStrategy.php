@@ -497,7 +497,7 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
     {
         $basepath           = $this->transporter->getPath();
         $uploadPath         = $basepath . '/' . $this->getUploadPath($context->getVersion());
-        $currentReleasePath = $basepath . '/' . $this->getCurrentReleasePath();
+        $currentReleasePath = $basepath . '/' . $this->getCurrentReleasePath() . '/';
 
         if (false === $context->isFullDeploy()) {
             // add some white space to the output

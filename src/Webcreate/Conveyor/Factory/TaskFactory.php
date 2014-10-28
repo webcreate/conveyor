@@ -46,10 +46,7 @@ class TaskFactory
      */
     public function get($alias, array $options = array())
     {
-        $container = $this->container;
-
         $serviceId  = $this->tasks[$alias];
-        $definition = $this->container->getDefinition($serviceId);
 
         $task = $this->container->get($serviceId);
         $task->setOptions($options);

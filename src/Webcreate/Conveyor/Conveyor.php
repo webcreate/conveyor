@@ -196,7 +196,6 @@ class Conveyor
         $config         = $this->getConfig()->getConfig();
         $targets        = (null !== $target) ? array($target) : array_keys($config['targets']);
         $repository     = $this->getRepository();
-        $io             = $this->getIO();
         $remoteInfoFile = $this->container->getParameter('conveyor.remoteinfofile');
 
         $retval = array();
