@@ -43,6 +43,7 @@ class Conveyor
     protected $container;
     protected $booted;
     protected $strategy;
+    protected $configFile;
 
     public function boot(IOInterface $io)
     {
@@ -527,6 +528,11 @@ class Conveyor
         $container->addCompilerPass(new StrategyCompilerPass());
         $container->addCompilerPass(new ParameterCompilerPass());
 
+        // set custom config file if it is set
+        if ($this->configFile) {
+            $container->setParameter('conveyor.configfile', $this->configFile);
+        }
+
         try {
             $container->compile();
         } catch (\InvalidArgumentException $e) {
@@ -568,5 +574,15 @@ class Conveyor
         }
 
         return true;
+    }
+
+    /**
+     * Set a custom config file, is used for booting (compiling the di container)
+     *
+     * @param string $path
+     */
+    public function setConfigFile($path)
+    {
+        $this->configFile = $path;
     }
 }

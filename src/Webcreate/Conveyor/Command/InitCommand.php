@@ -21,12 +21,9 @@ class InitCommand extends AbstractCommand
 {
     protected function configure()
     {
-        $yml = Yaml::parse(file_get_contents(__DIR__ . '/../Resources/config/parameters.yml'));
-
         $this
             ->setName('init')
             ->setDescription('Initialise a Conveyor configuration file')
-            ->addArgument('filename', InputArgument::OPTIONAL, 'Alternative filename.', $yml['parameters']['conveyor.configfile'])
         ;
     }
 
@@ -34,8 +31,6 @@ class InitCommand extends AbstractCommand
     {
         $deploy = $this->getConveyor($input, $output, $this->getHelperSet());
 
-        $filename = $input->getArgument('filename');
-
-        $deploy->init($filename);
+        $deploy->init();
     }
 }
