@@ -14,6 +14,7 @@ namespace Webcreate\Conveyor\Console;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -57,7 +58,18 @@ class Application extends BaseApplication
             $commands[] = new \Webcreate\Conveyor\Command\UpdateCommand();
         }
 
+
         return $commands;
+    }
+
+    protected function getDefaultInputDefinition()
+    {
+        $inputDefinition = parent::getDefaultInputDefinition();
+        $inputDefinition->addOption(
+            new InputOption('--configuration', '-c', InputOption::VALUE_REQUIRED, 'Configuration file override')
+        );
+
+        return $inputDefinition;
     }
 
     public function getName()
@@ -147,8 +159,16 @@ class Application extends BaseApplication
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         $io = new ConsoleIO($input, $output, $this->getHelperSet());
+        $conveyor = $this->getConveyor();
 
-        $this->getConveyor()->boot($io);
+        // retrieve the config file option really early so we can still make changes before the di container
+        // gets compiled
+        $configFile = $input->getParameterOption(array('--configuration', '-c'));
+        if ($configFile) {
+            $conveyor->setConfigFile($configFile);
+        }
+
+        $conveyor->boot($io);
 
         parent::doRun($input, $output);
     }
