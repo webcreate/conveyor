@@ -9,17 +9,19 @@
  * file that was distributed with this source code.
  */
 
-use Webcreate\Conveyor\Config\YamlConfig;
 use Webcreate\Conveyor\IO\NullIO;
 use Webcreate\Conveyor\Conveyor;
 
 class ConveyorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetConfig()
+    public function testBootBuildsContainer()
     {
         $conveyor = new Conveyor();
+
+        $this->assertNull($conveyor->getContainer());
+
         $conveyor->boot(new NullIO());
 
-        $this->assertInstanceOf('Webcreate\Conveyor\Conveyor', $conveyor);
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerInterface', $conveyor->getContainer());
     }
 }

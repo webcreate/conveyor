@@ -110,7 +110,7 @@ class Context
     }
 
     /**
-     * @param  \Webcreate\Conveyor\Util\FileCollection $filesDeleted
+     * @param  FileCollection $filesDeleted
      * @return $this
      */
     public function setFilesDeleted($filesDeleted)
@@ -121,7 +121,7 @@ class Context
     }
 
     /**
-     * @return \Webcreate\Conveyor\Util\FileCollection
+     * @return FileCollection
      */
     public function getFilesDeleted()
     {
@@ -129,7 +129,7 @@ class Context
     }
 
     /**
-     * @param  \Webcreate\Conveyor\Util\FileCollection $filesModified
+     * @param  FileCollection $filesModified
      * @return $this
      */
     public function setFilesModified($filesModified)
@@ -140,7 +140,7 @@ class Context
     }
 
     /**
-     * @return \Webcreate\Conveyor\Util\FileCollection
+     * @return FileCollection
      */
     public function getFilesModified()
     {
@@ -156,12 +156,12 @@ class Context
     }
 
     /**
-     * @param string $builddir
+     * @param string $buildDir
      * @return $this
      */
-    public function setBuilddir($builddir)
+    public function setBuilddir($buildDir)
     {
-        $this->buildDir = $builddir;
+        $this->buildDir = $buildDir;
 
         $this->filesModified->setBasepath($this->buildDir);
         $this->filesDeleted->setBasepath($this->buildDir);

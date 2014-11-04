@@ -5,14 +5,14 @@ conveyor:
   targets:
     production:
       transport:
-        type: rsync
+        type: sftp
         host: example.com
         path: /var/www/example.com
         user: johndoe
         pass: johndoepass
     staging:
       transport:
-        type: rsync
+        type: sftp
         host: staging.example.com
         path: /var/www/staging.example.com
         user: johndoe2

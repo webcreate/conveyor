@@ -61,8 +61,8 @@ class StatusCommand extends AbstractCommand
                     continue;
                 }
 
-                $version = $info['remoteVersion'];
-                $localVersion = $info['localVersion'];
+                $version        = $info['remoteVersion'];
+                $localVersion   = $info['localVersion'];
                 $versionCompare = $info['compare'];
 
                 $statusTxt = '';

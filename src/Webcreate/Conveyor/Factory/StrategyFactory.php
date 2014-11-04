@@ -11,26 +11,49 @@
 
 namespace Webcreate\Conveyor\Factory;
 
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Webcreate\Conveyor\Strategy\StrategyInterface;
 
 class StrategyFactory
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
+
+    /**
+     * @var string[]
+     */
     protected $strategies   = array();
+
+    /**
+     * @var array
+     */
     protected $configurations = array();
 
+    /**
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @param string $serviceId
+     * @param string $alias
+     * @param bool   $configuration
+     */
     public function addStrategy($serviceId, $alias, $configuration = false)
     {
         $this->strategies[$alias]     = $serviceId;
         $this->configurations[$alias] = $configuration;
     }
 
+    /**
+     * @return string[]
+     */
     public function getStrategies()
     {
         return $this->strategies;
@@ -61,8 +84,8 @@ class StrategyFactory
     /**
      * Returns transporter configuration
      *
-     * @param  string                                                              $alias transporter name
-     * @return \Symfony\Component\Config\Definition\ConfigurationInterface|boolean
+     * @param  string                         $alias transporter name
+     * @return ConfigurationInterface|boolean
      */
     public function configuration($alias)
     {

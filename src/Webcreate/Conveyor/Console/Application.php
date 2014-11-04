@@ -23,9 +23,19 @@ use Webcreate\Conveyor\IO\ConsoleIO;
 
 class Application extends BaseApplication
 {
+    /**
+     * @var Conveyor
+     */
     protected $conveyor;
+
+    /**
+     * @var bool
+     */
     protected $originalAutoExit;
 
+    /**
+     * @param Conveyor $conveyor
+     */
     public function __construct(Conveyor $conveyor)
     {
         $this->conveyor = $conveyor;
@@ -37,11 +47,17 @@ class Application extends BaseApplication
         parent::__construct();
     }
 
+    /**
+     * @return Conveyor
+     */
     public function getConveyor()
     {
         return $this->conveyor;
     }
 
+    /**
+     * @inheritdoc
+     */
     protected function getDefaultCommands()
     {
         $commands = parent::getDefaultCommands();
@@ -61,6 +77,9 @@ class Application extends BaseApplication
         return $commands;
     }
 
+    /**
+     * @inheritdoc
+     */
     protected function getDefaultInputDefinition()
     {
         $inputDefinition = parent::getDefaultInputDefinition();
@@ -71,11 +90,17 @@ class Application extends BaseApplication
         return $inputDefinition;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getName()
     {
         return 'Conveyor';
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getVersion()
     {
         $versionFilename = 'VERSION';
@@ -90,16 +115,7 @@ class Application extends BaseApplication
     }
 
     /**
-     * Runs the current application.
-     *
-     * @param InputInterface  $input  An Input instance
-     * @param OutputInterface $output An Output instance
-     *
-     * @return integer 0 if everything went fine, or an error code
-     *
-     * @throws \Exception When doRun returns Exception
-     *
-     * @api
+     * @inheritdoc
      */
     public function run(InputInterface $input = null, OutputInterface $output = null)
     {
@@ -155,6 +171,9 @@ class Application extends BaseApplication
         return $statusCode;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         $io = new ConsoleIO($input, $output, $this->getHelperSet());
@@ -172,10 +191,14 @@ class Application extends BaseApplication
         parent::doRun($input, $output);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function setAutoExit($bool)
     {
         // parent property is private, so we need to intercept it in a setter
         $this->originalAutoExit = (bool) $bool;
+
         parent::setAutoExit($bool);
     }
 }

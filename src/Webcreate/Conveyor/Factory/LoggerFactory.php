@@ -17,21 +17,21 @@ use Monolog\Logger;
 class LoggerFactory
 {
     /**
-     * @param  string $logdir
+     * @param  string $logDir
      * @return Logger
      */
-    public static function get($logdir)
+    public static function get($logDir)
     {
-        if (0 === strpos($logdir, '~')) {
-            $logdir = $_SERVER['HOME'] . substr($logdir, 1);
+        if (0 === strpos($logDir, '~')) {
+            $logDir = $_SERVER['HOME'] . substr($logDir, 1);
         }
 
-        if (false === file_exists($logdir)) {
-            mkdir($logdir, 0777, true);
+        if (false === file_exists($logDir)) {
+            mkdir($logDir, 0777, true);
         }
 
         $logger = new Logger('app');
-        $logger->pushHandler(new StreamHandler($logdir . '/app.log', Logger::DEBUG));
+        $logger->pushHandler(new StreamHandler($logDir . '/app.log', Logger::DEBUG));
 
         return $logger;
     }

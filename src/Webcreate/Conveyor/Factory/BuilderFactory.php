@@ -14,14 +14,22 @@ namespace Webcreate\Conveyor\Factory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Webcreate\Conveyor\Builder\Builder;
 use Webcreate\Conveyor\Config\YamlConfig;
+use Webcreate\Conveyor\IO\IOInterface;
 
 class BuilderFactory
 {
-    public static function get(YamlConfig $config, $io, EventDispatcherInterface $dispatcher, $taskFactory)
+    /**
+     * @param  YamlConfig               $config
+     * @param  IOInterface              $io
+     * @param  EventDispatcherInterface $dispatcher
+     * @param  TaskFactory              $taskFactory
+     * @return Builder
+     */
+    public static function get(YamlConfig $config, IOInterface $io, EventDispatcherInterface $dispatcher, TaskFactory $taskFactory)
     {
         $_config = $config->getConfig();
 
-        $builddir = $_config['build']['dir'];
+        $buildDir = $_config['build']['dir'];
 
         $builderTasks = array(
             $taskFactory->get('export'),
@@ -32,7 +40,7 @@ class BuilderFactory
             $builderTasks[] = $task;
         }
 
-        $builder = new Builder($builddir, $builderTasks, $io, $dispatcher);
+        $builder = new Builder($buildDir, $builderTasks, $io, $dispatcher);
 
         return $builder;
     }

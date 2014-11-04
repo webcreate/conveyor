@@ -17,9 +17,24 @@ use Webcreate\Conveyor\Stage\AbstractStage;
 
 class StageEvent extends Event
 {
+    /**
+     * @var AbstractStage
+     */
     protected $stage;
+
+    /**
+     * @var string
+     */
     protected $stageName;
+
+    /**
+     * @var Context
+     */
     protected $context;
+
+    /**
+     * @var mixed|null
+     */
     protected $data;
 
     /**
