@@ -57,7 +57,7 @@ class Application extends BaseApplication
         if ('phar:' === substr(__FILE__, 0, 5)) {
             $commands[] = new \Webcreate\Conveyor\Command\UpdateCommand();
         }
-        
+
         return $commands;
     }
 
