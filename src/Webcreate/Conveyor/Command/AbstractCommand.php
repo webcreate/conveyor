@@ -20,9 +20,9 @@ abstract class AbstractCommand extends Command
     /**
      * Returns a conveyor instance
      *
-     * @param  InputInterface               $input     The input instance
-     * @param  OutputInterface              $output    The output instance
-     * @param  null|\Symfony\Component\Console\Helper\HelperSet                    $helperSet The helperSet instance
+     * @param  InputInterface                                   $input     The input instance
+     * @param  OutputInterface                                  $output    The output instance
+     * @param  null|\Symfony\Component\Console\Helper\HelperSet $helperSet The helperSet instance
      * @return \Webcreate\Conveyor\Conveyor
      */
     public function getConveyor(InputInterface $input, OutputInterface $output, $helperSet)

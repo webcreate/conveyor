@@ -11,27 +11,49 @@
 
 namespace Webcreate\Conveyor\Factory;
 
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Webcreate\Conveyor\Task\Task;
 
 class TaskFactory
 {
+    /**
+     * @var ContainerBuilder
+     */
     protected $container;
 
-    protected $tasks          = array();
+    /**
+     * @var string[]
+     */
+    protected $tasks = array();
+
+    /**
+     * @var string[]
+     */
     protected $configurations = array();
 
+    /**
+     * @param ContainerBuilder $container
+     */
     public function __construct(ContainerBuilder $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @param string      $serviceId
+     * @param string      $alias
+     * @param string|bool $configuration
+     */
     public function addTask($serviceId, $alias, $configuration = false)
     {
         $this->tasks[$alias]          = $serviceId;
         $this->configurations[$alias] = $configuration;
     }
 
+    /**
+     * @return array
+     */
     public function getTasks()
     {
         return $this->tasks;
@@ -57,8 +79,8 @@ class TaskFactory
     /**
      * Returns task configuration
      *
-     * @param  string                                                              $alias task name
-     * @return \Symfony\Component\Config\Definition\ConfigurationInterface|boolean
+     * @param  string                         $alias task name
+     * @return ConfigurationInterface|boolean
      */
     public function configuration($alias)
     {

@@ -12,6 +12,7 @@
 namespace Webcreate\Conveyor\Factory;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Webcreate\Conveyor\Config\YamlConfig;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Task\TaskRunner;
 
@@ -20,12 +21,12 @@ class TaskRunnerFactory
     /**
      * @param  string                   $taskConfigPath path to the tasks configuration in the conveyor.yml config
      * @param  TaskFactory              $taskFactory
-     * @param $config
+     * @param  YamlConfig               $config
      * @param  IOInterface              $io
      * @param  EventDispatcherInterface $dispatcher
      * @return TaskRunner
      */
-    public static function get($taskConfigPath, TaskFactory $taskFactory, $config, IOInterface $io, EventDispatcherInterface $dispatcher = null)
+    public static function get($taskConfigPath, TaskFactory $taskFactory, YamlConfig $config, IOInterface $io, EventDispatcherInterface $dispatcher = null)
     {
         $_config = $config->getConfig();
 
@@ -52,11 +53,6 @@ class TaskRunnerFactory
 
         foreach ($path as $p => $_path) {
             if (!isset($currentConfig[$_path])) {
-//                 throw new \InvalidArgumentException(sprintf(
-//                     'Invalid path "%s" at "%s"',
-//                     $_path,
-//                     implode('.', array_slice($path, 0, $p + 1))
-//                 ));
                 return array();
             }
 

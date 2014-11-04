@@ -13,15 +13,21 @@ namespace Webcreate\Conveyor\Util;
 
 class ArrayUtil
 {
+    /**
+     * @param $array
+     * @return array
+     */
     public function flatten($array)
     {
         return $this->_flatten($array, '');
     }
 
     /**
+     * @param array $array
      * @param string $opath
+     * @return array
      */
-    protected function _flatten($array, $opath)
+    protected function _flatten(array $array, $opath)
     {
         $flatten = array();
 

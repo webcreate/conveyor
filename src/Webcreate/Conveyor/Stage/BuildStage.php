@@ -12,14 +12,15 @@
 namespace Webcreate\Conveyor\Stage;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Webcreate\Conveyor\Builder\Builder;
 use Webcreate\Conveyor\Context;
 use Webcreate\Conveyor\IO\IOInterface;
 
 class BuildStage extends AbstractStage
 {
     /**
-     * @param \Webcreate\Conveyor\Builder\Builder $builder
-     * @param \Webcreate\Conveyor\IO\IOInterface  $io
+     * @param Builder     $builder
+     * @param IOInterface $io
      */
     public function __construct($builder, IOInterface $io)
     {
@@ -34,7 +35,7 @@ class BuildStage extends AbstractStage
 
     public function execute(Context $context)
     {
-        if (true !== $this->validateBuilddir()) {
+        if (true !== $this->validateBuildDir()) {
             return false;
         }
 
@@ -57,19 +58,19 @@ class BuildStage extends AbstractStage
         return true;
     }
 
-    protected function validateBuilddir()
+    protected function validateBuildDir()
     {
-        $builddir = $this->builder->getBuildDir();
+        $buildDir = $this->builder->getBuildDir();
 
-        if (true === is_dir($builddir)) {
-            $anwser = $this->io->askConfirmation(sprintf(
+        if (true === is_dir($buildDir)) {
+            $answer = $this->io->askConfirmation(sprintf(
                     'Build directory \'%s\' does already exist, would you like ' .
                     'to overwrite it? (y/N): ',
-                    $builddir), false);
+                    $buildDir), false);
 
-            if (true === $anwser) {
+            if (true === $answer) {
                 $filesystem = new Filesystem();
-                $filesystem->remove($builddir);
+                $filesystem->remove($buildDir);
             } else {
                 return false;
             }

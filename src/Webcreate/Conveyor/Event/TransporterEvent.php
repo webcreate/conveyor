@@ -12,29 +12,43 @@
 namespace Webcreate\Conveyor\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use Webcreate\Conveyor\Transporter\AbstractTransporter;
 
 class TransporterEvent extends Event
 {
+    /**
+     * @var AbstractTransporter
+     */
     protected $transporter;
+
+    /**
+     * @var mixed|null
+     */
     protected $data;
 
     /**
      * Constructor.
      *
-     * @param object $transporter
-     * @param mixed  $data        depending on the event some data can be given
+     * @param AbstractTransporter $transporter
+     * @param mixed               $data        depending on the event some data can be given
      */
-    public function __construct($transporter, $data = null)
+    public function __construct(AbstractTransporter $transporter, $data = null)
     {
         $this->transporter = $transporter;
         $this->data        = $data;
     }
 
+    /**
+     * @return AbstractTransporter
+     */
     public function getTransporter()
     {
         return $this->transporter;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getData()
     {
         return $this->data;

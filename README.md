@@ -5,8 +5,14 @@ Conveyor is a build and deploy tool written in PHP for PHP projects.
 
 Full documentation is available at [http://conveyordeploy.com](http://conveyordeploy.com)
 
+[![Build Status](https://travis-ci.org/webcreate/conveyor.svg?branch=master)](https://travis-ci.org/webcreate/conveyor)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/webcreate/conveyor/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/webcreate/conveyor/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/webcreate/conveyor/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/webcreate/conveyor/?branch=master)
+
 Installation / Usage
 --------------------
+
+**Note:** The phar is very outdated, please follow the instructions for installation from source.
 
 1. Download the [`conveyor.phar`](http://conveyordeploy.com/download.html) executable.
 2. Create a conveyor.yml by running: `php conveyor.phar init`

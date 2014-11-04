@@ -13,20 +13,43 @@ namespace Webcreate\Conveyor\Repository;
 
 class Version
 {
+    /**
+     * @var string
+     */
     protected $name;
+
+    /**
+     * @var string
+     */
     protected $build;
 
-    public function __construct($name = null, $build = null)
+    /**
+     * @param string|null $name
+     * @param string|null $build
+     */
+    public function __construct($name = null , $build = null)
     {
-        $this->setName($name);
-        $this->setBuild($build);
+        if (null !== $name) {
+            $this->setName($name);
+        }
+
+        if (null !== $build) {
+            $this->setBuild($build);
+        }
     }
 
+    /**
+     * @return null|string
+     */
     public function getBuild()
     {
         return $this->build;
     }
 
+    /**
+     * @param string $build
+     * @return $this
+     */
     public function setBuild($build)
     {
         $this->build = (string) $build;
@@ -34,11 +57,18 @@ class Version
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function setName($name)
     {
         $this->name = (string) $name;
@@ -46,16 +76,26 @@ class Version
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getUID()
     {
         return sprintf('%s:%s', $this->name, $this->build);
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getUID();
     }
 
+    /**
+     * @param Version $version
+     * @return bool
+     */
     public function equals(Version $version)
     {
         return (

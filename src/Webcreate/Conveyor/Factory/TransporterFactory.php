@@ -16,21 +16,43 @@ use Webcreate\Conveyor\Transporter\AbstractTransporter;
 
 class TransporterFactory
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
-    protected $transporters   = array();
+
+    /**
+     * @var string[]
+     */
+    protected $transporters = array();
+
+    /**
+     * @var string[]
+     */
     protected $configurations = array();
 
+    /**
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @param string      $serviceId
+     * @param string      $alias
+     * @param string|bool $configuration
+     */
     public function addTransporter($serviceId, $alias, $configuration = false)
     {
         $this->transporters[$alias]   = $serviceId;
         $this->configurations[$alias] = $configuration;
     }
 
+    /**
+     * @return string[]
+     */
     public function getTransporters()
     {
         return $this->transporters;
@@ -50,7 +72,7 @@ class TransporterFactory
             throw new \InvalidArgumentException(sprintf('Transporter type \'%s\' does not exist', $alias));
         }
 
-        $serviceId  = $this->transporters[$alias];
+        $serviceId = $this->transporters[$alias];
 
         $transporter = $this->container->get($serviceId);
         $transporter->setOptions($options);

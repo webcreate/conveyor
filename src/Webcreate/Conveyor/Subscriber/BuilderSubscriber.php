@@ -62,7 +62,9 @@ class BuilderSubscriber implements EventSubscriberInterface
 
     public function onBuilderPreTask(GenericEvent $event)
     {
-        if (true === $this->showProgress) return;
+        if (true === $this->showProgress) {
+            return;
+        }
 
         $task = $event->getSubject();
         $io   = $this->io;
@@ -93,8 +95,6 @@ class BuilderSubscriber implements EventSubscriberInterface
 
     public function onBuilderPostTask(GenericEvent $event)
     {
-        $task = $event->getSubject();
-
         if (true === $this->showProgress) {
             $index = $event->getArgument('index');
             $total = $event->getArgument('total');
