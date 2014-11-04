@@ -143,7 +143,11 @@ class ConsoleIO implements IOInterface
      */
     public function select($question, $choices, $default = null, $attempts = false, $errorMessage = 'Value "%s" is invalid')
     {
-        return $this->helperSet->get('dialog')->select($this->output, $question, $choices, $default, $attempts, $errorMessage);
+        if ($this->isInteractive()) {
+            return $this->helperSet->get('dialog')->select($this->output, $question, $choices, $default, $attempts, $errorMessage);
+        } else {
+            return $default;
+        }
     }
 
     /**
@@ -151,7 +155,11 @@ class ConsoleIO implements IOInterface
      */
     public function ask($question, $default = null)
     {
-        return $this->helperSet->get('dialog')->ask($this->output, $question, $default);
+        if ($this->isInteractive()) {
+            return $this->helperSet->get('dialog')->ask($this->output, $question, $default);
+        } else {
+            return $default;
+        }
     }
 
     /**
@@ -159,7 +167,11 @@ class ConsoleIO implements IOInterface
      */
     public function askConfirmation($question, $default = true)
     {
-        return $this->helperSet->get('dialog')->askConfirmation($this->output, $question, $default);
+        if ($this->isInteractive()) {
+            return $this->helperSet->get('dialog')->askConfirmation($this->output, $question, $default);
+        } else {
+            return $default;
+        }
     }
 
     /**
@@ -167,7 +179,11 @@ class ConsoleIO implements IOInterface
      */
     public function askAndValidate($question, $validator, $attempts = false, $default = null)
     {
-        return $this->helperSet->get('dialog')->askAndValidate($this->output, $question, $validator, $attempts, $default);
+        if ($this->isInteractive()) {
+            return $this->helperSet->get('dialog')->askAndValidate($this->output, $question, $validator, $attempts, $default);
+        } else {
+            return $default;
+        }
     }
 
     /**
