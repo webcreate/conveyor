@@ -20,17 +20,17 @@
     "require": {
         "php": ">=5.4",
         "ext-ftp": "*",
-        "symfony/console": "2.2.*",
-        "symfony/config": "2.2.*",
-        "symfony/yaml": "2.2.*",
-        "symfony/finder": "2.2.*",
-        "symfony/filesystem": "2.2.*",
-        "symfony/event-dispatcher": "2.2.*",
-        "symfony/dependency-injection": "2.2.*",
+        "symfony/console": "~2.2",
+        "symfony/config": "~2.2",
+        "symfony/yaml": "~2.2",
+        "symfony/finder": "~2.2",
+        "symfony/filesystem": "~2.2",
+        "symfony/event-dispatcher": "~2.2",
+        "symfony/dependency-injection": "~2.2",
         "phpseclib/phpseclib": "*",
         "webcreate/vcs": "~1.2",
         "webcreate/util": "1.*",
-        "monolog/monolog": "1.4.*"
+        "monolog/monolog": "~1.4"
     },
     "require-dev": {
         "phpunit/phpunit": "~3.7"

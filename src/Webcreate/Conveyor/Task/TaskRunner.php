@@ -181,16 +181,20 @@ class TaskRunner implements TransporterAwareInterface
     {
         while (true) {
             try {
-                $answer = $this->io->select(
-                    '<info>Select an action</info>',
-                    array(
-                        'a' => 'abort',
-                        'r' => 'retry this task',
-                        's' => 'skip this task and continue with the next',
-                    ),
-                    'r',
-                    5
-                );
+                if (!$this->io->isInteractive()) {
+                    $answer = 'a';
+                } else {
+                    $answer = $this->io->select(
+                        '<info>Select an action</info>',
+                        array(
+                            'a' => 'abort',
+                            'r' => 'retry this task',
+                            's' => 'skip this task and continue with the next',
+                        ),
+                        'r',
+                        5
+                    );
+                }
             } catch (\RuntimeException $e) {
                 // can happen when there is no stty available
                 $answer = "a";
