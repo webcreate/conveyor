@@ -9,6 +9,12 @@
  * file that was distributed with this source code.
  */
 
-$loader = require __DIR__.'/../vendor/autoload.php';
+$autoloadLocation = __DIR__.'/../vendor/autoload.php';
+
+if (is_file($autoloadLocation)) {
+    $loader = require __DIR__.'/../vendor/autoload.php';
+} else {
+    $loader = require __DIR__.'/../../../autoload.php';
+}
 
 return $loader;
