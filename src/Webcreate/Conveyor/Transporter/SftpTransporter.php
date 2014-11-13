@@ -110,6 +110,8 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
                             return $success;
                         }
                     }
+                } else {
+                    return true;
                 }
             }
 
