@@ -378,11 +378,13 @@ class Conveyor
             $result = $manager->execute();
         }
 
-        // cleanup
-        $builddir = $this->getBuilder()->getBuildDir();
-        if (is_dir($builddir)) {
-            $filesystem = new Filesystem();
-            $filesystem->remove($builddir);
+        if ($result === true) {
+            // cleanup
+            $builddir = $this->getBuilder()->getBuildDir();
+            if (is_dir($builddir)) {
+                $filesystem = new Filesystem();
+                $filesystem->remove($builddir);
+            }
         }
     }
 
@@ -465,11 +467,13 @@ class Conveyor
 
         $result = $manager->execute();
 
-        // cleanup
-        $builddir = $this->getBuilder()->getBuildDir();
-        if (is_dir($builddir)) {
-            $filesystem = new Filesystem();
-            $filesystem->remove($builddir);
+        if ($result === true) {
+            // cleanup
+            $builddir = $this->getBuilder()->getBuildDir();
+            if (is_dir($builddir)) {
+                $filesystem = new Filesystem();
+                $filesystem->remove($builddir);
+            }
         }
     }
 
