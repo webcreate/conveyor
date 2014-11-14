@@ -304,6 +304,140 @@ class Conveyor
      */
     public function deploy($target, $version, array $options = array())
     {
+        $this->assertTargetOrGroupExists($target, $this->getConfig()->getConfig());
+
+        if ($this->isTargetGroup($target)) {
+            $targets = $this->getTargetsForGroup($target);
+        } else {
+            $targets = array($target);
+        }
+
+        foreach ($targets as $target) {
+            $this->getIO()->setPrefix(sprintf('[%s] ', $target));
+
+            $this->doDeploy($target, $version, $options);
+
+            $this->getIO()->setPrefix(null);
+        }
+    }
+
+    /**
+     * Simulates a deploy
+     *
+     * @param string $target
+     * @param string $version
+     * @param array  $options
+     */
+    public function simulate($target, $version, array $options = array())
+    {
+        $this->assertTargetOrGroupExists($target, $this->getConfig()->getConfig());
+
+        if ($this->isTargetGroup($target)) {
+            $targets = $this->getTargetsForGroup($target);
+        } else {
+            $targets = array($target);
+        }
+
+        foreach ($targets as $target) {
+            $this->getIO()->setPrefix(sprintf('[%s] ', $target));
+
+            $this->doSimulate($target, $version, $options);
+
+            $this->getIO()->setPrefix(null);
+        }
+    }
+
+    /**
+     * Performs a diff with the target
+     *
+     * @param string $target
+     * @param string $version
+     */
+    public function diff($target, $version)
+    {
+        $version = $this->getRepository()->getVersion($version);
+
+        $this->assertTargetExists($target, $this->getConfig()->getConfig());
+
+        $transporter    = $this->getTransporter($target);
+        $repository     = $this->getRepository();
+        $io             = $this->getIO();
+        $remoteInfoFile = $this->container->getParameter('conveyor.remoteinfofile');
+        $strategy       = $this->getStrategy($transporter);
+
+        $context = new Context();
+        $context
+            ->setVersion($version)
+            ->setTarget($target)
+            ->setStrategy($strategy)
+        ;
+
+        $manager = new StageManager($context, $this->container->get('dispatcher'));
+        $manager
+            ->addStage('get.remote.version', new Stage\RetrieveRemoteVersionInfoStage($transporter, $repository, $io, $remoteInfoFile, array('getRemoteVersion')))
+            ->addStage('diff',               new Stage\DiffStage($repository, $io))
+            ->execute()
+        ;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getTargetGroups()
+    {
+        $config = $this->getConfig()->getConfig();
+
+        $groups = array();
+        foreach ($config['targets'] as $targetName => $targetConfig) {
+            foreach ($targetConfig['groups'] as $group) {
+                $groups[$group][] = $targetName;
+            }
+        }
+
+        return $groups;
+    }
+
+    /**
+     * @param string $target
+     * @return bool
+     */
+    protected function isTargetGroup($target)
+    {
+        $groups = $this->getTargetGroups();
+
+        return array_key_exists($target, $groups);
+    }
+
+    /**
+     * @param string $group
+     * @return array
+     */
+    protected function getTargetsForGroup($group)
+    {
+        if (!$this->isTargetGroup($group)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '"%s" is not a valid target group, valid groups are: %s',
+                    $group,
+                    implode(', ', array_keys($this->getTargetGroups()))
+                )
+            );
+        }
+
+        $groups = $this->getTargetGroups();
+
+        return $groups[$group];
+    }
+
+    /**
+     * Deploys version to target
+     *
+     * @param string $target
+     * @param string $version
+     * @param array  $options
+     */
+    protected function doDeploy($target, $version, array $options = array())
+    {
         $version = $this->getRepository()->getVersion($version);
 
         $options += array(
@@ -395,7 +529,7 @@ class Conveyor
      * @param string $version
      * @param array  $options
      */
-    public function simulate($target, $version, array $options = array())
+    protected function doSimulate($target, $version, array $options = array())
     {
         $version = $this->getRepository()->getVersion($version);
 
@@ -478,39 +612,6 @@ class Conveyor
     }
 
     /**
-     * Performs a diff with the target
-     *
-     * @param string $target
-     * @param string $version
-     */
-    public function diff($target, $version)
-    {
-        $version = $this->getRepository()->getVersion($version);
-
-        $this->assertTargetExists($target, $this->getConfig()->getConfig());
-
-        $transporter    = $this->getTransporter($target);
-        $repository     = $this->getRepository();
-        $io             = $this->getIO();
-        $remoteInfoFile = $this->container->getParameter('conveyor.remoteinfofile');
-        $strategy       = $this->getStrategy($transporter);
-
-        $context = new Context();
-        $context
-            ->setVersion($version)
-            ->setTarget($target)
-            ->setStrategy($strategy)
-        ;
-
-        $manager = new StageManager($context, $this->container->get('dispatcher'));
-        $manager
-            ->addStage('get.remote.version', new Stage\RetrieveRemoteVersionInfoStage($transporter, $repository, $io, $remoteInfoFile, array('getRemoteVersion')))
-            ->addStage('diff',               new Stage\DiffStage($repository, $io))
-            ->execute()
-        ;
-    }
-
-    /**
      * @param  IOInterface                          $io
      * @return ContainerBuilder
      * @throws \Exception|\InvalidArgumentException
@@ -575,6 +676,24 @@ class Conveyor
     {
         if (!isset($config['targets'][$target])) {
             throw new \InvalidArgumentException(sprintf("Target '%s' does not exist, available targets are: %s.", $target, implode(", ", array_keys($config['targets']))));
+        }
+
+        return true;
+    }
+
+    /**
+     * @param string $target
+     * @param array $config
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    protected function assertTargetOrGroupExists($target, array $config)
+    {
+        if (!isset($config['targets'][$target]) && !$this->isTargetGroup($target)) {
+            $targets = array_keys($config['targets']);
+            $groups = array_keys($this->getTargetGroups());
+
+            throw new \InvalidArgumentException(sprintf("Target '%s' does not exist, available targets and groups are: %s.", $target, implode(", ", array_merge($targets, $groups))));
         }
 
         return true;
