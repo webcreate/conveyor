@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Webcreate\Conveyor\Util\ArrayUtil;
 
 /**
- * Pass to add the configurtion from conveyor.yml
+ * Pass to add the configuration from conveyor.yml
  * to the container.
  *
  */

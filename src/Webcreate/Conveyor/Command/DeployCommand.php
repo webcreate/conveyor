@@ -23,9 +23,9 @@ class DeployCommand extends AbstractCommand
         $this
             ->setName('deploy')
             ->setDescription('Deploy')
-            ->addArgument('target', InputArgument::REQUIRED, 'Target to deploy')
+            ->addArgument('target', InputArgument::REQUIRED, 'Target or group to deploy')
             ->addArgument('version', InputArgument::REQUIRED, 'Version to deploy')
-            ->addOption('full', 'F', InputOption::VALUE_NONE, 'Force full deploy instead of incremental deploy')
+            ->addOption('full', null, InputOption::VALUE_NONE, 'Force full deploy instead of incremental deploy')
             ->addOption('after', null, InputOption::VALUE_NONE, 'Only run deploy after tasks')
         ;
     }
@@ -44,10 +44,13 @@ class DeployCommand extends AbstractCommand
             $options['deploy_after_only'] = true;
         }
 
-        $targets = array($input->getArgument('target'));
+        $target = $input->getArgument('target');
+        $targets = [$target];
 
-        if (false !== strpos($input->getArgument('target'), ',')) {
-            $targets = explode(',', $input->getArgument('target'));
+        if (false !== strpos($target, ',')) {
+            $output->writeln('<info>Deprecated: Comma-separated list of targets is no longer supported, please use target groups to deploy to multiple targets at once.</info>');
+
+            $targets = explode(',', $target);
         }
 
         foreach ($targets as $target) {

@@ -21,7 +21,6 @@ use Webcreate\Conveyor\Util\ArrayUtil;
 
 /**
  * @todo refactor getConfig() method: might want to implement \ArrayAccess interface
- *
  */
 class YamlConfig
 {
@@ -111,6 +110,7 @@ class YamlConfig
             $this->process();
 
             $this->compiledConfig = $this->replaceParameters($this->processedConfig, $this->parameters);
+            $this->compiledConfig = $this->expandTasksTargetGroups($this->compiledConfig);
         }
 
         return $this->compiledConfig;
@@ -134,6 +134,68 @@ class YamlConfig
         }
 
         return $config;
+    }
+
+    /**
+     * Expand target groups
+     *
+     * @param array $config
+     * @return array
+     */
+    protected function expandTasksTargetGroups(array $config)
+    {
+        $sections = array(
+            &$config['build']['tasks'],
+            &$config['deploy']['before'],
+            &$config['deploy']['after'],
+            &$config['deploy']['final'],
+        );
+
+        foreach ($sections as &$section) {
+            $section = $this->expandTasksTargetGroupsForSection($config, $section);
+        }
+
+        return $config;
+    }
+
+    /**
+     * Expand target groups for a certain section
+     *
+     * @param array $config
+     * @param array $section
+     * @return array
+     */
+    protected function expandTasksTargetGroupsForSection(array $config, array $section = null)
+    {
+        if (null === $section) {
+            return $section;
+        }
+
+        $groups = array();
+        foreach ($config['targets'] as $targetName => $targetConfig) {
+            foreach ($targetConfig['groups'] as $group) {
+                $groups[$group][] = $targetName;
+            }
+        }
+
+        foreach ($section as &$taskConfig) {
+            $targets = $taskConfig['targets'];
+            $expandedTargets = array();
+
+            foreach ($targets as $target) {
+                if (isset($groups[$target])) {
+                    foreach ($groups[$target] as $groupTarget) {
+                        $expandedTargets[] = $groupTarget;
+                    }
+                } else {
+                    $expandedTargets[] = $target;
+                }
+            }
+
+            $taskConfig['targets'] = $expandedTargets;
+        }
+
+        return $section;
     }
 
     /**

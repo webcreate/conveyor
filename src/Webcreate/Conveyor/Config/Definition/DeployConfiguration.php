@@ -82,6 +82,16 @@ class DeployConfiguration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('name')->end()
                             ->scalarNode('url')->end()
+                            ->arrayNode('groups')
+                                ->defaultValue(array())
+                                ->beforeNormalization()
+                                    ->ifString()
+                                    ->then(function ($v) {
+                                            return array($v);
+                                        })
+                                ->end()
+                                ->prototype('scalar')->end()
+                            ->end()
                             ->node('transport', 'transporter')
                                 ->setTransporterFactory($this->transporterFactory)
                                 ->isRequired()

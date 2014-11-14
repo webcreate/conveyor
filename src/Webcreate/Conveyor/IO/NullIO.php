@@ -82,10 +82,18 @@ class NullIO implements IOInterface
     /**
      * Renders an exception
      *
-     * @param  Exception $e
+     * @param  \Exception $e
      * @return mixed
      */
     public function renderException($e)
+    {
+    }
+
+    /**
+     * @param string $prefix
+     * @return mixed
+     */
+    public function setPrefix($prefix)
     {
     }
 }

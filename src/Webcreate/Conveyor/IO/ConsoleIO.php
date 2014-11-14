@@ -20,7 +20,9 @@ class ConsoleIO implements IOInterface
     protected $helperSet;
     protected $authorizations = array();
     protected $lastMessage;
+    protected $lastMessageNewline = true;
     protected $indention = 0;
+    protected $prefix;
 
     /**
      * Constructor.
@@ -70,6 +72,10 @@ class ConsoleIO implements IOInterface
         $this->input->setOption('verbose', (bool) $option);
     }
 
+    /**
+     * @param string|array $messages
+     * @return string|array
+     */
     protected function applyIndention($messages)
     {
         if (is_array($messages)) {
@@ -84,11 +90,33 @@ class ConsoleIO implements IOInterface
     }
 
     /**
+     * @param string|array $messages
+     * @return string|array
+     */
+    protected function applyPrefix($messages)
+    {
+        if (!$this->prefix || !$this->lastMessageNewline) {
+            return $messages;
+        }
+
+        if (is_array($messages)) {
+            foreach ($messages as &$message) {
+                $message = $this->prefix . $message;
+            }
+        } else {
+            $messages = $this->prefix . $messages;
+        }
+
+        return $messages;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function write($messages, $newline = true)
     {
         $messages = $this->applyIndention($messages);
+        $messages = $this->applyPrefix($messages);
 
         $this->_write($messages, $newline);
     }
@@ -96,10 +124,11 @@ class ConsoleIO implements IOInterface
     /**
      * {@inheritDoc}
      */
-    public function _write($messages, $newline = true)
+    protected function _write($messages, $newline = true)
     {
         $this->output->write($messages, $newline);
-        $this->lastMessage = join($newline ? "\n" : '', (array) $messages);
+        $this->lastMessage = join($newline ? PHP_EOL : '', (array) $messages);
+        $this->lastMessageNewline = $newline;
     }
 
     /**
@@ -108,15 +137,19 @@ class ConsoleIO implements IOInterface
     public function overwrite($messages, $newline = true, $size = null)
     {
         $messages = $this->applyIndention($messages);
+        $messages = $this->applyPrefix($messages);
 
         // messages can be an array, let's convert it to string anyway
-        $messages = join($newline ? "\n" : '', (array) $messages);
+        $messages = join($newline ? PHP_EOL : '', (array) $messages);
 
         // since overwrite is supposed to overwrite last message...
         if (!isset($size)) {
             // removing possible formatting of lastMessage with strip_tags
             $size = strlen(strip_tags($this->lastMessage));
             $size+= $this->indention;
+            if ($this->prefix) {
+                $size += strlen($this->prefix);
+            }
         }
         // ...let's fill its length with backspaces
         $this->_write(str_repeat("\x08", $size), false);
@@ -136,6 +169,7 @@ class ConsoleIO implements IOInterface
             $this->_write('');
         }
         $this->lastMessage = $messages;
+        $this->lastMessageNewline = $newline;
     }
 
     /**
@@ -289,5 +323,14 @@ class ConsoleIO implements IOInterface
 
         // restore indention
         $this->setIndention($indention);
+    }
+
+    /**
+     * @param string $prefix
+     * @return mixed
+     */
+    public function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
     }
 }

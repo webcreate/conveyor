@@ -60,6 +60,30 @@ Username.
 
 Password.
 
+### parameters
+
+Allows to set target specific parameters which you can use in targets.
+
+For example:
+
+```yaml
+parameters:
+  symfony_env: prod
+  composer_flags: --optimize-autoloader --no-dev
+```
+
+This allows you to use this in a task:
+
+```yaml
+-
+  type: ssh
+  command: SYMFONY_ENV={{target.symfony_env}} composer install {{target.composer_flags}}
+```
+
+### groups
+
+You can add multiple targets to one or more groups and deploy to those targets in one run.
+
 ## build
 
 Build configuration. Also see chapter [Build](03-build.md).

@@ -154,4 +154,12 @@ interface IOInterface
      * @return mixed
      */
     public function renderException($e);
+
+    /**
+     * Sets prefix
+     *
+     * @param string $prefix
+     * @return mixed
+     */
+    public function setPrefix($prefix);
 }
