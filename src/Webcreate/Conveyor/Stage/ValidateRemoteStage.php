@@ -13,6 +13,7 @@ namespace Webcreate\Conveyor\Stage;
 
 use Webcreate\Conveyor\Context;
 use Webcreate\Conveyor\IO\IOInterface;
+use Webcreate\Conveyor\Transporter\AbstractTransporter;
 use Webcreate\Conveyor\Util\FilePath;
 
 class ValidateRemoteStage extends AbstractStage
@@ -25,7 +26,7 @@ class ValidateRemoteStage extends AbstractStage
         'validateRemoteVersionFile',
     );
 
-    public function __construct($transporter, IOInterface $io, $remoteInfoFile, array $subtasks = null)
+    public function __construct(AbstractTransporter $transporter, IOInterface $io, $remoteInfoFile, array $subtasks = null)
     {
         $this->transporter = $transporter;
         $this->io = $io;
@@ -54,6 +55,8 @@ class ValidateRemoteStage extends AbstractStage
                 return false;
             }
         }
+
+        return true;
     }
 
     protected function validateRemoteBasepath(Context $context)
@@ -61,9 +64,17 @@ class ValidateRemoteStage extends AbstractStage
         $basepath = $this->transporter->getPath();
 
         if (false == $this->transporter->exists($basepath)) {
-            $answer = $this->io->askConfirmation(sprintf(
-                    'Directory \'%s\' does not exist, would you like to create it? (Y/n): ',
-                    $basepath), true);
+            if ($context->isForce()) {
+                $answer = true;
+            } else {
+                $answer = $this->io->askConfirmation(
+                    sprintf(
+                        'Directory \'%s\' does not exist, would you like to create it? (Y/n): ',
+                        $basepath
+                    ),
+                    true
+                );
+            }
 
             if (true === $answer) {
                 $this->transporter->mkdir($basepath);
@@ -78,6 +89,8 @@ class ValidateRemoteStage extends AbstractStage
                 return false;
             }
         }
+
+        return true;
     }
 
     protected function validateRequiredDirectories(Context $context)
@@ -87,9 +100,17 @@ class ValidateRemoteStage extends AbstractStage
             $path = FilePath::join($this->transporter->getPath(), $directory);
 
             if (false == $this->transporter->exists($path)) {
-                $answer = $this->io->askConfirmation(sprintf(
-                        'Directory \'%s\' does not exist, would you like to create it? (Y/n): ',
-                        $path), true);
+                if ($context->isForce()) {
+                    $answer = true;
+                } else {
+                    $answer = $this->io->askConfirmation(
+                        sprintf(
+                            'Directory \'%s\' does not exist, would you like to create it? (Y/n): ',
+                            $path
+                        ),
+                        true
+                    );
+                }
 
                 if (true === $answer) {
                     $this->transporter->mkdir($path);
@@ -98,6 +119,8 @@ class ValidateRemoteStage extends AbstractStage
                 }
             }
         }
+
+        return true;
     }
 
     protected function validateRemoteVersionFile(Context $context)
@@ -111,8 +134,16 @@ class ValidateRemoteStage extends AbstractStage
         );
 
         if (false == $this->transporter->exists($versionFile)) {
-            $answer = $this->io->askConfirmation(sprintf(
-                    'Remote version information not found. Would you like to do a full deploy? (Y/n): '), 'Y');
+            if ($context->isForce()) {
+                $answer = true;
+            } else {
+                $answer = $this->io->askConfirmation(
+                    sprintf(
+                        'Remote version information not found. Would you like to do a full deploy? (Y/n): '
+                    ),
+                    'Y'
+                );
+            }
 
             if ($answer) {
                 $context->setFullDeploy(true);
@@ -120,5 +151,7 @@ class ValidateRemoteStage extends AbstractStage
                 return false;
             }
         }
+
+        return true;
     }
 }

@@ -443,6 +443,7 @@ class Conveyor
         $options += array(
             'full_deploy'       => false,
             'deploy_after_only' => false,
+            'force'             => false,
         );
 
         $this->assertTargetExists($target, $this->getConfig()->getConfig());
@@ -471,6 +472,7 @@ class Conveyor
         $context = new Context();
         $context
             ->setFullDeploy($options['full_deploy'])
+            ->setForce($options['force'])
             ->setBuilddir($builder->getBuildDir())
             ->setVersion($version)
             ->setTarget($target)
@@ -535,6 +537,7 @@ class Conveyor
 
         $options += array(
             'full_deploy' => false,
+            'force'       => false,
         );
 
         $this->assertTargetExists($target, $this->getConfig()->getConfig());
@@ -564,6 +567,7 @@ class Conveyor
         $context = new Context();
         $context
             ->setFullDeploy($options['full_deploy'])
+            ->setForce($options['force'])
             ->setSimulate(true)
             ->setBuilddir($this->getBuilder()->getBuildDir())
             ->setVersion($version)

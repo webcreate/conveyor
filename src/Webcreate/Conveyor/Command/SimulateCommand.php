@@ -25,7 +25,8 @@ class SimulateCommand extends AbstractCommand
             ->setDescription('Simulate a deploy')
             ->addArgument('target', InputArgument::REQUIRED, 'Target or group to simulate')
             ->addArgument('version', InputArgument::REQUIRED, 'Version to simulate')
-            ->addOption('full', null, InputOption::VALUE_NONE, 'Force full deploy instead of incremental deploy')
+            ->addOption('force', '-f', InputOption::VALUE_NONE, 'Force deploy')
+            ->addOption('full', null, InputOption::VALUE_NONE, 'Full deploy instead of incremental deploy')
         ;
     }
 
@@ -34,10 +35,8 @@ class SimulateCommand extends AbstractCommand
         $conveyor = $this->getConveyor($input, $output, $this->getHelperSet());
 
         $options = array();
-
-        if ($input->getOption('full')) {
-            $options['full_deploy'] = true;
-        }
+        $options['full_deploy'] = (bool) $input->getOption('full');
+        $options['force'] = (bool) $input->getOption('force');
 
         $target = $input->getArgument('target');
         $targets = [$target];
