@@ -3,6 +3,7 @@
 namespace Webcreate\Conveyor\Task;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Task\Result\ExecuteResult;
@@ -80,6 +81,9 @@ class RemoveTask extends Task
             } else {
                 $this->output(sprintf("Removed %s", $file));
             }
+
+            // remove empty directories
+            $this->removeEmptyDirectories($this->cwd, $file);
         }
 
         if ($this->io && !$this->io->isVerbose()) {
@@ -90,5 +94,41 @@ class RemoveTask extends Task
             array(),
             $files
         );
+    }
+
+    /**
+     * Removes empty directories
+     *
+     * @param $cwd
+     * @param $file
+     */
+    protected function removeEmptyDirectories($cwd, $file)
+    {
+        $filesystem = new Filesystem();
+
+        $filename = sprintf('%s/%s', rtrim($cwd, DIRECTORY_SEPARATOR), $file);
+
+        while ('.' !== dirname($file)) {
+            $file     = dirname($file);
+            $filename = dirname($filename);
+
+            $finder = new Finder();
+            $countFiles = $finder
+                ->files()
+                ->in($filename)
+                ->ignoreDotFiles(false)
+                ->ignoreVCS(false)
+                ->count();
+
+            if ($countFiles === 0) {
+                $filesystem->remove($filename);
+
+                if ($this->io && $this->io->isVerbose()) {
+                    $this->output(sprintf("Removed %s", $file));
+                }
+            } else {
+                return;
+            }
+        }
     }
 }

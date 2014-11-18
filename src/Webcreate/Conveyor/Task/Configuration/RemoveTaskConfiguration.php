@@ -25,9 +25,21 @@ class RemoveTaskConfiguration implements ConfigurationInterface
             ->children()
                 ->arrayNode('files')
                     ->prototype('scalar')->end()
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(function ($v) {
+                            return array($v);
+                        })
+                    ->end()
                 ->end()
                 ->arrayNode('exclude')
                     ->prototype('scalar')->end()
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(function ($v) {
+                            return array($v);
+                        })
+                    ->end()
                 ->end()
             ->end()
         ;
