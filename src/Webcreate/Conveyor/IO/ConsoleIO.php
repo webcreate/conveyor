@@ -95,7 +95,7 @@ class ConsoleIO implements IOInterface
      */
     protected function applyPrefix($messages)
     {
-        if (!$this->prefix || !$this->lastMessageNewline) {
+        if (!$this->prefix || (!$this->lastMessageNewline && trim($messages) == '')) {
             return $messages;
         }
 
