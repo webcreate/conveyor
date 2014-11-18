@@ -35,7 +35,7 @@ class BuildStage extends AbstractStage
 
     public function execute(Context $context)
     {
-        if (true !== $this->validateBuildDir()) {
+        if (true !== $this->validateBuildDir($context->isForce())) {
             return false;
         }
 
@@ -58,15 +58,23 @@ class BuildStage extends AbstractStage
         return true;
     }
 
-    protected function validateBuildDir()
+    protected function validateBuildDir($force = false)
     {
         $buildDir = $this->builder->getBuildDir();
 
         if (true === is_dir($buildDir)) {
-            $answer = $this->io->askConfirmation(sprintf(
-                    'Build directory \'%s\' does already exist, would you like ' .
-                    'to overwrite it? (y/N): ',
-                    $buildDir), false);
+            if (true === $force) {
+                $answer = true;
+            } else {
+                $answer = $this->io->askConfirmation(
+                    sprintf(
+                        'Build directory \'%s\' does already exist, would you like ' .
+                        'to overwrite it? (y/N): ',
+                        $buildDir
+                    ),
+                    false
+                );
+            }
 
             if (true === $answer) {
                 $filesystem = new Filesystem();

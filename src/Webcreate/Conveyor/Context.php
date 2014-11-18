@@ -22,6 +22,7 @@ class Context
     protected $buildDir;
     protected $filesModified;
     protected $filesDeleted;
+    protected $force = false;
 
     /**
      * @var Version
@@ -224,5 +225,23 @@ class Context
     public function getStrategy()
     {
         return $this->strategy;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isForce()
+    {
+        return $this->force;
+    }
+
+    /**
+     * @param boolean $force
+     * @return $this
+     */
+    public function setForce($force)
+    {
+        $this->force = $force;
+        return $this;
     }
 }

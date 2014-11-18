@@ -25,7 +25,8 @@ class DeployCommand extends AbstractCommand
             ->setDescription('Deploy')
             ->addArgument('target', InputArgument::REQUIRED, 'Target or group to deploy')
             ->addArgument('version', InputArgument::REQUIRED, 'Version to deploy')
-            ->addOption('full', null, InputOption::VALUE_NONE, 'Force full deploy instead of incremental deploy')
+            ->addOption('force', '-f', InputOption::VALUE_NONE, 'Force deploy')
+            ->addOption('full', null, InputOption::VALUE_NONE, 'Full deploy instead of incremental deploy')
             ->addOption('after', null, InputOption::VALUE_NONE, 'Only run deploy after tasks')
         ;
     }
@@ -36,13 +37,9 @@ class DeployCommand extends AbstractCommand
 
         $options = array();
 
-        if ($input->getOption('full')) {
-            $options['full_deploy'] = true;
-        }
-
-        if ($input->getOption('after')) {
-            $options['deploy_after_only'] = true;
-        }
+        $options['full_deploy'] = (bool) $input->getOption('full');
+        $options['deploy_after_only'] = (bool) $input->getOption('after');
+        $options['force'] = (bool) $input->getOption('force');
 
         $target = $input->getArgument('target');
         $targets = [$target];

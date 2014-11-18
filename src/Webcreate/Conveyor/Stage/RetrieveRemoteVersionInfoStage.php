@@ -58,6 +58,8 @@ class RetrieveRemoteVersionInfoStage extends AbstractStage
                 return false;
             }
         }
+
+        return true;
     }
 
     protected function getRemoteVersion(Context $context)
@@ -77,35 +79,57 @@ class RetrieveRemoteVersionInfoStage extends AbstractStage
 
     protected function compareRemoteVersionName(Context $context)
     {
-        if ($context->isFullDeploy()) return;
+        if ($context->isFullDeploy()) {
+            return true;
+        }
 
         if ($context->getVersion()->getName() != $context->getRemoteVersion()->getName()) {
-            $answer = $this->io->askConfirmation(sprintf(
-                    'Remote version (%s) differs from selected version (%s). '.
-                    'Would you like to continue? (Y/n): ',
-                    $context->getRemoteVersion()->getName(),
-                    $context->getVersion()->getName()), 'Y');
+            if ($context->isForce()) {
+                $answer = true;
+            } else {
+                $answer = $this->io->askConfirmation(
+                    sprintf(
+                        'Remote version (%s) differs from selected version (%s). ' .
+                        'Would you like to continue? (Y/n): ',
+                        $context->getRemoteVersion()->getName(),
+                        $context->getVersion()->getName()
+                    ),
+                    'Y'
+                );
+            }
 
             if (false === $answer) {
                 return false;
             }
         }
+
+        return true;
     }
 
     protected function compareRemoteVersionBuild(Context $context)
     {
-        if ($context->isFullDeploy()) return;
+        if ($context->isFullDeploy()) {
+            return true;
+        }
 
         if ($context->getVersion()->equals($context->getRemoteVersion())) {
             $this->io->write('Remote version is already up-to-date.', true);
 
             return false;
         } elseif (1 === $this->repository->versionCompare($context->getRemoteVersion(), $context->getVersion())) {
-            $answer = $this->io->askConfirmation(sprintf(
-                    'Remote version (%s) is newer than the selected version (%s). ' .
-                    'Would you like to continue as full deploy? (Y/n): ',
-                    $context->getRemoteVersion()->getBuild(),
-                    $context->getVersion()->getBuild()), 'Y');
+            if ($context->isForce()) {
+                $answer = true;
+            } else {
+                $answer = $this->io->askConfirmation(
+                    sprintf(
+                        'Remote version (%s) is newer than the selected version (%s). ' .
+                        'Would you like to continue as full deploy? (Y/n): ',
+                        $context->getRemoteVersion()->getBuild(),
+                        $context->getVersion()->getBuild()
+                    ),
+                    'Y'
+                );
+            }
 
             if ($answer) {
                 $context->setFullDeploy(true);
@@ -113,5 +137,7 @@ class RetrieveRemoteVersionInfoStage extends AbstractStage
                 return false;
             }
         }
+
+        return true;
     }
 }
