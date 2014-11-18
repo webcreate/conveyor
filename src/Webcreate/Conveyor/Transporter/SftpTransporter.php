@@ -18,6 +18,10 @@ use Webcreate\Conveyor\Event\TransporterEvents;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Transporter\Ftp\Sftp;
 
+if (!class_exists('System_SSH_Agent')) {
+    include 'System/SSH_Agent.php';
+}
+
 /**
  * @todo refactor the injection of the IOInterface to a event-based solution?
  */
@@ -77,45 +81,57 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
 
         // try to login using ssh key
         if (null === $password) {
+            try {
+                // try with agent (suppress stupid phpseclib warnings/errors)
+                $agent = @new \System_SSH_Agent();
+            } catch (\Exception $e) {
+                $agent = null;
+            }
+
+            if ($success = $this->sftp->login($username, $agent)) {
+                return true;
+            }
+
+            // try with key manually
             $identityFilePath = $_SERVER['HOME'] . '/.ssh/id_rsa';
-            if (file_exists($identityFilePath)) {
-                $identityFile = file_get_contents($identityFilePath);
+            if (!is_file($identityFilePath)) {
+                $this->io->write(sprintf('Public key file not found in %s', $identityFilePath));
 
-                // try without pass
-                $key = new \Crypt_RSA();
-                $loaded = $key->loadKey($identityFile);
+                return false;
+            }
 
-                // first try without keypass
-                if (!$loaded || false === $success = $this->sftp->login($username, $key)) {
-                    $attempts = 3;
+            $identityFile = file_get_contents($identityFilePath);
+            $key          = new \Crypt_RSA();
+            $loaded       = $key->loadKey($identityFile);
 
-                    // now N attempts to load the identity file
-                    while ($attempts--) {
-                        // retry with password
-                        $this->keyPassword = $this->keyPassword ?: $this->io->askAndHideAnswer(sprintf('Enter passphrase for %s: ', $identityFilePath));
-                        $key->setPassword($this->keyPassword);
-                        $loaded = $key->loadKey($identityFile);
+            // first try without keypass
+            if (!$loaded || false === $success = $this->sftp->login($username, $key)) {
+                $attempts = 3;
 
-                        if (!$loaded) {
-                            if ($attempts > 0) {
-                                $this->keyPassword = null;
+                // now N attempts to load the identity file
+                while ($attempts--) {
+                    // retry with password
+                    $this->keyPassword = $this->keyPassword ?: $this->io->askAndHideAnswer(sprintf('Enter passphrase for %s: ', $identityFilePath));
+                    $key->setPassword($this->keyPassword);
+                    $loaded = $key->loadKey($identityFile);
 
-                                $this->io->write('Permission denied, please try again.');
-                            }
-                        } else {
-                            if (false === $success = $this->sftp->login($username, $key)) {
-                                $this->io->write(sprintf('%s@%s: Permission denied (publickey)', $this->username, $this->host));
-                            }
+                    if (!$loaded) {
+                        if ($attempts > 0) {
+                            $this->keyPassword = null;
 
-                            return $success;
+                            $this->io->write('Permission denied, please try again.');
                         }
+                    } else {
+                        if (false === $success = $this->sftp->login($username, $key)) {
+                            $this->io->write(sprintf('%s@%s: Permission denied (publickey)', $this->username, $this->host));
+                        }
+
+                        return $success;
                     }
-                } else {
-                    return true;
                 }
             }
 
-            return false;
+            return $success;
         }
 
         // login with given password
