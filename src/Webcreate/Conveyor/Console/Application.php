@@ -65,6 +65,7 @@ class Application extends BaseApplication
         $commands[] = new \Webcreate\Conveyor\Command\BuildCommand();
         $commands[] = new \Webcreate\Conveyor\Command\SimulateCommand();
         $commands[] = new \Webcreate\Conveyor\Command\DeployCommand();
+        $commands[] = new \Webcreate\Conveyor\Command\UndeployCommand();
         $commands[] = new \Webcreate\Conveyor\Command\DiffCommand();
         $commands[] = new \Webcreate\Conveyor\Command\InitCommand();
         $commands[] = new \Webcreate\Conveyor\Command\ValidateCommand();

@@ -347,6 +347,36 @@ class Conveyor
         }
     }
 
+    public function undeploy($target, array $options = array())
+    {
+        $this->assertTargetExists($target, $this->getConfig()->getConfig());
+
+        $options += array(
+            'force'             => false,
+        );
+
+        /** @var \Webcreate\Conveyor\Task\TaskRunner $trUndeploy */
+        $transporter        = $this->getTransporter($target);
+        $io                 = $this->getIO();
+        $trUndeploy         = $this->container->get('undeploy.taskrunner');
+        $strategy           = $this->getStrategy($transporter);
+
+        $context = new Context();
+        $context
+            ->setTarget($target)
+            ->setForce($options['force'])
+            ->setStrategy($strategy)
+            ->setVersion(new Version())
+        ;
+
+        $manager = new StageManager($context, $this->container->get('dispatcher'));
+        $manager
+            ->addStage('undeploy.before', new Stage\UndeployBeforeStage($trUndeploy, $io, $transporter))
+            ->addStage('undeploy',        new Stage\UndeployStage($transporter, $io))
+            ->execute()
+        ;
+    }
+
     /**
      * Performs a diff with the target
      *
