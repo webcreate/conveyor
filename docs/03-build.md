@@ -83,3 +83,34 @@ Example:
 		  type: phing
 		  target: [test, dist]
 		  buildfile: custom_build.xml
+
+### RemoveTask
+
+Task to remove files.
+
+Example:
+
+	build:
+	  tasks:
+	    -
+		  type: remove
+		  target: [test, dist]
+		  files: 
+		    - web/app_dev.php
+		    - web/app_test.php
+		    - tests/
+
+You can also exclude files. The following task removes all files execpt the app, src and web folders:
+
+	build:
+	  tasks:
+	    -
+		  type: remove
+		  target: [test, dist]
+		  files: '*'
+		  exclude:
+		    - app/
+		    - src/
+		    - web/
+		    
+
