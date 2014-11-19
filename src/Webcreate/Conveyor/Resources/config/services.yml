@@ -92,3 +92,10 @@ services:
     factory_method: get
     arguments: [ 'deploy.final', @task.factory, @config, @io, @dispatcher ]
     scope: prototype
+
+  undeploy.taskrunner:
+    class: Webcreate\Conveyor\Task\TaskRunner
+    factory_class: Webcreate\Conveyor\Factory\TaskRunnerFactory
+    factory_method: get
+    arguments: [ 'undeploy.tasks', @task.factory, @config, @io, @dispatcher ]
+    scope: prototype
