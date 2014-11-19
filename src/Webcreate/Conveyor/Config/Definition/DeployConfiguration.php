@@ -95,6 +95,29 @@ class DeployConfiguration implements ConfigurationInterface
                             ->node('transport', 'transporter')
                                 ->setTransporterFactory($this->transporterFactory)
                                 ->isRequired()
+                                ->beforeNormalization()
+                                ->ifString()
+                                ->then(function ($v) {
+                                        $regex = '/^(?P<type>\w+):\/\/(?P<user>\w+)(:(?P<pass>\w+))?@(?P<host>[.\w]+)(:(?P<port>\w+))?(?P<path>\/[\/\w]+)/';
+
+                                        if (is_string($v)) {
+                                            if (preg_match($regex, $v, $matches)) {
+                                                return array(
+                                                    'type' => $matches['type'],
+                                                    'user' => $matches['user'],
+                                                    'pass' => $matches['pass'] ?: null,
+                                                    'host' => $matches['host'],
+                                                    'port' => $matches['port'],
+                                                    'path' => $matches['path'],
+                                                );
+                                            } else {
+                                                throw new InvalidConfigurationException(sprintf('Could not parse "%s" as DSN', $v));
+                                            }
+                                        }
+
+                                        return $v;
+                                    })
+                                ->end()
                             ->end()
                             ->arrayNode('parameters')
                                 ->prototype('scalar')->end()
