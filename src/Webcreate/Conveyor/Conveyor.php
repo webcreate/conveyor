@@ -352,10 +352,10 @@ class Conveyor
         $this->assertTargetExists($target, $this->getConfig()->getConfig());
 
         /** @var \Webcreate\Conveyor\Task\TaskRunner $trUndeploy */
-        $transporter        = $this->getTransporter($target);
-        $io                 = $this->getIO();
-        $trUndeploy         = $this->container->get('undeploy.taskrunner');
-        $strategy           = $this->getStrategy($transporter);
+        $transporter = $this->getTransporter($target);
+        $io          = $this->getIO();
+        $trUndeploy  = $this->container->get('undeploy.taskrunner');
+        $strategy    = $this->getStrategy($transporter);
 
         $context = new Context();
         $context
@@ -366,7 +366,7 @@ class Conveyor
 
         $manager = new StageManager($context, $this->container->get('dispatcher'));
         $manager
-            ->addStage('undeploy',       new Stage\UndeployStage($trUndeploy, $transporter, $io))
+            ->addStage('undeploy', new Stage\UndeployStage($trUndeploy, $transporter, $io))
             ->execute()
         ;
     }
