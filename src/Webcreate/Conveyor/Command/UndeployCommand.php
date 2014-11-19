@@ -32,20 +32,23 @@ class UndeployCommand extends AbstractCommand
     {
         $conveyor = $this->getConveyor($input, $output, $this->getHelperSet());
 
+        if (!$input->getOption('force')) {
+            $answer = $conveyor->getIO()->askConfirmation(
+                sprintf(
+                    'Are you sure you want to undeploy? The remote directory "%s" will be removed! ' .
+                    'Data will be lost! (y/N): ',
+                    $conveyor->getTransporter($input->getArgument('target'))->getPath()
+                ),
+                false
+            );
+
+            if (!$answer) {
+                return;
+            }
+        }
+
         $options = array();
-        $options['force'] = (bool) $input->getOption('force');
 
-        $target = $input->getArgument('target');
-        $targets = [$target];
-
-        if (false !== strpos($target, ',')) {
-            $output->writeln('<info>Deprecated: Comma-separated list of targets is no longer supported, please use target groups to deploy to multiple targets at once.</info>');
-
-            $targets = explode(',', $target);
-        }
-
-        foreach ($targets as $target) {
-            $conveyor->undeploy($target, $options);
-        }
+        $conveyor->undeploy($input->getArgument('target'), $options);
     }
 }
