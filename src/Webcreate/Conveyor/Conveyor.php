@@ -351,11 +351,15 @@ class Conveyor
     {
         $this->assertTargetExists($target, $this->getConfig()->getConfig());
 
+        $this->setConfigParametersForTarget($target);
+
         /** @var \Webcreate\Conveyor\Task\TaskRunner $trUndeploy */
         $transporter = $this->getTransporter($target);
         $io          = $this->getIO();
         $trUndeploy  = $this->container->get('undeploy.taskrunner');
         $strategy    = $this->getStrategy($transporter);
+
+        $trUndeploy->setTransporter($transporter);
 
         $context = new Context();
         $context

@@ -149,6 +149,7 @@ class YamlConfig
             &$config['deploy']['before'],
             &$config['deploy']['after'],
             &$config['deploy']['final'],
+            &$config['undeploy']['tasks'],
         );
 
         foreach ($sections as &$section) {
