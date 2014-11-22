@@ -409,9 +409,9 @@ class ReleasesStrategy implements StrategyInterface, TransporterAwareInterface, 
      */
     protected function symlinkSharedFilesAndFolders(Context $context)
     {
-        $basepath           = $this->transporter->getPath();
-        $sharedPath         = $basepath . '/shared';
-        $uploadPath         = $basepath . '/' . $this->getUploadPath($context->getVersion());
+        $basepath   = $this->transporter->getPath();
+        $sharedPath = $basepath . '/shared';
+        $uploadPath = $basepath . '/' . $this->getUploadPath($context->getVersion());
 
         $shared = (array) $this->options['shared'];
 

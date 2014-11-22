@@ -5,20 +5,13 @@ conveyor:
   targets:
     production:
       transport:
-        type: sftp
-        host: ~
-        path: conveyor
-        user: ~
-        pass: ~
-    staging:
-      transport:
-        type: sftp
-        host: ~
-        path: ~
-        user: ~
-        pass: ~
+      type: sftp
+      host: ~
+      path: conveyor
+      user: ~
+      pass: ~
   build:
-    dir: /tmp/conveyor/build/conveyor
+    dir: /tmp/conveyor/build
     derived:
       - { source: '*', derived: conveyor.phar }
       - { source: composer.lock, derived: vendor/ }
@@ -27,3 +20,19 @@ conveyor:
         type: shell
         command: composer install
         creates: ['vendor/']
+      -
+        type: remove
+        files:
+          - conveyor.yml
+          - composer.*
+          - tests/
+      -
+        type: phar
+        filename: conveyor.phar
+        stub: bin/conveyor
+      -
+        type: remove
+        files: '*'
+        exclude: 'conveyor.phar'
+  deploy:
+    strategy: simple
