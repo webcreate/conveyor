@@ -12,8 +12,6 @@ Full documentation is available at [http://conveyordeploy.com](http://conveyorde
 Installation / Usage
 --------------------
 
-**Note:** The phar is very outdated, please follow the instructions for installation from source.
-
 1. Download the [`conveyor.phar`](http://conveyordeploy.com/download.html) executable.
 2. Create a conveyor.yml by running: `php conveyor.phar init`
 3. Read the [docs](http://conveyordeploy.com/docs) on how to configure Conveyor for your project

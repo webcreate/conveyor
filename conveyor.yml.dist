@@ -5,11 +5,11 @@ conveyor:
   targets:
     production:
       transport:
-      type: sftp
-      host: ~
-      path: conveyor
-      user: ~
-      pass: ~
+        type: sftp
+        host: ~
+        path: conveyor
+        user: ~
+        pass: ~
   build:
     dir: /tmp/conveyor/build
     derived:
@@ -18,7 +18,7 @@ conveyor:
     tasks:
       -
         type: shell
-        command: composer install
+        command: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
         creates: ['vendor/']
       -
         type: remove
@@ -33,6 +33,8 @@ conveyor:
       -
         type: remove
         files: '*'
-        exclude: 'conveyor.phar'
+        exclude:
+          - conveyor.phar
+          - VERSION
   deploy:
     strategy: simple
