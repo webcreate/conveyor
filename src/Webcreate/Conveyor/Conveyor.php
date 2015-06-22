@@ -24,6 +24,7 @@ use Webcreate\Conveyor\DependencyInjection\Compiler\TransporterCompilerPass;
 use Webcreate\Conveyor\DependencyInjection\TransporterAwareInterface;
 use Webcreate\Conveyor\Event\StageEvent;
 use Webcreate\Conveyor\Event\StageEvents;
+use Webcreate\Conveyor\Exception\EmptyChangesetException;
 use Webcreate\Conveyor\Factory\StrategyFactory;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\IO\NullIO;
@@ -535,11 +536,17 @@ class Conveyor
             );
         }
 
+        $runnableStages = array();
         if (true === $options['deploy_after_only']) {
             $runnableStages = array('deploy.after');
+        }
+
+        try {
             $result = $manager->execute($runnableStages);
-        } else {
-            $result = $manager->execute();
+        } catch (EmptyChangesetException $e) {
+            $this->getIO()->write('Nothing to deploy: no files have been changed or removed. Use --full to deploy anyway.', true);
+
+            $result = true; // trigger a cleanup
         }
 
         if ($result === true) {
@@ -631,7 +638,13 @@ class Conveyor
             );
         }
 
-        $result = $manager->execute();
+        try {
+            $result = $manager->execute();
+        } catch (EmptyChangesetException $e) {
+            $this->getIO()->write('Nothing to deploy: no files have been changed or removed. Use --full to deploy anyway.', true);
+
+            $result = true; // trigger a cleanup
+        }
 
         if ($result === true) {
             // cleanup
