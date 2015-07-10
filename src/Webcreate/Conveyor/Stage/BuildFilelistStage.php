@@ -12,6 +12,7 @@
 namespace Webcreate\Conveyor\Stage;
 
 use Webcreate\Conveyor\Context;
+use Webcreate\Conveyor\Exception\EmptyChangesetException;
 use Webcreate\Conveyor\Repository\Repository;
 use Webcreate\Conveyor\Util\FileCollection;
 use Webcreate\Vcs\Common\Status;
@@ -96,9 +97,8 @@ class BuildFilelistStage extends AbstractStage
         $filesModified->remove('conveyor.yml');
 
         // validate result, throw exception when we have nothing to deploy
-        // @todo improve this, throwing exceptions is crap!
         if (0 === count($filesModified) && 0 === count($filesDeleted)) {
-            throw new \RuntimeException('Nothing to deploy, this should not have happend');
+            throw new EmptyChangesetException();
         }
 
         $context->setFilesModified($filesModified);
