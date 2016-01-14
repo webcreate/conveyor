@@ -27,7 +27,7 @@
         "symfony/filesystem": "~2.2",
         "symfony/event-dispatcher": "~2.2",
         "symfony/dependency-injection": "~2.2",
-        "phpseclib/phpseclib": "*",
+        "phpseclib/phpseclib": "~2.0",
         "webcreate/vcs": "~1.2",
         "webcreate/util": "1.*",
         "monolog/monolog": "~1.4"
