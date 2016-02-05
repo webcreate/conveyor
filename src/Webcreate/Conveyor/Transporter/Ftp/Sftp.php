@@ -11,12 +11,12 @@
 
 namespace Webcreate\Conveyor\Transporter\Ftp;
 
-use phpseclib\Net\SFTP as phpseclib_SFTP;
+use phpseclib\Net\SFTP as PhpseclibSFTP;
 
 class Sftp
 {
     /**
-     * @var phpseclib_SFTP
+     * @var PhpseclibSFTP
      */
     protected $sftp;
 
@@ -32,7 +32,7 @@ class Sftp
         $oldErrorHandler = set_error_handler(array(&$this, 'errorHandler'), E_USER_NOTICE);
 
         $this->error = null;
-        $this->sftp = new phpseclib_SFTP($host, $port);
+        $this->sftp = new PhpseclibSFTP($host, $port, PHP_INT_MAX);
 
         // restore the old handler when needed
         if ($oldErrorHandler) {
