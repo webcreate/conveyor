@@ -32,7 +32,7 @@ class Sftp
         $oldErrorHandler = set_error_handler(array(&$this, 'errorHandler'), E_USER_NOTICE);
 
         $this->error = null;
-        $this->sftp = new PhpseclibSFTP($host, $port, PHP_INT_MAX);
+        $this->sftp = new PhpseclibSFTP($host, $port, 900);
 
         // restore the old handler when needed
         if ($oldErrorHandler) {
