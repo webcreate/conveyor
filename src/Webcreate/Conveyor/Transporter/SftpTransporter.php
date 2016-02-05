@@ -11,6 +11,9 @@
 
 namespace Webcreate\Conveyor\Transporter;
 
+use phpseclib\Crypt\RSA;
+use phpseclib\Net\SFTP as PhpseclibSFTP;
+use phpseclib\System\SSH\Agent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\Finder;
 use Webcreate\Conveyor\Event\TransporterEvent;
@@ -18,17 +21,13 @@ use Webcreate\Conveyor\Event\TransporterEvents;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\Transporter\Ftp\Sftp;
 
-if (!class_exists('System_SSH_Agent')) {
-    include 'System/SSH_Agent.php';
-}
-
 /**
  * @todo refactor the injection of the IOInterface to a event-based solution?
  */
 class SftpTransporter extends AbstractTransporter implements SshCapableTransporterInterface
 {
     /**
-     * @var null|Ftp\Sftp|\Net_SFTP
+     * @var null|Ftp\Sftp|PhpseclibSFTP
      */
     protected $sftp;
     protected $io;
@@ -83,7 +82,7 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
         if (null === $password) {
             try {
                 // try with agent (suppress stupid phpseclib warnings/errors)
-                $agent = @new \System_SSH_Agent();
+                $agent = @new Agent();
             } catch (\Exception $e) {
                 $agent = null;
             }
@@ -101,7 +100,7 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
             }
 
             $identityFile = file_get_contents($identityFilePath);
-            $key          = new \Crypt_RSA();
+            $key          = new RSA();
             $loaded       = $key->loadKey($identityFile);
 
             // first try without keypass
@@ -235,7 +234,7 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
 
             $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_PUT, new TransporterEvent($this, array('dest' => $dest, 'src' => $file->getPathname())));
 
-            $success = $this->sftp->put($dest, $file->getPathname(), NET_SFTP_LOCAL_FILE);
+            $success = $this->sftp->put($dest, $file->getPathname(), PhpseclibSFTP::SOURCE_LOCAL_FILE);
 
             if (!$success) {
                 // maybe the parent directory doesnt exist; try to create it and try again
@@ -244,7 +243,7 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
                     $this->mkdir($pwd);
 
                     // retry try to put
-                    $success = $this->sftp->put($dest, $file->getPathname(), NET_SFTP_LOCAL_FILE);
+                    $success = $this->sftp->put($dest, $file->getPathname(), PhpseclibSFTP::SOURCE_LOCAL_FILE);
                     if (!$success) {
                         throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", $this->sftp->getSFTPErrors()));
                     }
@@ -272,7 +271,7 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
 
         $this->dispatcher->dispatch(TransporterEvents::TRANSPORTER_PUT_CONTENT, new TransporterEvent($this, array('dest' => $dest, 'content' => $content)));
 
-        $success = $this->sftp->put($dest, $content, NET_SFTP_STRING);
+        $success = $this->sftp->put($dest, $content, PhpseclibSFTP::SOURCE_STRING);
 
         if (!$success) {
             // maybe the parent directory doesnt exist; try to create it and try again
@@ -281,7 +280,7 @@ class SftpTransporter extends AbstractTransporter implements SshCapableTransport
                 $this->mkdir($pwd);
 
                 // retry try to put
-                $success = $this->sftp->put($dest, $content, NET_SFTP_STRING);
+                $success = $this->sftp->put($dest, $content, PhpseclibSFTP::SOURCE_STRING);
                 if (!$success) {
                     throw new \RuntimeException('Something went wrong: ' . "\n" . implode("\n", $this->sftp->getSFTPErrors()));
                 }
