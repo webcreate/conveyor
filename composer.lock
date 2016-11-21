@@ -179,7 +179,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "reference": "1.0.0",
+                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
                 "shasum": ""
             },
             "type": "library",
@@ -213,12 +213,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "0316364bfebc8b080077c731a99f189341476bd7"
+                "reference": "a0c84ef5da5a9562374f8f8dbf24780ec64ac43e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/0316364bfebc8b080077c731a99f189341476bd7",
-                "reference": "0316364bfebc8b080077c731a99f189341476bd7",
+                "url": "https://api.github.com/repos/symfony/config/zipball/a0c84ef5da5a9562374f8f8dbf24780ec64ac43e",
+                "reference": "a0c84ef5da5a9562374f8f8dbf24780ec64ac43e",
                 "shasum": ""
             },
             "require": {
@@ -655,22 +655,22 @@
         },
         {
             "name": "webcreate/vcs",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webcreate/vcs.git",
-                "reference": "4f62520aa0a04fd4d47882ff53c5ba439a3a9b4e"
+                "reference": "3a1b0d145e91b8f3116635141fe9889b9ee74466"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webcreate/vcs/zipball/4f62520aa0a04fd4d47882ff53c5ba439a3a9b4e",
-                "reference": "4f62520aa0a04fd4d47882ff53c5ba439a3a9b4e",
+                "url": "https://api.github.com/repos/webcreate/vcs/zipball/3a1b0d145e91b8f3116635141fe9889b9ee74466",
+                "reference": "3a1b0d145e91b8f3116635141fe9889b9ee74466",
                 "shasum": ""
             },
             "require": {
-                "symfony/filesystem": ">=v2.1.2",
-                "symfony/finder": ">=v2.1.2",
-                "symfony/process": "~2.3",
+                "symfony/filesystem": ">=v2.1.2|~3.0",
+                "symfony/finder": ">=v2.1.2|~3.0",
+                "symfony/process": "~2.3|~3.0",
                 "webcreate/util": "1.*"
             },
             "suggest": {
@@ -705,7 +705,7 @@
                 "vcs",
                 "versioncontrol"
             ],
-            "time": "2014-01-13 09:38:32"
+            "time": "2016-11-21 15:16:45"
         }
     ],
     "packages-dev": [
