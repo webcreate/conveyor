@@ -83,17 +83,6 @@ class TaskRunner implements TransporterAwareInterface
     public function setTransporter($transporter)
     {
         $this->transporter = $transporter;
-
-        // also apply it to the tasks
-        // @todo remove this because it's plain wrong!
-        array_walk(
-            $this->tasks,
-            function ($task) use ($transporter) {
-                if ($task instanceof TransporterAwareInterface) {
-                    $task->setTransporter($transporter);
-                }
-            }
-        );
     }
 
     /**
@@ -113,6 +102,10 @@ class TaskRunner implements TransporterAwareInterface
                 $result = null;
 
                 try {
+                    if ($task instanceof TransporterAwareInterface) {
+                        $task->setTransporter($this->transporter);
+                    }
+
                     $result = $task->execute($target, $version);
 
                     break;
