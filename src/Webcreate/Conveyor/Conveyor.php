@@ -28,6 +28,7 @@ use Webcreate\Conveyor\Exception\EmptyChangesetException;
 use Webcreate\Conveyor\Factory\StrategyFactory;
 use Webcreate\Conveyor\IO\IOInterface;
 use Webcreate\Conveyor\IO\NullIO;
+use Webcreate\Conveyor\Repository\Repository;
 use Webcreate\Conveyor\Repository\Version;
 use Webcreate\Conveyor\Stage\Manager\StageManager;
 use Webcreate\Conveyor\Strategy\StrategyInterface;
@@ -278,6 +279,7 @@ class Conveyor
         $this->assertTargetExists($target, $this->getConfig()->getConfig());
 
         $this->setConfigParametersForTarget($target);
+        $this->setConfigParametersForVcs($this->getRepository(), $version);
 
         $builder = $this->getBuilder();
         $io      = $this->getIO();
@@ -353,6 +355,7 @@ class Conveyor
         $this->assertTargetExists($target, $this->getConfig()->getConfig());
 
         $this->setConfigParametersForTarget($target);
+        $this->setConfigParametersForVcs($this->getRepository(), new Version());
 
         /** @var \Webcreate\Conveyor\Task\TaskRunner $trUndeploy */
         $transporter = $this->getTransporter($target);
@@ -478,6 +481,7 @@ class Conveyor
         $this->assertTargetExists($target, $this->getConfig()->getConfig());
 
         $this->setConfigParametersForTarget($target);
+        $this->setConfigParametersForVcs($this->getRepository(), $version);
 
         $config         = $this->getConfig()->getConfig();
         $derived        = $config['build']['derived'];
@@ -578,6 +582,7 @@ class Conveyor
         $this->assertTargetExists($target, $this->getConfig()->getConfig());
 
         $this->setConfigParametersForTarget($target);
+        $this->setConfigParametersForVcs($this->getRepository(), $version);
 
         $transporter = $this->getTransporter($target);
         $readOnlyTransporter = $this->container->get('transporter.readonly');
@@ -709,6 +714,19 @@ class Conveyor
         foreach ($transporterOptions as $key => $value) {
             $this->getConfig()->setParameter('target.transport.' . $key, $value);
         }
+    }
+
+    /**
+     * @param Repository $getRepository
+     * @param Version $version
+     */
+    private function setConfigParametersForVcs(Repository $getRepository, Version $version)
+    {
+        $this->getConfig()->setParameter('vcs.url', $getRepository->getUrl());
+        $this->getConfig()->setParameter('vcs.type', $getRepository->getType());
+        $this->getConfig()->setParameter('vcs.build', $version->getBuild());
+        $this->getConfig()->setParameter('vcs.build_short', substr($version->getBuild(), 0, 7));
+        $this->getConfig()->setParameter('vcs.version', $version->getName());
     }
 
     /**
