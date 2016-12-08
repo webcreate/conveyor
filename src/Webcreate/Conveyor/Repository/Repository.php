@@ -85,6 +85,11 @@ class Repository
         return $this->type;
     }
 
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
     /**
      * @todo move this to webcreate/vcs library
      *
